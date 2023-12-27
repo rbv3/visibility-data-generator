@@ -32,3 +32,19 @@ export const custom_models = [
         path: '/data/NYC/custom_model/NY-1-3.gltf'
     }
 ]
+export const collada_models = [
+    {
+        name: 'model-0-0',
+        path: '/data/NYC/collada_model/model-0-0.dae'
+    },
+    {
+        name: 'model-0-1',
+        path: '/data/NYC/collada_model/model-0-1.dae'
+    },
+]
+export const fbx_models = [
+    {
+        name: 'model-0-0',
+        path: '/data/NYC/collada_model/model-0-0.fbx'
+    },
+]

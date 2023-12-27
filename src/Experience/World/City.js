@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import Experience from '../Experience'
-import { custom_models } from './models.js'
+import { collada_models } from './models.js'
 
 const map = {}
 
@@ -40,14 +40,15 @@ export default class City {
         return customMaterial
     }
     loadModels() {
-        const toLoad = custom_models.length
+        const toLoad = collada_models.length
         let loaded = 0
-        for(const model of custom_models) {
-            this.loaders.gltfLoader.load(
+        for(const model of collada_models) {
+            this.loaders.colladaLoader.load(
                 model.path,
                 (gltf) => {
-                    this.auxRecursiveIterator(gltf.scene)
+                    // this.auxRecursiveIterator(gltf.scene)
                     console.log(gltf.scene)
+                    console.log(gltf.library.visualScenes)
                     this.scene.add(gltf.scene)
                     loaded++
                     if(loaded == toLoad) {

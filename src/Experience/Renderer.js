@@ -1,5 +1,6 @@
-import * as THREE from 'three'
 import Experience from './Experience.js'
+import WebGPU from 'three/addons/capabilities/WebGPU.js'
+import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js'
 
 export default class Renderer {
     constructor() {
@@ -13,14 +14,19 @@ export default class Renderer {
     }
 
     setInstance() {
-        this.instance = new THREE.WebGLRenderer({
+        if ( WebGPU.isAvailable() === false ) {
+
+            document.body.appendChild( WebGPU.getErrorMessage() )
+
+            throw new Error( 'No WebGPU support' )
+        } else {
+            console.log('Using WebGPU')
+        }
+        this.instance = new WebGPURenderer({
             canvas: this.canvas,
             antialias: true,
-            powerPreference: 'high-performance'
         })
-        // this.instance.toneMapping = THREE.CineonToneMapping
-        // this.instance.toneMappingExposure = 1.75
-        this.instance.setClearColor('#211d20')
+        this.instance.setClearColor('#000000')
         this.instance.setSize(this.sizes.width, this.sizes.height)
         this.instance.setPixelRatio(this.sizes.pixelRatio)
     }

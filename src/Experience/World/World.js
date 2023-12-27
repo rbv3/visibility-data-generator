@@ -17,7 +17,4 @@ export default class World {
         // this.scene.add(this.lights.directionalLight)
         this.scene.add(this.lights.ambientLight)
     }
-    update() {
-        this.city.update()
-    }
 }

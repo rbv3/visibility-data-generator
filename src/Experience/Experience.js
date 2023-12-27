@@ -8,8 +8,7 @@ import GUI from './Utils/GUI.js'
 import RayCaster from './RayCaster.js'
 import CharacterControls from './CharacterControls.js'
 import Loaders from './Utils/Loaders.js'
-// import StatsMonitor from './Utils/StatsMonitor.js'
-import LoadingPlane from './World/LoadingPlane.js'
+import StatsMonitor from './Utils/StatsMonitor.js'
 
 let instance = null
 
@@ -29,7 +28,7 @@ export default class Experience {
 
         // Debug
         this.gui = new GUI()
-        // this.statsMonitor = new StatsMonitor()
+        this.statsMonitor = new StatsMonitor()
 
         // Setup
         this.sizes = new Sizes()
@@ -38,7 +37,6 @@ export default class Experience {
         this.camera = new Camera()
         this.characterControls = new CharacterControls()
         this.renderer = new Renderer()
-        this.loadingPlane = new LoadingPlane()
         this.loaders = new Loaders()
         this.world = new World()
         this.buildingsMeshes = this.world.buildingsMeshes
@@ -59,15 +57,14 @@ export default class Experience {
         this.renderer.resize()
     }
     update() {
-        // this.statsMonitor.instance.begin()
+        this.statsMonitor.instance.begin()
 		
         this.camera.update()
         this.renderer.update()
         this.raycaster.update()
         this.characterControls.update()
-        this.world.update()
 
-        // this.statsMonitor.instance.end()
+        this.statsMonitor.instance.end()
     }
     
 }

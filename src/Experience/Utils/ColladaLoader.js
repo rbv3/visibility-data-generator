@@ -3517,11 +3517,10 @@ class ColladaLoader extends Loader {
                     break
 
                 case 'extra':
-                    data.extras = parseExtraNode( child )
+                    data.extras = parseVisualSceneExtraNode( child )
                     break
                 default:
                     console.log( child )
-
                 }
 
             }
@@ -3539,7 +3538,7 @@ class ColladaLoader extends Loader {
             return data
 
         }
-        function parseExtraNode( xml ) {
+        function parseVisualSceneExtraNode( xml ) {
             const data = {
 
             }
@@ -4037,19 +4036,22 @@ class ColladaLoader extends Loader {
 
             for ( let i = 0; i < elements.length; i ++ ) {
                 const parsedNode = parseNode(elements[i])
-                if(parsedNode.name == 'geopipeinodevjNdI6kV') {
-                    console.log(elements[i])
-                    console.log(parseNode(elements[i]))
-                }
                 data.children.push( parsedNode )
 
             }
-            console.log('---s---')
-            console.log(data.children)
-            console.log(xml.getAttribute( 'id' ))
-            console.log('---e---')
             library.visualScenes[ xml.getAttribute( 'id' ) ] = data
 
+        }
+
+        function getMetadataMap(metadata) {
+            console.log(metadata)
+            const map = {}
+
+            metadata.forEach(md => {
+                map[md.id] = md.extras
+            })
+
+            return map
         }
 
         function buildVisualScene( data ) {
@@ -4289,6 +4291,7 @@ class ColladaLoader extends Loader {
             },
             kinematics: kinematics,
             library: library,
+            metadataMap: getMetadataMap(library.visualScenes.geopipe_scene.children),
             scene: scene
         }
 

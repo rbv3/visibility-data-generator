@@ -14,7 +14,7 @@ export default class World {
 
         this.city.loadModels()
 
-        // this.scene.add(this.lights.directionalLight)
+        this.scene.add(this.lights.directionalLight)
         this.scene.add(this.lights.ambientLight)
     }
 }

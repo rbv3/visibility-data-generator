@@ -51,7 +51,46 @@ export default class Experience {
             this.update()
         })
     }
+    countColorOfPixels() {
+        const gl = this.renderer.instance.getContext()
+        const readPixelBuffer = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4)
+        gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, readPixelBuffer)
 
+        const colorMap = {}
+        for(let i = 0; i < readPixelBuffer.length; i += 4) {
+            let color = [
+                readPixelBuffer[i],
+                readPixelBuffer[i + 1],
+                readPixelBuffer[i + 2]
+            ]
+            color = this.roundColor(color)
+            if(color in colorMap) {
+                colorMap[color] += 1
+            } else {
+                colorMap[color] = 1
+            }
+        }
+        const totalPixels = readPixelBuffer.length / 4
+        console.log('Camera position and angle:')
+        console.log(this.camera.instance.quaternion)
+        console.log(this.camera.instance.rotation)
+        console.log(this.camera.instance.position)
+        console.log('Visibility of canvas:')
+        for(const color in colorMap) {
+            console.log(`${color}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+        }
+    }
+    roundColor(color) {
+        let roundedColor = [0, 0, 0]
+        for(let i=0; i<color.length; i++) {
+            if(color[i] > 100) {
+                roundedColor[i] = 255
+            } else {
+                roundedColor[i] = 0
+            }
+        }
+        return roundedColor
+    }
     resize() {
         this.camera.resize()
         this.renderer.resize()

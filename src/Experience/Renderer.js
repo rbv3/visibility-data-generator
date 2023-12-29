@@ -1,3 +1,4 @@
+import { WebGLRenderer } from 'three'
 import Experience from './Experience.js'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js'
@@ -14,17 +15,10 @@ export default class Renderer {
     }
 
     setInstance() {
-        if ( WebGPU.isAvailable() === false ) {
-
-            document.body.appendChild( WebGPU.getErrorMessage() )
-
-            throw new Error( 'No WebGPU support' )
-        } else {
-            console.log('Using WebGPU')
-        }
-        this.instance = new WebGPURenderer({
+        this.instance = new WebGLRenderer({
             canvas: this.canvas,
             antialias: true,
+            preserveDrawingBuffer: true
         })
         this.instance.setClearColor('#000000')
         this.instance.setSize(this.sizes.width, this.sizes.height)

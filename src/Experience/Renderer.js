@@ -1,7 +1,5 @@
 import { WebGLRenderer } from 'three'
 import Experience from './Experience.js'
-import WebGPU from 'three/addons/capabilities/WebGPU.js'
-import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js'
 
 export default class Renderer {
     constructor() {

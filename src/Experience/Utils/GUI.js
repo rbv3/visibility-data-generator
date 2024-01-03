@@ -5,6 +5,6 @@ export default class GUI {
         this.instance = new dat.GUI()
         this.debugObject = {}
         this.instance.close()
-        this.instance.domElement.style.display = 'none'
+        // this.instance.domElement.style.display = 'none'
     }
 }

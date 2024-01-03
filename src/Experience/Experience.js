@@ -9,6 +9,7 @@ import RayCaster from './RayCaster.js'
 import CharacterControls from './CharacterControls.js'
 import Loaders from './Utils/Loaders.js'
 import StatsMonitor from './Utils/StatsMonitor.js'
+import { COLOR_TO_OBJECT } from './Utils/constants.js'
 
 let instance = null
 
@@ -20,7 +21,7 @@ export default class Experience {
         }
         instance = this
 
-        // Global access
+        // Console access for debugging purpose
         window.experience = this
 
         // Options
@@ -50,6 +51,13 @@ export default class Experience {
         this.time.on('tick', () => {
             this.update()
         })
+
+        this.setGUI()
+    }
+    setGUI() {
+        this.gui.instance.add({countColorOfPixels : () => {
+            this.countColorOfPixels()
+        }}, 'countColorOfPixels')
     }
     countColorOfPixels() {
         const gl = this.renderer.instance.getContext()
@@ -64,20 +72,33 @@ export default class Experience {
                 readPixelBuffer[i + 2]
             ]
             color = this.roundColor(color)
-            if(color in colorMap) {
-                colorMap[color] += 1
-            } else {
-                colorMap[color] = 1
+
+            if(!(color in COLOR_TO_OBJECT)) {
+                this.increaseMapFrequency('miscelaneous', colorMap)
+
+                continue
             }
+            this.increaseMapFrequency(color, colorMap)
         }
         const totalPixels = readPixelBuffer.length / 4
-        console.log('Camera position and angle:')
-        console.log(this.camera.instance.quaternion)
-        console.log(this.camera.instance.rotation)
+        console.log('Camera position and quaternion:')
         console.log(this.camera.instance.position)
+        console.log(this.camera.instance.quaternion)
         console.log('Visibility of canvas:')
         for(const color in colorMap) {
-            console.log(`${color}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+            if(color in COLOR_TO_OBJECT) {
+                console.log(`${COLOR_TO_OBJECT[color]}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+            } else {
+                console.log(`${color}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+
+            }
+        }
+    }
+    increaseMapFrequency(key, map) {
+        if(key in map) {
+            map[key] += 1
+        } else {
+            map[key] = 1
         }
     }
     roundColor(color) {

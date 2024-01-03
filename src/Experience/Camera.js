@@ -2,6 +2,8 @@ import * as THREE from 'three'
 import Experience from './Experience.js'
 import { CustomPointerLockControls } from './CustomPointerLockControls.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { CAMERA_QUATERNIONS, ENDING_FLOOR_BUILDING_POSITION } from './Utils/constants.js'
+
 
 export default class Camera {
     constructor() {
@@ -11,10 +13,12 @@ export default class Camera {
         this.scene = this.experience.scene
         this.canvas = this.experience.canvas
 
+        this.quaternionIndex = 0
+
         this.setInstance()
         this.setControls()
 
-        // this.setGUI()
+        this.setGUI()
     }
     setInstance() {
         this.instance = new THREE.PerspectiveCamera(
@@ -23,9 +27,11 @@ export default class Camera {
             0.1,
             2500
         )
-        this.instance.position.set(1300, 100, 1500)
-        // face loading plane
+        // this.instance.position.set(1300, 100, 1500)
+        this.instance.position.set(...ENDING_FLOOR_BUILDING_POSITION)
+
         this.instance.quaternion.set(0, 0.2, 0, 1)
+        this.instance.quaternion.set(...CAMERA_QUATERNIONS[this.quaternionIndex])
         this.scene.add(this.instance)
     }
     setOrbitControls() {
@@ -41,11 +47,25 @@ export default class Camera {
         this.controls.isLocked = true
     }
     setGUI() {
-        this.gui.instance.add(this.instance.position, 'x').min(0).max(2000).step(1)
-        this.gui.instance.add(this.instance.position, 'y').min(0).max(2000).step(1)
-        this.gui.instance.add(this.instance.position, 'z').min(-100).max(2000).step(1)
+        this.gui.instance.add({updateQuaternion : () => {
+            this.updateQuaternion()
+        }}, 'updateQuaternion')
+    }
+    updateQuaternion() {
+        this.quaternionIndex += 1
+        this.quaternionIndex %= CAMERA_QUATERNIONS.length
+        this.instance.quaternion.set(...CAMERA_QUATERNIONS[this.quaternionIndex])
     }
 
+    createSnapshotPositions() {
+        // get differente between start and ending positions
+        // divide the diff by X (prolly 10)
+        // create a array that goes from start to the end by moving delta/X each time 
+    }
+
+    updatePosition() {
+        // iterate through snapshotPositions
+    }
     resize() {
         this.instance.aspect = this.sizes.width / this.sizes.height
         this.instance.updateProjectionMatrix()

@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import Experience from '../Experience'
 import { collada_models } from './models.js'
+import { OBJECT_TO_COLOR } from '../Utils/constants.js'
 
 const map = {}
 const terrainMap = {}
@@ -18,14 +19,15 @@ export default class City {
         this.buildingsMeshes = []
         // visibility test
         this.defaultMaterial = this.createCustomMaterial('#8ba4c7')
-        this.buildingMaterial = this.createCustomMaterial('#ff0000')
-        this.treeMaterial = this.createCustomMaterial('#00ff00')
-        this.waterMaterial = this.createCustomMaterial('#0000ff')
-        this.roadMaterial = this.createCustomMaterial('#ffff00')
-        this.sidewalkMaterial = this.createCustomMaterial('#cccc00')
-        this.surfaceMaterial = this.createCustomMaterial('#888800')
-        this.subwayMaterial = this.createCustomMaterial('#ff00ff')
-        this.streetLightMaterial = this.createCustomMaterial('#00ffff')
+        // buildings
+        this.buildingMaterial = this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['building']})`)
+        // surfaces
+        this.waterMaterial = this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['water']})`)
+        this.roadMaterial = this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['road']})`)
+        this.sidewalkMaterial = this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['sidewalk']})`)
+        this.surfaceMaterial = this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['surface']})`)
+        // entities
+        this.treeMaterial = this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['tree']})`)
     }
     createCustomMaterial(color) {
         const customMaterial = new THREE.MeshStandardMaterial({
@@ -95,11 +97,7 @@ export default class City {
             this.recursiveSetMaterial(child, this.treeMaterial)
             break
         case 'street_light':
-            this.recursiveSetMaterial(child, this.streetLightMaterial)
-            break
         case 'subway_entrance':
-            this.recursiveSetMaterial(child, this.subwayMaterial)
-            break
         case 'bus_shelter':
         case 'bus_stop':
         case 'collection_box':

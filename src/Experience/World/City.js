@@ -1,22 +1,22 @@
 import * as THREE from 'three'
 import Experience from '../Experience'
 import { collada_models } from './models.js'
-import { OBJECT_TO_COLOR } from '../Utils/constants.js'
+import { OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR } from '../Utils/constants.js'
 
 const map = {}
 const terrainMap = {}
 const buildingMap = {}
 
 export default class City {
-    constructor() {
+    constructor(visibility) {
         this.experience = new Experience()
         this.characterControls = this.experience.characterControls
         this.loaders = this.experience.loaders
         this.scene = this.experience.scene
         this.time = this.experience.time
         this.gui = this.experience.gui
-
-        this.buildingsMeshes = []
+        this.isVisibility = visibility
+        this.meshesToUpdateMaterial = []
         // visibility test
         this.defaultMaterial = this.createCustomMaterial('#8ba4c7')
         // buildings
@@ -28,6 +28,18 @@ export default class City {
         this.surfaceMaterial = this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['surface']})`)
         // entities
         this.treeMaterial = this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['tree']})`)
+
+        // "Real World" materials
+        this.realWorldDefaultMaterial = this.createCustomMaterial('#3d3d3d')
+        // buildings
+        this.realWorldBuildingMaterial = this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['building']}`)
+        // surfaces
+        this.realWorldWaterMaterial = this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['water']}`)
+        this.realWorldRoadMaterial = this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['road']}`)
+        this.realWorldSidewalkMaterial = this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['sidewalk']}`)
+        this.realWorldsurfaceMaterial = this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['surface']}`)
+        // entities
+        this.realWorldTreeMaterial = this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['tree']}`)
     }
     createCustomMaterial(color) {
         const customMaterial = new THREE.MeshStandardMaterial({
@@ -54,18 +66,25 @@ export default class City {
                         console.log(terrainMap)
                         console.log(buildingMap)
                     }
+                    this.setDepthMaterial()
                 },
                 () => {}, // progress callback
                 (err) => console.log(err)
             )
         }
     }
-    getGltfSceneParent(gltfScene) {
-        for(const child of gltfScene.children) {
-            if(!child.isMesh) {
-                return child
+    toggleMaterial() {
+        console.log(this.isVisibility)
+        this.isVisibility = !this.isVisibility
+        this.meshesToUpdateMaterial.forEach(child => {
+            if(child.userData.type === 'entity') {
+                this.setEntityChild(child, this.isVisibility)
+            } else if(child.userData.terrain?.length > 0) {
+                this.setTerrainChild(child, this.isVisibility)
+            } else {
+                this.setBuildingChild(child, this.isVisibility)
             }
-        }
+        })
     }
     auxRecursiveIterator(object3d, metadataMap) {
         const children = object3d.children
@@ -78,11 +97,11 @@ export default class City {
             child.userData = metadataMap[child.name]
             
             if(child.userData.type === 'entity') {
-                this.setEntityChild(child)
+                this.setEntityChild(child, this.isVisibility)
             } else if(child.userData.terrain?.length > 0) {
-                this.setTerrainChild(child)
+                this.setTerrainChild(child, this.isVisibility)
             } else {
-                this.setBuildingChild(child)
+                this.setBuildingChild(child, this.isVisibility)
             }
         }
         return
@@ -94,7 +113,11 @@ export default class City {
         
         switch(key) {
         case 'tree':
-            this.recursiveSetMaterial(child, this.treeMaterial)
+            this.recursiveSetMaterial(
+                child,
+                this.isVisibility? this.treeMaterial : this.realWorldTreeMaterial,
+                child.userData
+            )
             break
         case 'street_light':
         case 'subway_entrance':
@@ -104,42 +127,77 @@ export default class City {
         case 'hydrant':
         case 'waste_receptacle':
         case 'street_sign_sign':
-            this.recursiveSetMaterial(child, this.defaultMaterial)
+            this.recursiveSetMaterial(
+                child,
+                this.isVisibility? this.defaultMaterial : this.realWorldDefaultMaterial,
+                child.userData
+            )
             break
         }
     }
     setBuildingChild(child) {
         const key = child.userData.building
         this.hydrateMap(key, buildingMap)
-        this.recursiveSetMaterial(child, this.buildingMaterial)
+        this.recursiveSetMaterial(
+            child,
+            this.isVisibility? this.buildingMaterial : this.realWorldBuildingMaterial,
+            child.userData
+        )
     }
     setTerrainChild(child) {
         const key = child.userData['terrain']
         this.hydrateMap(key, terrainMap)
-        console.log(child)
         switch(key) {
         case 'water':
-            this.recursiveSetMaterial(child, this.waterMaterial)
+            this.recursiveSetMaterial(
+                child,
+                this.isVisibility? this.waterMaterial : this.realWorldWaterMaterial,
+                child.userData
+            )
             break
         case 'road':
-            this.recursiveSetMaterial(child, this.roadMaterial)
+            this.recursiveSetMaterial(
+                child,
+                this.isVisibility? this.roadMaterial : this.realWorldRoadMaterial,
+                child.userData
+            )
             break
         case 'sidewalk':
-            this.recursiveSetMaterial(child, this.sidewalkMaterial)
+            this.recursiveSetMaterial(
+                child,
+                this.isVisibility? this.sidewalkMaterial : this.realWorldSidewalkMaterial,
+                child.userData
+            )
             break
         case 'surface':
-            this.recursiveSetMaterial(child, this.surfaceMaterial)
+            this.recursiveSetMaterial(
+                child,
+                this.isVisibility? this.surfaceMaterial : this.realWorldsurfaceMaterial,
+                child.userData
+            )
             break
         }
     }
-    recursiveSetMaterial(child, material) {
+    recursiveSetMaterial(child, material, userData) {
+        if(Object.keys(child.userData).length == 0) {
+            child.userData = userData
+        }
+        const childUserData = child.userData
+
         if(child.isMesh) {
+            this.meshesToUpdateMaterial.push(child)
             child.material = material
             return
         }
         if(child.children.length > 0) {
-            child.children.forEach(c => this.recursiveSetMaterial(c, material))
+            child.children.forEach(c => this.recursiveSetMaterial(c, material, childUserData))
         }
+    }
+    setDepthMaterial() {
+        console.log(this.meshesToUpdateMaterial)
+        // this.meshesToUpdateMaterial.forEach(mesh => {
+        //     mesh.material = new THREE.MeshDepthMaterial()
+        // })
     }
     hydrateMap(key, map) {
         if(key in map) {

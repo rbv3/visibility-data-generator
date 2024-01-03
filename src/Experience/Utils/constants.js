@@ -40,7 +40,16 @@ export const COLOR_TO_OBJECT = {
     '0,255,0': 'tree',
     '0,0,0': 'sky',
 }
-
+// Real world look like rendering
+export const REAL_WORLD_OBJECT_TO_COLOR = {
+    'building': '#9c9b89',
+    'water': '#4f759c',
+    'road': '#7e7e7e',
+    'sidewalk': '#848791',
+    'surface': '#876645',
+    'tree':'#2f663c',
+    'sky':'#bce0df',
+}
 // Camera Grid
 export const INITIAL_FLOOR_BUILDING_POSITION = new THREE.Vector3(310, 45, 268)
 export const ENDING_FLOOR_BUILDING_POSITION = new THREE.Vector3(348, 45, 204)

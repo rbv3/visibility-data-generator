@@ -58,8 +58,14 @@ export default class Experience {
         this.gui.instance.add({countColorOfPixels : () => {
             this.countColorOfPixels()
         }}, 'countColorOfPixels')
+
+        this.gui.instance.add({toggleVisibilityMode: () => this.toggleVisibilityMode()}, 'toggleVisibilityMode')
     }
     countColorOfPixels() {
+        if(!this.world.isVisibility) {
+            console.warn('This method should not be used on Real World Rendering')
+            return
+        }
         const gl = this.renderer.instance.getContext()
         const readPixelBuffer = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4)
         gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, readPixelBuffer)
@@ -112,6 +118,12 @@ export default class Experience {
         }
         return roundedColor
     }
+
+    toggleVisibilityMode() {
+        this.world.city.toggleMaterial()
+        this.world.lights.toggleDirectionalLight()
+    }
+
     resize() {
         this.camera.resize()
         this.renderer.resize()
@@ -125,6 +137,26 @@ export default class Experience {
         this.characterControls.update()
 
         this.statsMonitor.instance.end()
+    }
+    setupPost() {
+
+        // Setup post processing stage
+        this.camera.postCamera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 )
+        const postMaterial = new THREE.ShaderMaterial( {
+            vertexShader: document.querySelector( '#post-vert' ).textContent.trim(),
+            fragmentShader: document.querySelector( '#post-frag' ).textContent.trim(),
+            uniforms: {
+                cameraNear: { value: this.camera.instance.near },
+                cameraFar: { value: this.camera.instance.far },
+                tDiffuse: { value: null },
+                tDepth: { value: null }
+            }
+        } )
+        const postPlane = new THREE.PlaneGeometry( 2, 2 )
+        const postQuad = new THREE.Mesh( postPlane, postMaterial )
+        const postScene = new THREE.Scene()
+        postScene.add( postQuad )
+
     }
     
 }

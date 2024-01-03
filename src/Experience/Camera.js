@@ -13,6 +13,8 @@ export default class Camera {
         this.scene = this.experience.scene
         this.canvas = this.experience.canvas
 
+        this.postCamera
+
         this.quaternionIndex = 0
 
         this.setInstance()

@@ -9,7 +9,7 @@ import RayCaster from './RayCaster.js'
 import CharacterControls from './CharacterControls.js'
 import Loaders from './Utils/Loaders.js'
 import StatsMonitor from './Utils/StatsMonitor.js'
-import { COLOR_TO_OBJECT } from './Utils/constants.js'
+import { COLOR_TO_OBJECT, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR } from './Utils/constants.js'
 
 let instance = null
 
@@ -120,8 +120,14 @@ export default class Experience {
     }
 
     toggleVisibilityMode() {
+        const toggledIsVisibility = !this.world.isVisibility
         this.world.city.toggleMaterial()
         this.world.lights.toggleDirectionalLight()
+
+        const clearColor = toggledIsVisibility? `rgb(${OBJECT_TO_COLOR['sky']})` : REAL_WORLD_OBJECT_TO_COLOR['sky']
+        this.renderer.updateClearColor(clearColor)
+
+        this.world.isVisibility = toggledIsVisibility
     }
 
     resize() {
@@ -138,25 +144,4 @@ export default class Experience {
 
         this.statsMonitor.instance.end()
     }
-    setupPost() {
-
-        // Setup post processing stage
-        this.camera.postCamera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 )
-        const postMaterial = new THREE.ShaderMaterial( {
-            vertexShader: document.querySelector( '#post-vert' ).textContent.trim(),
-            fragmentShader: document.querySelector( '#post-frag' ).textContent.trim(),
-            uniforms: {
-                cameraNear: { value: this.camera.instance.near },
-                cameraFar: { value: this.camera.instance.far },
-                tDiffuse: { value: null },
-                tDepth: { value: null }
-            }
-        } )
-        const postPlane = new THREE.PlaneGeometry( 2, 2 )
-        const postQuad = new THREE.Mesh( postPlane, postMaterial )
-        const postScene = new THREE.Scene()
-        postScene.add( postQuad )
-
-    }
-    
 }

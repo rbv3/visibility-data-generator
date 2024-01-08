@@ -17,6 +17,9 @@ export default class City {
         this.gui = this.experience.gui
         this.isVisibility = visibility
         this.meshesToUpdateMaterial = []
+
+        this.depthMaterial = this.setCustomMeshDepthMaterial()
+
         // visibility test
         this.defaultMaterial = this.createCustomMaterial('#8ba4c7')
         // buildings
@@ -66,7 +69,7 @@ export default class City {
                         console.log(terrainMap)
                         console.log(buildingMap)
                     }
-                    this.setDepthMaterial()
+                    // this.setDepthMaterial()
                 },
                 () => {}, // progress callback
                 (err) => console.log(err)
@@ -208,11 +211,47 @@ export default class City {
             child.children.forEach(c => this.recursiveSetMaterial(c, material, childUserData))
         }
     }
+    setCustomMeshDepthMaterial() {
+        const material = new THREE.MeshDepthMaterial()
+        const customUniforms = {
+            uCameraNear: { value: this.experience.camera.instance.near },
+            uCameraFar: { value: this.experience.camera.instance.far }
+        }
+        material.onBeforeCompile = (shader) => {
+            shader.uniforms.uCameraNear = customUniforms.uCameraNear
+            shader.uniforms.uCameraFar = customUniforms.uCameraFar
+
+            shader.fragmentShader = shader.fragmentShader
+                .replace(
+                    '#include <common>',
+                    `
+                        uniform float uCameraNear;
+                        uniform float uCameraFar;
+                    `
+                )
+                .replace(
+                    'float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;',
+                    `
+                        float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
+                        float viewZ = perspectiveDepthToViewZ(fragCoordZ, uCameraNear, uCameraFar);
+                        float depth = viewZToOrthographicDepth(viewZ, uCameraNear, uCameraFar);
+                    `,
+                )
+                .replace(
+                    'gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );',
+                    'gl_FragColor = vec4( vec3( depth ), opacity );'
+                ).replace(
+                    'gl_FragColor = packDepthToRGBA( fragCoordZ )',
+                    'gl_FragColor = packDepthToRGBA( 1.0 - depth );'
+                )
+        }
+        return material
+    }
     setDepthMaterial() {
         console.log(this.meshesToUpdateMaterial)
-        // this.meshesToUpdateMaterial.forEach(mesh => {
-        //     mesh.material = new THREE.MeshDepthMaterial()
-        // })
+        this.meshesToUpdateMaterial.forEach(mesh => {
+            mesh.material = this.depthMaterial
+        })
     }
     hydrateMap(key, map) {
         if(key in map) {

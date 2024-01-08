@@ -13,7 +13,6 @@ export default class Camera {
         this.scene = this.experience.scene
         this.canvas = this.experience.canvas
 
-        this.postCamera
 
         this.quaternionIndex = 0
 
@@ -26,7 +25,7 @@ export default class Camera {
         this.instance = new THREE.PerspectiveCamera(
             35,
             this.sizes.width/this.sizes.height,
-            0.1,
+            1,
             2500
         )
         // this.instance.position.set(1300, 100, 1500)

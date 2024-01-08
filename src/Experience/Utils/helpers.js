@@ -16,3 +16,15 @@ export const roundColor = (color) => {
     }
     return roundedColor
 }
+
+export const isGreyColor = (color) => {
+    return color[0] == color[1] && color[0] == color[2]
+}
+
+export const hydrateMap = (key, map) => {
+    if(key in map) {
+        map[key]++
+    } else {
+        map[key] = 1
+    }
+}

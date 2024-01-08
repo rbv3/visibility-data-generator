@@ -8,10 +8,9 @@ export default class World {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.loaders = new Loaders()
-        this.isVisibility = false
 
-        this.lights = new Lights(this.isVisibility)
-        this.city = new City(this.isVisibility)
+        this.lights = new Lights()
+        this.city = new City()
         this.buildingsMeshes = this.city.buildingsMeshes
 
         this.city.loadModels()

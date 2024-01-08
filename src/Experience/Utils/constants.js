@@ -50,6 +50,9 @@ export const REAL_WORLD_OBJECT_TO_COLOR = {
     'tree':'#2f663c',
     'sky':'#bce0df',
 }
+// Depth Color
+export const DEPTH_SKY = '255, 0, 0'
+
 // Camera Grid
 export const INITIAL_FLOOR_BUILDING_POSITION = new THREE.Vector3(310, 45, 268)
 export const ENDING_FLOOR_BUILDING_POSITION = new THREE.Vector3(348, 45, 204)
@@ -84,3 +87,10 @@ export const CAMERA_QUATERNIONS = [
         0.5104375965983629
     ),
 ]
+
+// view modes
+export const VIEW_MODES = {
+    depth: 'depth',
+    visibility: 'visibility',
+    realWorld: 'realWorld'
+}

@@ -4044,7 +4044,6 @@ class ColladaLoader extends Loader {
         }
 
         function getMetadataMap(metadata) {
-            console.log(metadata)
             const map = {}
 
             metadata.forEach(md => {

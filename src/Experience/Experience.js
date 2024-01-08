@@ -130,6 +130,7 @@ export default class Experience {
         console.log('COLOR DEPTH MODE')
         const colorMap = {}
         let totalGreyPixel = 0
+        let sumGreyColor = 0
         for(let i = 0; i < readPixelBuffer.length; i += 4) {
             let color = [
                 readPixelBuffer[i],
@@ -138,6 +139,7 @@ export default class Experience {
             ]
             if(isGreyColor(color)) {
                 increaseMapFrequency(color, colorMap)
+                sumGreyColor += color[0]
                 totalGreyPixel += 1
             }
         }
@@ -145,9 +147,9 @@ export default class Experience {
         console.log(this.camera.instance.position)
         console.log(this.camera.instance.quaternion)
         console.log('Visibility of canvas:')
-        for(const color in colorMap) {
-            console.log(`${color}: ${colorMap[color] * 100 / totalGreyPixel}% | ${colorMap[color]} pixels`)
-        }
+        const averageGreyColor = sumGreyColor / totalGreyPixel
+        console.log(`Average grey color: ${averageGreyColor}, ${averageGreyColor}, ${averageGreyColor}`)
+        console.log(`Avg visibility depth is ${averageGreyColor*100/255}%`)
     }
 
     enableDepthMode() {

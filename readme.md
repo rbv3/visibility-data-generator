@@ -1,4 +1,4 @@
-# Rama: A study about vision occlusion on urban virtual environments
+# visibility-data-generator
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).

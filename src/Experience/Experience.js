@@ -10,6 +10,7 @@ import CharacterControls from './CharacterControls.js'
 import Loaders from './Utils/Loaders.js'
 import StatsMonitor from './Utils/StatsMonitor.js'
 import { COLOR_TO_OBJECT, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR } from './Utils/constants.js'
+import { increaseMapFrequency, roundColor } from './Utils/helpers.js'
 
 let instance = null
 
@@ -77,14 +78,14 @@ export default class Experience {
                 readPixelBuffer[i + 1],
                 readPixelBuffer[i + 2]
             ]
-            color = this.roundColor(color)
+            color = roundColor(color)
 
             if(!(color in COLOR_TO_OBJECT)) {
-                this.increaseMapFrequency('miscelaneous', colorMap)
+                increaseMapFrequency('miscelaneous', colorMap)
 
                 continue
             }
-            this.increaseMapFrequency(color, colorMap)
+            increaseMapFrequency(color, colorMap)
         }
         const totalPixels = readPixelBuffer.length / 4
         console.log('Camera position and quaternion:')
@@ -99,24 +100,6 @@ export default class Experience {
 
             }
         }
-    }
-    increaseMapFrequency(key, map) {
-        if(key in map) {
-            map[key] += 1
-        } else {
-            map[key] = 1
-        }
-    }
-    roundColor(color) {
-        let roundedColor = [0, 0, 0]
-        for(let i=0; i<color.length; i++) {
-            if(color[i] > 100) {
-                roundedColor[i] = 255
-            } else {
-                roundedColor[i] = 0
-            }
-        }
-        return roundedColor
     }
 
     toggleVisibilityMode() {

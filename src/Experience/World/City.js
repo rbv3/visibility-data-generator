@@ -124,6 +124,7 @@ export default class City {
 
         const boundingBoxGroupName = 'geopipeinodeHx9pKZTR'
         if(child.name == boundingBoxGroupName) {
+            console.log(child)
             let boundingBox = new THREE.Box3().setFromObject(child, true)
             const helper = new THREE.Box3Helper( boundingBox, 0xffff00 )
             helper.updateMatrixWorld(true)

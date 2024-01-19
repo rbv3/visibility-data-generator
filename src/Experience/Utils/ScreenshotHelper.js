@@ -1,6 +1,6 @@
 import { getDistance } from './helpers'
 
-const MIN_DISTANCE = 10
+const MIN_DISTANCE = 25
 
 export default class ScreenshotHelper {
     constructor() {

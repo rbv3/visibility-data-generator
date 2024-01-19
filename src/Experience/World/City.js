@@ -41,17 +41,6 @@ export default class City {
                         this.pointsOfInterest = float32Flatten(this.positionsOfInterest)
                         this.pointToAvoid = float32Flatten(this.positionsToAvoid)
                         this.screenshotHelper.getValidPoints(this.pointsOfInterest, this.pointToAvoid)
-                        // let arr = []
-                        // for(let i = 0; i < 1000; i++ ) {
-                        //     arr.push(i)
-                        // }
-                        // const sum = this.screenshotHelper.getPosition(
-                        //     this.pointsOfInterest,
-                        //     this.pointsOfInterest.length,
-                        //     this.pointToAvoid,
-                        //     this.pointToAvoid.length
-                        // )
-                        // console.log(sum)
                     }
                 },
                 () => {}, // progress callback
@@ -206,7 +195,7 @@ export default class City {
         const position = child.geometry.attributes.position.array
         if(isBuilding) {
             this.positionsToAvoid.push(position)
-        } else if(entityType) {
+        } else if(entityType == 'tree') {
             this.positionsToAvoid.push(position)
         } else if(terrain) {
             this.positionsOfInterest.push(position)

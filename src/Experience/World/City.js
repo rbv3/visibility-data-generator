@@ -2,7 +2,8 @@ import * as THREE from 'three'
 import Experience from '../Experience'
 import { collada_models } from './models.js'
 import MaterialHelper from '../Utils/MaterialHelper.js'
-import { hydrateMap } from '../Utils/helpers.js'
+import { float32Flatten, hydrateMap } from '../Utils/helpers.js'
+import ScreenshotHelper from '../Utils/ScreenshotHelper.js'
 
 const map = {}
 const terrainMap = {}
@@ -12,6 +13,7 @@ export default class City {
     constructor() {
         this.materialHelper = new MaterialHelper()
         this.experience = new Experience()
+        this.screenshotHelper = new ScreenshotHelper()
         this.characterControls = this.experience.characterControls
         this.loaders = this.experience.loaders
         this.scene = this.experience.scene
@@ -19,6 +21,8 @@ export default class City {
         this.gui = this.experience.gui
 
         this.meshesToUpdateMaterial = []
+        this.positionsOfInterest = []
+        this.positionsToAvoid = []
     }
     loadModels() {
         const toLoad = collada_models.length
@@ -34,6 +38,20 @@ export default class City {
                         console.log(map)
                         console.log(terrainMap)
                         console.log(buildingMap)
+                        this.pointsOfInterest = float32Flatten(this.positionsOfInterest)
+                        this.pointToAvoid = float32Flatten(this.positionsToAvoid)
+                        this.screenshotHelper.getValidPoints(this.pointsOfInterest, this.pointToAvoid)
+                        // let arr = []
+                        // for(let i = 0; i < 1000; i++ ) {
+                        //     arr.push(i)
+                        // }
+                        // const sum = this.screenshotHelper.getPosition(
+                        //     this.pointsOfInterest,
+                        //     this.pointsOfInterest.length,
+                        //     this.pointToAvoid,
+                        //     this.pointToAvoid.length
+                        // )
+                        // console.log(sum)
                     }
                 },
                 () => {}, // progress callback
@@ -171,12 +189,27 @@ export default class City {
         const childUserData = child.userData
 
         if(child.isMesh) {
+            this.createArrayOfPoints(child)
             this.meshesToUpdateMaterial.push(child)
             child.material = material
             return
         }
         if(child.children.length > 0) {
             child.children.forEach(c => this.recursiveSetMaterial(c, material, childUserData))
+        }
+    }
+    createArrayOfPoints(child) {
+        const terrain = child.userData.terrain
+        const entityType = child.userData['entity:type']
+        const isBuilding = !terrain && !entityType
+
+        const position = child.geometry.attributes.position.array
+        if(isBuilding) {
+            this.positionsToAvoid.push(position)
+        } else if(entityType) {
+            this.positionsToAvoid.push(position)
+        } else if(terrain) {
+            this.positionsOfInterest.push(position)
         }
     }
 }

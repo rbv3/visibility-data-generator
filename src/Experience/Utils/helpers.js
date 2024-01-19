@@ -28,3 +28,26 @@ export const hydrateMap = (key, map) => {
         map[key] = 1
     }
 }
+
+export const float32Flatten = (chunks) => {
+    const result = []
+    chunks.forEach((chunk)=> {
+        for(let i = 0; i < chunk.length; i += 3) {
+            result.push([
+                chunk[i],
+                chunk[i+1],
+                chunk[i+2]
+            ])
+        }
+    })
+
+    return result
+}
+
+export const getDistance = (pointA, pointB) => {
+    const deltaX = pointA[0] - pointB[0]
+    const deltaY = pointA[1] - pointB[1]
+    const deltaZ = pointA[2] - pointB[2]
+
+    return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2))
+}

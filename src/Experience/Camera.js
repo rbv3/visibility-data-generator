@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import Experience from './Experience.js'
 import { CustomPointerLockControls } from './CustomPointerLockControls.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { CAMERA_QUATERNIONS, ENDING_FLOOR_BUILDING_POSITION } from './Utils/constants.js'
+import { CAMERA_QUATERNIONS } from './Utils/constants.js'
 
 
 export default class Camera {

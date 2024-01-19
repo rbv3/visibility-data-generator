@@ -29,7 +29,8 @@ export default class Camera {
             2500
         )
         this.instance.position.set(1500, 100, 1650)
-        // this.instance.position.set(...ENDING_FLOOR_BUILDING_POSITION)
+        // this.instance.position.set(337.87109375, -11.231389999389648,  -59.07550048828125)
+        
 
         this.instance.quaternion.set(0, 0.2, 0, 1)
         this.instance.quaternion.set(...CAMERA_QUATERNIONS[this.quaternionIndex])

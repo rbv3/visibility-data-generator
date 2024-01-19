@@ -4,7 +4,7 @@ import { getDistance } from './helpers'
 import { screenshotPositions } from './screenshotPositions'
 import Experience from '../Experience'
 
-const MIN_DISTANCE = 20
+const MIN_DISTANCE = 10
 
 export default class ScreenshotHelper {
     constructor() {
@@ -38,7 +38,7 @@ export default class ScreenshotHelper {
         }
         console.log(this.screenShotPositions)
     }
-    createParticleOnPosition() {
+    createParticleOnPosition(screenshotPositions) {
         const geometry = new THREE.BufferGeometry()
         const positions = new Float32Array(screenshotPositions.length * 3)
 

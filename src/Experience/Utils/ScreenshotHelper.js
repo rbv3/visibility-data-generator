@@ -25,6 +25,7 @@ export default class ScreenshotHelper {
             }
             if(i%500 == 0) {
                 console.log(`${i*100/pointsOfInterest.length}% | ${isValid} | ${i}`)
+                console.log(this.screenShotPositions.length)
             }
 
         }

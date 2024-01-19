@@ -4,7 +4,7 @@ import { getDistance } from './helpers'
 import { screenshotPositions } from './screenshotPositions'
 import Experience from '../Experience'
 
-const MIN_DISTANCE = 10
+const MIN_DISTANCE = 15
 
 export default class ScreenshotHelper {
     constructor() {

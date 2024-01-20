@@ -1,10 +1,9 @@
 import * as THREE from 'three'
 
 import { getDistance } from './helpers'
-import { screenshotPositions } from './screenshotPositions'
 import Experience from '../Experience'
 
-const MIN_DISTANCE = 15
+const MIN_DISTANCE = 10
 
 export default class ScreenshotHelper {
     constructor() {
@@ -46,7 +45,7 @@ export default class ScreenshotHelper {
             const i3 = i*3
             positions[i3] = screenshotPositions[i][0]
             positions[i3+1] = screenshotPositions[i][1]
-            positions[i3+2] = screenshotPositions[i][2] + 50
+            positions[i3+2] = screenshotPositions[i][2]
         }
 
         geometry.setAttribute(
@@ -63,7 +62,7 @@ export default class ScreenshotHelper {
         // points
         const points = new THREE.Points(geometry, material)
         console.log(points)
-        points.rotation.set(-1.5707963267948966, 0, 0)
+        // points.rotation.set(-1.5707963267948966, 0, 0)
 
         this.scene.add(points)
     }

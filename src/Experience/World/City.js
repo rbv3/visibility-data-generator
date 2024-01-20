@@ -4,6 +4,8 @@ import { collada_models } from './models.js'
 import MaterialHelper from '../Utils/MaterialHelper.js'
 import { float32Flatten, hydrateMap } from '../Utils/helpers.js'
 import ScreenshotHelper from '../Utils/ScreenshotHelper.js'
+import { sc1, sc2 } from '../Utils/screenshotPositions.js'
+import { fullArr } from '../Utils/fullArr.js'
 
 const map = {}
 const terrainMap = {}
@@ -38,11 +40,13 @@ export default class City {
                         console.log(map)
                         console.log(terrainMap)
                         console.log(buildingMap)
-                        this.pointsOfInterest = float32Flatten(this.positionsOfInterest)
-                        this.pointToAvoid = float32Flatten(this.positionsToAvoid)
-                        console.log(this.pointsOfInterest.length, this.pointToAvoid.length)
-                        this.screenshotHelper.getValidPoints(this.pointsOfInterest, this.pointToAvoid)
-                        // this.screenshotHelper.createParticleOnPosition()
+                        // this.pointsOfInterest = float32Flatten(this.positionsOfInterest)
+                        // this.pointToAvoid = float32Flatten(this.positionsToAvoid)
+                        // console.log(this.pointsOfInterest.length, this.pointToAvoid.length)
+                        // this.screenshotHelper.getValidPoints(this.pointsOfInterest, this.pointToAvoid)
+                        let b = [...new Set(fullArr.map(JSON.stringify))].map(JSON.parse)
+                        // console.log(b.length)
+                        this.screenshotHelper.createParticleOnPosition(b)
                     }
                 },
                 () => {}, // progress callback
@@ -193,12 +197,21 @@ export default class City {
         const terrain = child.userData.terrain
         const entityType = child.userData['entity:type']
         const isBuilding = !terrain && !entityType
-
-        const position = child.geometry.attributes.position.array
+        const geometry = child.geometry
+        const position = geometry.getAttribute( 'position' )
+        const vertexArr = []
+        for(let i = 0; i < position.array.length; i += 3) {
+            let index = i / 3
+            //convert from local to world position
+            const vertex = new THREE.Vector3()
+            vertex.fromBufferAttribute( position, index )
+            child.localToWorld( vertex )
+            vertexArr.push(...vertex)
+        }
         if(isBuilding) {
-            this.positionsToAvoid.push(position)
+            this.positionsToAvoid.push(vertexArr)
         } else if(terrain) {
-            this.positionsOfInterest.push(position)
+            this.positionsOfInterest.push(vertexArr)
         }
     }
 }

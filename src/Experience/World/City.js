@@ -4,8 +4,7 @@ import { collada_models } from './models.js'
 import MaterialHelper from '../Utils/MaterialHelper.js'
 import { float32Flatten, hydrateMap } from '../Utils/helpers.js'
 import ScreenshotHelper from '../Utils/ScreenshotHelper.js'
-import { sc1, sc2 } from '../Utils/screenshotPositions.js'
-import { fullArr } from '../Utils/fullArr.js'
+import { sc1, sc2, sc3 } from '../Utils/screenshotPositions.js'
 
 const map = {}
 const terrainMap = {}
@@ -44,9 +43,10 @@ export default class City {
                         // this.pointToAvoid = float32Flatten(this.positionsToAvoid)
                         // console.log(this.pointsOfInterest.length, this.pointToAvoid.length)
                         // this.screenshotHelper.getValidPoints(this.pointsOfInterest, this.pointToAvoid)
-                        let b = [...new Set(fullArr.map(JSON.stringify))].map(JSON.parse)
-                        // console.log(b.length)
-                        this.screenshotHelper.createParticleOnPosition(b)
+                        // console.log(fullArr.length)
+                        // let b = [...new Set(fullArr.map(JSON.stringify))].map(JSON.parse)
+                        // console.log(b)
+                        this.screenshotHelper.createParticleOnPosition(sc3)
                     }
                 },
                 () => {}, // progress callback

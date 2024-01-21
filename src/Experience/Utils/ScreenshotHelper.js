@@ -4,12 +4,14 @@ import { getDistance } from './helpers'
 import Experience from '../Experience'
 
 const MIN_DISTANCE = 10
+const MIN_FILTER_DISTANCE = 30
 
 export default class ScreenshotHelper {
     constructor() {
         this.screenShotPositions = []
         this.experience = new Experience()
         this.scene = this.experience.scene
+        this.camera = this.experience.camera
     }
     isValidPoint(pointsToAvoid, point) {
         for(let j = 0; j < pointsToAvoid.length; j++) {
@@ -65,5 +67,25 @@ export default class ScreenshotHelper {
         // points.rotation.set(-1.5707963267948966, 0, 0)
 
         this.scene.add(points)
+    }
+    validateFilterScreenshotPositions(point, filteredPositions) {
+        for(let j = 0; j < filteredPositions.length; j++) {
+            // horizontal distance
+            const currDistance = getDistance(point, filteredPositions[j])
+            if(currDistance < MIN_FILTER_DISTANCE) {
+                return false
+            }
+        }
+        return true
+    }
+    filterScreenshotPositions(scPositions) {
+        const filteredPositions = []
+        filteredPositions.push(scPositions[0])
+        for(let i = 1; i < scPositions.length; i++) {
+            if(this.validateFilterScreenshotPositions(scPositions[i], filteredPositions)) {
+                filteredPositions.push(scPositions[i])
+            }
+        }
+        return filteredPositions
     }
 }

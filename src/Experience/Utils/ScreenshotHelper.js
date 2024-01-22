@@ -95,7 +95,7 @@ export default class ScreenshotHelper {
     }
     generateImageOfMode(scPositions, mode) {
         const start = performance.now()
-        for(let i = 0; i < 1; i++) {
+        for(let i = 0; i < scPositions.length; i++) {
             const cameraPosOff20 = [...scPositions[i]]
             cameraPosOff20[1] += 20
             const cameraPosOff70 = [...scPositions[i]]

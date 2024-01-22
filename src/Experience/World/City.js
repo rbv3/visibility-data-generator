@@ -93,6 +93,7 @@ export default class City {
             break
         case 'street_light':
         case 'subway_entrance':
+        case 'waste_receptacle':
             hydrateMap(key, map)
             this.recursiveSetMaterial(
                 child,
@@ -104,7 +105,6 @@ export default class City {
         case 'bus_stop':
         case 'collection_box':
         case 'hydrant':
-        case 'waste_receptacle':
         case 'street_sign_sign':
         default:
             // to enhance performance we're removing any child

@@ -150,21 +150,6 @@ export default class City {
         const key = child.userData.building
         hydrateMap(key, buildingMap)
 
-        const boundingBoxGroupName = 'geopipeinodeHx9pKZTR'
-        if(child.name == boundingBoxGroupName) {
-            console.log(child)
-            let boundingBox = new THREE.Box3().setFromObject(child, true)
-            const helper = new THREE.Box3Helper( boundingBox, 0xffff00 )
-            helper.updateMatrixWorld(true)
-            child.add( helper )
-
-            this.recursiveSetMaterial(
-                child,
-                materialMap['default'],
-                child.userData
-            )
-            return
-        }
         this.recursiveSetMaterial(
             child,
             materialMap['building'],

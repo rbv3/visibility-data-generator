@@ -2,6 +2,7 @@ import * as THREE from 'three'
 
 import { getDistance } from './helpers'
 import Experience from '../Experience'
+import { CAMERA_LOOKAT } from './constants'
 
 const MIN_DISTANCE = 10
 const MIN_FILTER_DISTANCE = 30
@@ -12,6 +13,7 @@ export default class ScreenshotHelper {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.camera = this.experience.camera
+        this.renderer = this.experience.renderer
     }
     isValidPoint(pointsToAvoid, point) {
         for(let j = 0; j < pointsToAvoid.length; j++) {
@@ -87,5 +89,33 @@ export default class ScreenshotHelper {
             }
         }
         return filteredPositions
+    }
+    generateImages(scPositions) {
+        this.generateImageOfMode(scPositions, this.experience.currentMode)
+    }
+    generateImageOfMode(scPositions, mode) {
+        const start = performance.now()
+        for(let i = 0; i < 1; i++) {
+            const cameraPosOff20 = [...scPositions[i]]
+            cameraPosOff20[1] += 20
+            const cameraPosOff70 = [...scPositions[i]]
+            cameraPosOff70[1] += 70
+            for(let j = 0; j < CAMERA_LOOKAT.length; j++) {
+                const imageName = `pos${i}${j}-${mode}`
+                // offset height by 20
+                this.camera.instance.position.set(...cameraPosOff20)
+                this.camera.instance.lookAt(CAMERA_LOOKAT[j])
+                this.experience.update() // force update b4 screenshot
+                this.renderer.createImage(`${imageName}-20`)
+    
+                // offset height by 70
+                this.camera.instance.position.set(...cameraPosOff70)
+                this.camera.instance.lookAt(CAMERA_LOOKAT[j])
+                this.experience.update() // force update b4 screenshot
+                this.renderer.createImage(`${imageName}-70`)
+            }
+        }
+        const end = performance.now()
+        console.log(`Execution time: ${end - start} ms`)
     }
 }

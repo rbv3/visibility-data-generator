@@ -29,6 +29,8 @@ export default class Camera {
             2500
         )
         this.instance.position.set(1500, 100, 1650)
+        this.instance.lookAt(733, 55, 714) // random point on the lake
+
         // this.instance.position.set(337.87109375, -11.231389999389648,  -59.07550048828125)
         
 
@@ -52,6 +54,10 @@ export default class Camera {
         this.gui.instance.add({updateQuaternion : () => {
             this.updateQuaternion()
         }}, 'updateQuaternion')
+
+        this.gui.instance.add({getCameraPosition : () => {
+            console.log(this.instance.position)
+        }}, 'getCameraPosition')
     }
     updateQuaternion() {
         this.quaternionIndex += 1

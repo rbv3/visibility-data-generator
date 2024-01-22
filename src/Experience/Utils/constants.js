@@ -57,6 +57,40 @@ export const DEPTH_SKY = '255, 0, 0'
 export const INITIAL_FLOOR_BUILDING_POSITION = new THREE.Vector3(310, 45, 268)
 export const ENDING_FLOOR_BUILDING_POSITION = new THREE.Vector3(348, 45, 204)
 
+export const CAMERA_LOOKAT = [
+    new THREE.Vector3(
+        500,
+        268,
+        1378
+    ),
+    new THREE.Vector3(
+        500,
+        50,
+        1378
+    ),
+    new THREE.Vector3(
+        733,
+        55,
+        714
+    ),
+    new THREE.Vector3(
+        733,
+        200,
+        714
+    ),
+    new THREE.Vector3(
+        172,
+        150,
+        387
+    ),
+    new THREE.Vector3(
+        172,
+        50,
+        387
+    )
+        
+]
+
 export const CAMERA_QUATERNIONS = [
     // front
     new THREE.Vector4(

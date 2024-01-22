@@ -29,6 +29,7 @@ export default class City {
     loadModels() {
         const toLoad = collada_models.length
         let loaded = 0
+        this.experience.characterControls.isPaused = true
         for(const model of collada_models) {
             this.loaders.colladaLoader.load(
                 model.path,
@@ -37,6 +38,8 @@ export default class City {
                     this.auxRecursiveIterator(gltf.scene, gltf.metadataMap)
                     loaded++
                     if(loaded == toLoad) {
+                        this.experience.characterControls.isPaused = false
+
                         console.log(map)
                         console.log(terrainMap)
                         console.log(buildingMap)

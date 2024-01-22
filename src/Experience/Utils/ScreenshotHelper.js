@@ -101,7 +101,7 @@ export default class ScreenshotHelper {
             const cameraPosOff70 = [...scPositions[i]]
             cameraPosOff70[1] += 70
             for(let j = 0; j < CAMERA_LOOKAT.length; j++) {
-                const imageName = `pos${i}${j}-${mode}`
+                const imageName = `pos${i}-${j}-${mode}`
                 // offset height by 20
                 this.camera.instance.position.set(...cameraPosOff20)
                 this.camera.instance.lookAt(CAMERA_LOOKAT[j])

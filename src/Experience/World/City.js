@@ -9,6 +9,7 @@ import { sc1 } from '../Utils/screenshotPositions.js'
 const map = {}
 const terrainMap = {}
 const buildingMap = {}
+let removedMeshes = 0
 
 export default class City {
     constructor() {
@@ -32,23 +33,31 @@ export default class City {
             this.loaders.colladaLoader.load(
                 model.path,
                 (gltf) => {
-                    this.auxRecursiveIterator(gltf.scene, gltf.metadataMap)
                     this.scene.add(gltf.scene)
+                    this.auxRecursiveIterator(gltf.scene, gltf.metadataMap)
                     loaded++
                     if(loaded == toLoad) {
                         console.log(map)
                         console.log(terrainMap)
                         console.log(buildingMap)
+                        console.log({removedMeshes})
+                        // Create points of interest and to avoid
                         // this.pointsOfInterest = float32Flatten(this.positionsOfInterest)
                         // this.pointToAvoid = float32Flatten(this.positionsToAvoid)
                         // console.log(this.pointsOfInterest.length, this.pointToAvoid.length)
+
+                        // Get valid points for screenshot
                         // this.screenshotHelper.getValidPoints(this.pointsOfInterest, this.pointToAvoid)
                         // console.log(fullArr.length)
-                        // let b = [...new Set(fullArr.map(JSON.stringify))].map(JSON.parse)
+                        // let sc1 = [...new Set(fullArr.map(JSON.stringify))].map(JSON.parse)
+
+                        // Filter points that are too close from each other
                         console.log(sc1.length)
-                        const filteredScreenshotPositions = this.screenshotHelper.filterScreenshotPositions(sc1)
-                        console.log(filteredScreenshotPositions.length)
-                        this.screenshotHelper.createParticleOnPosition(filteredScreenshotPositions)
+                        this.filteredScreenshotPositions = this.screenshotHelper.filterScreenshotPositions(sc1)
+                        console.log(this.filteredScreenshotPositions.length)
+
+                        // for debugging purposes show screenshot positions on screen
+                        // this.screenshotHelper.createParticleOnPosition(this.filteredScreenshotPositions)
                     }
                 },
                 () => {}, // progress callback
@@ -59,7 +68,6 @@ export default class City {
     setMaterialByMode(mode) {
         this.setMaterial(this.materialHelper.materialMap[mode])
     }
-
     setMaterial(materialMap) {
         this.meshesToUpdateMaterial.forEach(child => {
             if(child.userData.type === 'entity') {
@@ -73,10 +81,10 @@ export default class City {
     }
     setMaterialEntityChild(child, materialMap) {
         const key = child.userData['entity:type']
-        hydrateMap(key, map)
         
         switch(key) {
         case 'tree':
+            hydrateMap(key, map)
             this.recursiveSetMaterial(
                 child,
                 materialMap['tree'],
@@ -85,17 +93,22 @@ export default class City {
             break
         case 'street_light':
         case 'subway_entrance':
+            hydrateMap(key, map)
+            this.recursiveSetMaterial(
+                child,
+                materialMap['default'],
+                child.userData
+            )
+            break
         case 'bus_shelter':
         case 'bus_stop':
         case 'collection_box':
         case 'hydrant':
         case 'waste_receptacle':
         case 'street_sign_sign':
-            this.recursiveSetMaterial(
-                child,
-                materialMap['default'],
-                child.userData
-            )
+        default:
+            // to enhance performance we're removing any child
+            this.recursiveRemoveChild(child)
             break
         }
     }
@@ -193,6 +206,40 @@ export default class City {
         }
         if(child.children.length > 0) {
             child.children.forEach(c => this.recursiveSetMaterial(c, material, childUserData))
+        }
+    }
+    recursiveRemoveChild(child) {
+        if(child.isMesh && child instanceof THREE.Object3D) {
+            // for better memory management and performance
+            if (child.geometry) {
+                child.geometry.dispose()
+            }
+
+            if (child.material) {
+                Object.keys(child.material).forEach(prop => {
+                    if(!child.material[prop]) {
+                        return
+                    }
+                    if(child.material[prop] !== null && typeof child.material[prop].dispose === 'function') {
+                        child.material[prop].dispose()
+                    }
+                })
+                if (child.material instanceof Array) {
+                    // for better memory management and performance
+                    child.material.forEach(material => material.dispose())
+                } else {
+                    // for better memory management and performance
+                    child.material.dispose()
+                }
+            }
+            
+            child.removeFromParent()
+            removedMeshes++
+            
+            return
+        }
+        if(child.children.length > 0) {
+            child.children.forEach(c => this.recursiveRemoveChild(c))
         }
     }
     createArrayOfPoints(child) {

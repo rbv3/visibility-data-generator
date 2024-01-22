@@ -11,6 +11,7 @@ import Loaders from './Utils/Loaders.js'
 import StatsMonitor from './Utils/StatsMonitor.js'
 import { COLOR_TO_OBJECT, DEPTH_SKY, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR, VIEW_MODES } from './Utils/constants.js'
 import { increaseMapFrequency, isGreyColor, roundColor } from './Utils/helpers.js'
+import ScreenshotHelper from './Utils/ScreenshotHelper.js'
 
 let instance = null
 
@@ -43,6 +44,7 @@ export default class Experience {
         this.world = new World()
         this.buildingsMeshes = this.world.buildingsMeshes
         this.raycaster = new RayCaster()
+        this.screenshotHelper = new ScreenshotHelper()
 
         this.currentMode = VIEW_MODES['realWorld']
 
@@ -74,6 +76,13 @@ export default class Experience {
             countColorOfPixels : () => {
                 this.countColorOfPixels()
             }}, 'countColorOfPixels')
+        
+        this.gui.instance.add({
+            generateImages: () => {
+                this.screenshotHelper.generateImages(
+                    this.world.city.filteredScreenshotPositions
+                )
+            }}, 'generateImages')
     }
     countColorOfPixels() {
         if(this.currentMode == VIEW_MODES['realWorld']) {
@@ -153,22 +162,37 @@ export default class Experience {
     }
 
     enableDepthMode() {
+        const start = performance.now()
+
         this.currentMode = VIEW_MODES['depth']
         this.world.city.setMaterialByMode(VIEW_MODES['depth'])
         this.world.lights.setDirectionalLight(false)
         this.renderer.updateClearColor(`rgb(${DEPTH_SKY})`)
+        const end = performance.now()
+        console.log(`Execution time: ${end - start} ms`)
+
     }
     enableVisibilityMode() {
+        const start = performance.now()
+
         this.currentMode = VIEW_MODES['visibility']
         this.world.city.setMaterialByMode(VIEW_MODES['visibility'])
         this.world.lights.setDirectionalLight(false)
         this.renderer.updateClearColor(`rgb(${OBJECT_TO_COLOR['sky']})`)
+        const end = performance.now()
+        console.log(`Execution time: ${end - start} ms`)
+
     }
     enableRealWorldMode() {
+        const start = performance.now()
+
         this.currentMode = VIEW_MODES['realWorld']
         this.world.city.setMaterialByMode(VIEW_MODES['realWorld'])
         this.world.lights.setDirectionalLight(true)
         this.renderer.updateClearColor(`${REAL_WORLD_OBJECT_TO_COLOR['sky']}`)
+        const end = performance.now()
+        console.log(`Execution time: ${end - start} ms`)
+
     }
 
     resize() {

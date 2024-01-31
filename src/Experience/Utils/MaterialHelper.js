@@ -16,7 +16,7 @@ export default class MaterialHelper {
     }
     setVisibilityMaterials() {
         return {
-            default: this.createCustomMaterial('#8ba4c7'),
+            default: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['miscelaneous']})`),
             // buildings
             building: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['building']})`),
             // surfaces

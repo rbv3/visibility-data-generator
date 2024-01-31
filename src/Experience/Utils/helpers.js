@@ -1,3 +1,5 @@
+import { OBJECT_TO_COLOR } from './constants'
+
 export const increaseMapFrequency = (key, map) => {
     if(key in map) {
         map[key] += 1
@@ -50,4 +52,42 @@ export const getDistance = (pointA, pointB) => {
     const deltaZ = pointA[2] - pointB[2]
 
     return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaZ, 2))
+}
+
+export const download_csv = (data, fileName) => {
+    var csvData = new Blob([data], {type: 'text/csv;charset=utf-8;'})
+    var csvURL =  null
+    if (navigator.msSaveBlob) {
+        csvURL = navigator.msSaveBlob(csvData, `${fileName}.csv`)
+    } else {
+        csvURL = window.URL.createObjectURL(csvData)
+    }
+
+    var tempLink = document.createElement('a')
+    tempLink.href = csvURL
+    tempLink.setAttribute('download', `${fileName}.csv`)
+    tempLink.click()
+}
+
+export const createCsvColor = (colorMap) => {
+    let csvColorLine = '['
+    console.log(colorMap)
+    csvColorLine += checkMapValue(colorMap, 'building')
+    csvColorLine += checkMapValue(colorMap, 'water')
+    csvColorLine += checkMapValue(colorMap, 'road')
+    csvColorLine += checkMapValue(colorMap, 'sidewalk')
+    csvColorLine += checkMapValue(colorMap, 'surface')
+    csvColorLine += checkMapValue(colorMap, 'tree')
+    csvColorLine += checkMapValue(colorMap, 'sky')
+    csvColorLine += checkMapValue(colorMap, 'miscelaneous')
+    csvColorLine = csvColorLine.slice(0, -1)
+    csvColorLine += ']'
+    return csvColorLine
+}
+const checkMapValue = (map, key) => {
+    if(OBJECT_TO_COLOR[key] in map) {
+        return `${map[OBJECT_TO_COLOR[key]]},`
+    }
+    return '0,'
+
 }

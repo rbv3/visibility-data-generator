@@ -1,8 +1,9 @@
 import * as THREE from 'three'
+import * as PAPA from 'papaparse'
 
-import { getDistance } from './helpers'
+import { download_csv, getDistance } from './helpers'
 import Experience from '../Experience'
-import { CAMERA_LOOKAT } from './constants'
+import { CAMERA_LOOKAT, VIEW_MODES } from './constants'
 
 const MIN_DISTANCE = 10
 const MIN_FILTER_DISTANCE = 30
@@ -90,11 +91,27 @@ export default class ScreenshotHelper {
         }
         return filteredPositions
     }
-    generateImages(scPositions) {
-        this.generateImageOfMode(scPositions, this.experience.currentMode)
+    generateImages(scPositions, shouldCreateImage) {
+        this.generateImageOfMode(scPositions, this.experience.currentMode, shouldCreateImage)
     }
-    generateImageOfMode(scPositions, mode) {
+    generateImageOfMode(scPositions, mode, shouldCreateImage) {
         const start = performance.now()
+        const csv = {
+            fields: [
+                'x',
+                'y',
+                'z',
+                'xh',
+                'yh',
+                'zh',
+                'f_xyz',
+                'image_name'
+            ],
+            data: []
+        }
+        // disable update to improve performance
+        this.experience.shouldUpdateOnTick = false
+        
         for(let i = 0; i < scPositions.length; i++) {
             const cameraPosOff20 = [...scPositions[i]]
             cameraPosOff20[1] += 20
@@ -106,16 +123,38 @@ export default class ScreenshotHelper {
                 this.camera.instance.position.set(...cameraPosOff20)
                 this.camera.instance.lookAt(CAMERA_LOOKAT[j])
                 this.experience.update() // force update b4 screenshot
-                this.renderer.createImage(`${imageName}-20`)
+
+                csv.data.push(this.createCsvLineForScene(`${imageName}-20`))
+                if(shouldCreateImage) {
+                    this.renderer.createImage(`${imageName}-20`)
+                }
     
                 // offset height by 70
                 this.camera.instance.position.set(...cameraPosOff70)
                 this.camera.instance.lookAt(CAMERA_LOOKAT[j])
                 this.experience.update() // force update b4 screenshot
-                this.renderer.createImage(`${imageName}-70`)
+
+                csv.data.push(this.createCsvLineForScene(`${imageName}-70`))
+                if(shouldCreateImage) {
+                    this.renderer.createImage(`${imageName}-70`)
+                }
             }
         }
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
+
+        const csvFile = PAPA.unparse(csv)
+        download_csv(csvFile, `${this.experience.currentMode}`)
+
+        this.experience.shouldUpdateOnTick = true
+    }
+    createCsvLineForScene(fileName) {
+        if(this.experience.currentMode == VIEW_MODES['visibility']){
+            const countColorCsv = this.experience.countColorOfPixels()
+            countColorCsv.push(fileName)
+            let csvLine = countColorCsv
+            return csvLine
+        }
+        return
     }
 }

@@ -30,6 +30,7 @@ export const OBJECT_TO_COLOR = {
     'surface': '255,0,255',
     'tree':'0,255,0',
     'sky':'0,0,0',
+    'miscelaneous': '255,255,255'
 }
 export const COLOR_TO_OBJECT = {
     '255,0,0': 'building',
@@ -39,6 +40,7 @@ export const COLOR_TO_OBJECT = {
     '255,0,255': 'surface',
     '0,255,0': 'tree',
     '0,0,0': 'sky',
+    '255,255,255': 'miscelaneous'
 }
 // Real world look like rendering
 export const REAL_WORLD_OBJECT_TO_COLOR = {

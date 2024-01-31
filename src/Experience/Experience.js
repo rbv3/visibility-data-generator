@@ -10,7 +10,7 @@ import CharacterControls from './CharacterControls.js'
 import Loaders from './Utils/Loaders.js'
 import StatsMonitor from './Utils/StatsMonitor.js'
 import { COLOR_TO_OBJECT, DEPTH_SKY, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR, VIEW_MODES } from './Utils/constants.js'
-import { increaseMapFrequency, isGreyColor, roundColor } from './Utils/helpers.js'
+import { createCsvColor, increaseMapFrequency, isGreyColor, roundColor } from './Utils/helpers.js'
 import ScreenshotHelper from './Utils/ScreenshotHelper.js'
 
 let instance = null
@@ -46,7 +46,9 @@ export default class Experience {
         this.raycaster = new RayCaster()
         this.screenshotHelper = new ScreenshotHelper()
 
-        this.currentMode = VIEW_MODES['realWorld']
+        this.currentMode = VIEW_MODES.realWorld
+
+        this.shouldUpdateOnTick = true
 
         // Events
         this.sizes.on('resize', () => {
@@ -54,7 +56,9 @@ export default class Experience {
         })
 
         this.time.on('tick', () => {
-            this.update()
+            if(this.shouldUpdateOnTick) {
+                this.update()
+            }
         })
 
         this.setGUI()
@@ -74,17 +78,26 @@ export default class Experience {
             }}, 'enableRealWorldMode')
         this.gui.instance.add({
             countColorOfPixels : () => {
-                this.countColorOfPixels()
+                this.countColorOfPixels(true)
             }}, 'countColorOfPixels')
         
         this.gui.instance.add({
-            generateImages: () => {
+            generateImagesAndCsv: () => {
                 this.screenshotHelper.generateImages(
-                    this.world.city.filteredScreenshotPositions
+                    this.world.city.filteredScreenshotPositions,
+                    true
                 )
-            }}, 'generateImages')
+            }}, 'generateImagesAndCsv')
+
+        this.gui.instance.add({
+            generateCsvOnly: () => {
+                this.screenshotHelper.generateImages(
+                    this.world.city.filteredScreenshotPositions,
+                    false
+                )
+            }}, 'generateCsvOnly')
     }
-    countColorOfPixels() {
+    countColorOfPixels(shouldLogResults = false) {
         if(this.currentMode == VIEW_MODES['realWorld']) {
             console.warn('This method should not be used on Real World Rendering')
             return
@@ -94,8 +107,7 @@ export default class Experience {
         gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, readPixelBuffer)
         
         if(this.currentMode == VIEW_MODES['visibility']) {
-            this.countColorVisiblityMode(readPixelBuffer)
-            return
+            return this.countColorVisiblityMode(readPixelBuffer, shouldLogResults)
         }
         if(this.currentMode == VIEW_MODES['depth']) {
             this.countColorDepthMode(readPixelBuffer)
@@ -104,7 +116,8 @@ export default class Experience {
 
         console.warn('unexpected view mode')
     }
-    countColorVisiblityMode(readPixelBuffer) {
+    countColorVisiblityMode(readPixelBuffer, shouldLogResults) {
+        let csvLine = []
         const colorMap = {}
         for(let i = 0; i < readPixelBuffer.length; i += 4) {
             let color = [
@@ -115,25 +128,39 @@ export default class Experience {
             color = roundColor(color)
 
             if(!(color in COLOR_TO_OBJECT)) {
-                increaseMapFrequency('miscelaneous', colorMap)
+                increaseMapFrequency('unknown', colorMap)
 
                 continue
             }
             increaseMapFrequency(color, colorMap)
         }
+        // console.log('Camera position and quaternion:')
+        // console.log(this.camera.instance.position)
+        
+        csvLine.push(`${this.camera.instance.position.x}`)
+        csvLine.push(`${this.camera.instance.position.y}`)
+        csvLine.push(`${this.camera.instance.position.z}`)
+        
+        // console.log(this.camera.instance.quaternion)
+        
+        csvLine.push(`${this.camera.instance.rotation.x * (180/Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.y * (180/Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.z * (180/Math.PI)}`)
+        
         const totalPixels = readPixelBuffer.length / 4
-        console.log('Camera position and quaternion:')
-        console.log(this.camera.instance.position)
-        console.log(this.camera.instance.quaternion)
-        console.log('Visibility of canvas:')
-        for(const color in colorMap) {
-            if(color in COLOR_TO_OBJECT) {
-                console.log(`${COLOR_TO_OBJECT[color]}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
-            } else {
-                console.log(`${color}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
-
+        if(shouldLogResults) {
+            console.log('Visibility of canvas:')
+            for(const color in colorMap) {
+                if(color in COLOR_TO_OBJECT) {
+                    console.log(`${COLOR_TO_OBJECT[color]}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+                } else {
+                    console.log(`${color}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+                }
             }
         }
+
+        csvLine.push(createCsvColor(colorMap))
+        return csvLine
     }
     countColorDepthMode(readPixelBuffer) {
         console.log('COLOR DEPTH MODE')

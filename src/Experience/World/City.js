@@ -25,6 +25,9 @@ export default class City {
         this.meshesToUpdateMaterial = []
         this.positionsOfInterest = []
         this.positionsToAvoid = []
+
+        this.buildingMeshes = []
+        this.previousHovered = undefined
     }
     loadModels() {
         const toLoad = collada_models.length
@@ -152,7 +155,7 @@ export default class City {
     setMaterialBuildingChild(child, materialMap) {
         const key = child.userData.building
         hydrateMap(key, buildingMap)
-
+        this.buildingMeshes.push(...child.children)
         this.recursiveSetMaterial(
             child,
             materialMap['building'],
@@ -249,6 +252,26 @@ export default class City {
             this.positionsToAvoid.push(vertexArr)
         } else if(terrain) {
             this.positionsOfInterest.push(vertexArr)
+        }
+    }
+    update() {
+        const currentHover = this.experience.raycaster.hoveredBuilding
+        console.log(currentHover)
+        if(currentHover && this.previousHovered?.name != currentHover.name) {
+            console.log('updating hover material')
+            currentHover.children.forEach(c => {
+                c.material = this.materialHelper.materialMap['realWorld'].hover
+            })
+            this.previousHovered?.children.forEach(c => {
+                c.material = this.materialHelper.materialMap['realWorld'].building
+            })
+            this.previousHovered = currentHover
+        }
+        if(!currentHover && this.previousHovered) {
+            this.previousHovered?.children.forEach(c => {
+                c.material = this.materialHelper.materialMap['realWorld'].building
+            })
+            this.previousHovered = currentHover
         }
     }
 }

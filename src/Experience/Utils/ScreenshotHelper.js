@@ -112,6 +112,8 @@ export default class ScreenshotHelper {
         // disable update to improve performance
         this.experience.shouldUpdateOnTick = false
         
+        console.log(scPositions.length)
+        
         for(let i = 0; i < scPositions.length; i++) {
             const cameraPosOff20 = [...scPositions[i]]
             cameraPosOff20[1] += 20

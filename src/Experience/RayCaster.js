@@ -8,8 +8,9 @@ export default class RayCaster {
         this.experience = new Experience()
         this.camera = this.experience.camera
         this.sizes = this.experience.sizes
-        this.buildingsMeshes = this.experience.buildingsMeshes
+        this.buildingMeshes = this.experience.buildingMeshes
         this.mouse = new THREE.Vector2()
+        this.hoveredBuilding = undefined
 
         window.addEventListener('mousemove', (_event) => {
             this.mouse.x = (_event.clientX / this.sizes.width) * 2 - 1
@@ -18,8 +19,7 @@ export default class RayCaster {
     }
     update() {
         this.instance.setFromCamera(this.mouse, this.camera.instance)
-        // const intersects = this.instance.intersectObjects(this.buildingsMeshes)
-        // console.log(intersects[0]);
-        // console.log(intersects[0]?.faceIndex);
+        const intersects = this.instance.intersectObjects(this.buildingMeshes)
+        this.hoveredBuilding = intersects[0]?.object?.parent
     }
 }

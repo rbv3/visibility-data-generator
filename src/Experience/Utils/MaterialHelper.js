@@ -55,6 +55,8 @@ export default class MaterialHelper {
             surface: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['surface']}`),
             // entities
             tree: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['tree']}`),
+            //hover
+            hover: this.createCustomMaterial('#66ff00'),
         }
     }
 

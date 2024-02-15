@@ -11,11 +11,14 @@ export default class World {
 
         this.lights = new Lights()
         this.city = new City()
-        this.buildingsMeshes = this.city.buildingsMeshes
+        this.buildingMeshes = this.city.buildingMeshes
 
         this.city.loadModels()
 
         this.scene.add(this.lights.directionalLight)
         this.scene.add(this.lights.ambientLight)
+    }
+    update() {
+        this.city.update()
     }
 }

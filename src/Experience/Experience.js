@@ -42,7 +42,7 @@ export default class Experience {
         this.renderer = new Renderer()
         this.loaders = new Loaders()
         this.world = new World()
-        this.buildingsMeshes = this.world.buildingsMeshes
+        this.buildingMeshes = this.world.buildingMeshes
         this.raycaster = new RayCaster()
         this.screenshotHelper = new ScreenshotHelper()
 
@@ -232,6 +232,7 @@ export default class Experience {
         this.camera.update()
         this.renderer.update()
         this.raycaster.update()
+        this.world.update()
         this.characterControls.update()
 
         this.statsMonitor.instance.end()

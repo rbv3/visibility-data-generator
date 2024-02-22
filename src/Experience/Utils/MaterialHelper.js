@@ -55,14 +55,17 @@ export default class MaterialHelper {
             surface: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['surface']}`),
             // entities
             tree: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['tree']}`),
-            //hover
+            //mouse interactions
             hover: this.createCustomMaterial('#66ff00'),
+            click: this.createCustomMaterial('#eb15b2', true, 0.0),
         }
     }
 
-    createCustomMaterial(color) {
+    createCustomMaterial(color, transparent = false, opacity = 1) {
         const customMaterial = new THREE.MeshStandardMaterial({
-            color: new THREE.Color(color)
+            color: new THREE.Color(color),
+            transparent,
+            opacity
         })
 
         return customMaterial

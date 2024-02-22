@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import Experience from '../Experience'
 import { collada_models } from './models.js'
 import MaterialHelper from '../Utils/MaterialHelper.js'
-import { float32Flatten, hydrateMap } from '../Utils/helpers.js'
+import { float32Flatten, hydrateMap, updateChildrenMaterial } from '../Utils/helpers.js'
 import ScreenshotHelper from '../Utils/ScreenshotHelper.js'
 import { sc1 } from '../Utils/screenshotPositions.js'
 
@@ -27,7 +27,6 @@ export default class City {
         this.positionsToAvoid = []
 
         this.buildingMeshes = []
-        this.previousHovered = undefined
     }
     loadModels() {
         const toLoad = collada_models.length
@@ -256,21 +255,24 @@ export default class City {
     }
     update() {
         const currentHover = this.experience.raycaster.hoveredBuilding
-        console.log(currentHover)
-        if(currentHover && this.previousHovered?.name != currentHover.name) {
+        const previousHovered = this.experience.raycaster.previousHovered
+
+        if(
+            currentHover &&
+            previousHovered?.name != currentHover.name &&
+            this.experience.raycaster.clickedBuilding?.name !== currentHover.name
+        ) {
             console.log('updating hover material')
-            currentHover.children.forEach(c => {
-                c.material = this.materialHelper.materialMap['realWorld'].hover
-            })
-            this.previousHovered?.children.forEach(c => {
-                c.material = this.materialHelper.materialMap['realWorld'].building
-            })
-            this.previousHovered = currentHover
+            updateChildrenMaterial(currentHover, this.materialHelper.materialMap['realWorld'].hover)
+            if(previousHovered?.name !== this.experience.raycaster.clickedBuilding?.name) {
+                updateChildrenMaterial(previousHovered, this.materialHelper.materialMap['realWorld'].building)
+            }
+            this.experience.raycaster.previousHovered = currentHover
         }
-        if(!currentHover && this.previousHovered) {
-            this.previousHovered?.children.forEach(c => {
-                c.material = this.materialHelper.materialMap['realWorld'].building
-            })
+        if(!currentHover && previousHovered) {
+            if(previousHovered.name !== this.experience.raycaster.clickedBuilding?.name) {
+                updateChildrenMaterial(previousHovered, this.materialHelper.materialMap['realWorld'].building)
+            }
             this.previousHovered = currentHover
         }
     }

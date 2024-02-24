@@ -3,7 +3,7 @@ import * as PAPA from 'papaparse'
 
 import { download_csv, getDistance } from './helpers'
 import Experience from '../Experience'
-import { CAMERA_LOOKAT, VIEW_MODES } from './constants'
+import { CAMERA_BUILDING_LOOKAT, CAMERA_LOOKAT, VIEW_MODES } from './constants'
 
 const MIN_DISTANCE = 10
 const MIN_FILTER_DISTANCE = 30
@@ -147,6 +147,45 @@ export default class ScreenshotHelper {
 
         const csvFile = PAPA.unparse(csv)
         download_csv(csvFile, `${this.experience.currentMode}`)
+
+        this.experience.shouldUpdateOnTick = true
+    }
+
+    generateBuildingImages(scPositions, buildingName) {
+        this.generateBuildingImageOfMode(scPositions, buildingName, this.experience.currentMode)
+    }
+    generateBuildingImageOfMode(scPositions, buildingName, mode) {
+        const start = performance.now()
+        // disable update to improve performance
+        this.experience.shouldUpdateOnTick = false
+        
+        console.log(scPositions.length)
+        
+        for(let i = 0; i < scPositions.length; i++) {
+            for(let j = 0; j < CAMERA_BUILDING_LOOKAT.length; j++) {
+                const imageName = `${buildingName}-${i}-${j}-${mode}`
+                
+                this.camera.instance.position.set(...scPositions[i])
+                this.camera.instance.lookAt(CAMERA_LOOKAT[j])
+                this.experience.update() // force update b4 screenshotas
+
+                this.renderer.createImage(`${imageName}-down`)
+
+                // offset to current position height
+                if(scPositions[i][1] < 40) {
+                    continue
+                }
+                const lookAtOffset = [...CAMERA_LOOKAT[j]]
+                lookAtOffset[1] = scPositions[i][1]
+                this.camera.instance.lookAt(...lookAtOffset)
+                this.experience.update() // force update b4 screenshot
+
+                this.renderer.createImage(`${imageName}-front`)
+
+            }
+        }
+        const end = performance.now()
+        console.log(`Execution time: ${end - start} ms`)
 
         this.experience.shouldUpdateOnTick = true
     }

@@ -90,7 +90,39 @@ export const CAMERA_LOOKAT = [
         50,
         387
     )
-        
+]
+
+export const CAMERA_BUILDING_LOOKAT = [
+    new THREE.Vector3(
+        2973,
+        20,
+        1286
+    ),
+    new THREE.Vector3(
+        2477,
+        20,
+        2838
+    ),
+    new THREE.Vector3(
+        1900,
+        20,
+        2023
+    ),
+    new THREE.Vector3(
+        -4,
+        20,
+        1536
+    ),
+    new THREE.Vector3(
+        -119,
+        20,
+        -82
+    ),
+    new THREE.Vector3(
+        382,
+        20,
+        912
+    )
 ]
 
 export const CAMERA_QUATERNIONS = [

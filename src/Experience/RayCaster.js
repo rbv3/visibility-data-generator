@@ -13,6 +13,7 @@ export default class RayCaster {
         this.experience = new Experience()
         this.camera = this.experience.camera
         this.screenshotHelper = this.experience.world.city.screenshotHelper
+        this.gui = this.experience.gui
 
         this.sizes = this.experience.sizes
         this.buildingMeshes = this.experience.buildingMeshes
@@ -29,8 +30,7 @@ export default class RayCaster {
         this.currentBoundingBox = undefined
         this.previousBoundingBox = undefined
 
-        this.rotationMatrix = new THREE.Matrix4() // create once and reuse it
-
+        this.setGUI()
 
         window.addEventListener('mousemove', (_event) => {
             this.mouse.x = (_event.clientX / this.sizes.width) * 2 - 1
@@ -69,8 +69,11 @@ export default class RayCaster {
 
 
                 this.buildingCameraPositions = []
-                this.updateSegment()
-                this.screenshotHelper.createParticleOnPosition(this.buildingCameraPositions, 1)
+                this.updateSegment(
+                    Math.ceil(geometry.parameters.width/10),
+                    Math.ceil(geometry.parameters.depth/10),
+                )
+                // this.screenshotHelper.createParticleOnPosition(this.buildingCameraPositions, 1)
                 
                 console.log(this.helper)
                 console.log(obb)
@@ -90,7 +93,7 @@ export default class RayCaster {
         })
     }
 
-    updateSegment() {
+    updateSegment(widthSegments, depthSegments) {
         if(this.currentSeg > this.numSegments) {
             return
         }
@@ -102,9 +105,9 @@ export default class RayCaster {
             this.geometry.parameters.width,
             this.geometry.parameters.height * percentageStep,
             this.geometry.parameters.depth,
-            10,
-            10,
-            10
+            widthSegments,
+            1,
+            depthSegments
         )
         const positions = this.helper.geometry.getAttribute( 'position' )
         const normals = this.helper.geometry.getAttribute( 'normal' )
@@ -131,9 +134,21 @@ export default class RayCaster {
 
         this.currentSeg++
         this.buildingCameraPositions.push(...topSidePositions)
-        this.updateSegment()
+        this.updateSegment(widthSegments, depthSegments)
     }
-
+    screenShotBuilding() {
+        if(!this.buildingCameraPositions?.length) {
+            console.warn('No building selected')
+            return
+        }
+        this.screenshotHelper.generateBuildingImages(this.buildingCameraPositions, this.clickedBuilding.name)
+    }
+    setGUI() {
+        this.gui.instance.add({
+            screenShotSelectedBuilding : () => {
+                this.screenShotBuilding()
+            }}, 'screenShotSelectedBuilding')
+    }
     update() {
         this.instance.setFromCamera(this.mouse, this.camera.instance)
         const intersects = this.instance.intersectObjects(this.buildingMeshes)

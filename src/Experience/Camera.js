@@ -28,7 +28,8 @@ export default class Camera {
             1,
             2500
         )
-        this.instance.position.set(1500, 100, 1650)
+        // this.instance.position.set(1500, 100, 1650)
+        this.instance.position.set(0, 100, 0)
         this.instance.lookAt(733, 55, 714) // random point on the lake
 
         // this.instance.position.set(337.87109375, -11.231389999389648,  -59.07550048828125)

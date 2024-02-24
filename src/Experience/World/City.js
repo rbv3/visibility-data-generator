@@ -39,6 +39,7 @@ export default class City {
                     this.scene.add(gltf.scene)
                     this.auxRecursiveIterator(gltf.scene, gltf.metadataMap)
                     loaded++
+                    console.log(`loaded ${loaded} /${toLoad}`)
                     if(loaded == toLoad) {
                         this.experience.characterControls.isPaused = false
 
@@ -262,17 +263,17 @@ export default class City {
             previousHovered?.name != currentHover.name &&
             this.experience.raycaster.clickedBuilding?.name !== currentHover.name
         ) {
-            console.log('updating hover material')
-            updateChildrenMaterial(currentHover, this.materialHelper.materialMap['realWorld'].hover)
-            if(previousHovered?.name !== this.experience.raycaster.clickedBuilding?.name) {
-                updateChildrenMaterial(previousHovered, this.materialHelper.materialMap['realWorld'].building)
-            }
+            // console.log('updating hover material')
+            // updateChildrenMaterial(currentHover, this.materialHelper.materialMap['realWorld'].hover)
+            // if(previousHovered?.name !== this.experience.raycaster.clickedBuilding?.name) {
+            //     updateChildrenMaterial(previousHovered, this.materialHelper.materialMap['realWorld'].building)
+            // }
             this.experience.raycaster.previousHovered = currentHover
         }
         if(!currentHover && previousHovered) {
-            if(previousHovered.name !== this.experience.raycaster.clickedBuilding?.name) {
-                updateChildrenMaterial(previousHovered, this.materialHelper.materialMap['realWorld'].building)
-            }
+            // if(previousHovered.name !== this.experience.raycaster.clickedBuilding?.name) {
+            //     updateChildrenMaterial(previousHovered, this.materialHelper.materialMap['realWorld'].building)
+            // }
             this.previousHovered = currentHover
         }
     }

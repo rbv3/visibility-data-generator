@@ -42,7 +42,7 @@ export default class ScreenshotHelper {
         }
         console.log(this.screenShotPositions)
     }
-    createParticleOnPosition(screenshotPositions) {
+    createParticleOnPosition(screenshotPositions, size = 10) {
         const geometry = new THREE.BufferGeometry()
         const positions = new Float32Array(screenshotPositions.length * 3)
 
@@ -60,7 +60,7 @@ export default class ScreenshotHelper {
 
         // material
         const material = new THREE.PointsMaterial({
-            size: 10,
+            size,
             color: 'red'
         })
 

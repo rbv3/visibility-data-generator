@@ -187,6 +187,19 @@ export default class Experience {
         console.log(`Average grey color: ${averageGreyColor}, ${averageGreyColor}, ${averageGreyColor}`)
         console.log(`Avg visibility depth is ${averageGreyColor*100/255}%`)
     }
+    getCameraCoordinates() {
+        let csvLine = []
+
+        csvLine.push(`${this.camera.instance.position.x}`)
+        csvLine.push(`${this.camera.instance.position.y}`)
+        csvLine.push(`${this.camera.instance.position.z}`)
+        
+        csvLine.push(`${this.camera.instance.rotation.x * (180/Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.y * (180/Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.z * (180/Math.PI)}`)
+        
+        return csvLine
+    }
 
     enableDepthMode() {
         const start = performance.now()
@@ -197,7 +210,6 @@ export default class Experience {
         this.renderer.updateClearColor(`rgb(${DEPTH_SKY})`)
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
-
     }
     enableVisibilityMode() {
         const start = performance.now()

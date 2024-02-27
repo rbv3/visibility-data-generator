@@ -25,7 +25,9 @@ export default class MaterialHelper {
             sidewalk: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['sidewalk']})`),
             surface: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['surface']})`),
             // entities
-            tree: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['tree']})`)
+            tree: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['tree']})`),
+            //mouse interactions
+            click: this.createCustomMaterial('#eb15b2', true, 0.0),
         }
     }
     setDepthMaterials() {

@@ -158,6 +158,27 @@ export default class ScreenshotHelper {
         const start = performance.now()
         // disable update to improve performance
         this.experience.shouldUpdateOnTick = false
+        const isVisibility = mode == VIEW_MODES.visibility
+        const csvCommonFields = [
+            'x',
+            'y',
+            'z',
+            'xh',
+            'yh',
+            'zh',
+        ]
+
+        if(isVisibility) {
+            csvCommonFields.push('f_xyz')
+        }
+
+        const csv = {
+            fields: [
+                ...csvCommonFields,
+                'image_name'
+            ],
+            data: []
+        }
         
         console.log(scPositions.length)
         
@@ -167,12 +188,16 @@ export default class ScreenshotHelper {
                 
                 this.camera.instance.position.set(...scPositions[i])
                 this.camera.instance.lookAt(CAMERA_LOOKAT[j])
-                this.experience.update() // force update b4 screenshotas
+                
+                this.renderer.compile()
+                this.experience.update() // force update b4 screenshots
+                
+                csv.data.push(this.createCsvLineForBuilding(`${imageName}-down`, isVisibility))
 
-                this.renderer.createImage(`${imageName}-down`)
+                this.renderer.createImage(`${imageName}-down`,i,j)
 
                 // offset to current position height
-                if(scPositions[i][1] < 40) {
+                if(scPositions[i][1] < 60) {
                     continue
                 }
                 const lookAtOffset = [...CAMERA_LOOKAT[j]]
@@ -180,10 +205,13 @@ export default class ScreenshotHelper {
                 this.camera.instance.lookAt(...lookAtOffset)
                 this.experience.update() // force update b4 screenshot
 
-                this.renderer.createImage(`${imageName}-front`)
+                csv.data.push(this.createCsvLineForBuilding(`${imageName}-front`, isVisibility))
 
+                this.renderer.createImage(`${imageName}-front`)
             }
         }
+        const csvFile = PAPA.unparse(csv)
+        download_csv(csvFile, `location-${buildingName}-${mode}`)
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
 
@@ -197,5 +225,16 @@ export default class ScreenshotHelper {
             return csvLine
         }
         return
+    }
+    createCsvLineForBuilding(fileName, isVisibility) {
+        let csvLine
+        if(isVisibility) {
+            csvLine = this.experience.countColorOfPixels()
+        } else {
+            csvLine = this.experience.getCameraCoordinates()
+        }
+        csvLine.push(fileName)
+        
+        return csvLine
     }
 }

@@ -37,11 +37,9 @@ export default class Renderer {
         this.instance.setClearColor(color)
     }
     createImage(fileName) {
-
         const url = this.instance.domElement.toDataURL()
 
         const link = document.createElement('a')
-
         link.setAttribute('href', url)
         link.setAttribute('target', '_blank')
         link.setAttribute('download', fileName)
@@ -54,6 +52,10 @@ export default class Renderer {
             const randomName = (Math.random() + 1).toString(36).substring(7)
             this.createImage(randomName)
         }}, 'screenshot')
+    }
+
+    compile() {
+        this.instance.compile(this.scene, this.camera.instance, this.instance.getRenderTarget())
     }
 
     update() {

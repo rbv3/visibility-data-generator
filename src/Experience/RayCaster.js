@@ -67,7 +67,6 @@ export default class RayCaster {
                 console.log('posY' + this.helper.position.y)
                 this.heightStep = (this.maxHeight - this.helper.position.y) / this.numSegments
 
-
                 this.buildingCameraPositions = []
                 this.updateSegment(
                     Math.ceil(geometry.parameters.width/10),
@@ -87,8 +86,8 @@ export default class RayCaster {
                 this.previousBoundingBox?.material.dispose()
                 this.experience.scene.remove( this.previousBoundingBox )
 
-                updateChildrenMaterial(this.clickedBuilding, this.materialHelper.materialMap['realWorld'].click)
-                updateChildrenMaterial(this.previousClicked, this.materialHelper.materialMap['realWorld'].building)
+                updateChildrenMaterial(this.clickedBuilding, this.materialHelper.materialMap[this.experience.currentMode].click)
+                updateChildrenMaterial(this.previousClicked, this.materialHelper.materialMap[this.experience.currentMode].building)
             }
         })
     }

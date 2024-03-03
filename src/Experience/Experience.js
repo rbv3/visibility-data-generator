@@ -208,6 +208,7 @@ export default class Experience {
         this.world.city.setMaterialByMode(VIEW_MODES['depth'])
         this.world.lights.setDirectionalLight(false)
         this.renderer.updateClearColor(`rgb(${DEPTH_SKY})`)
+        this.renderer.saoPass.enabled = false
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
     }
@@ -218,6 +219,7 @@ export default class Experience {
         this.world.city.setMaterialByMode(VIEW_MODES['visibility'])
         this.world.lights.setDirectionalLight(false)
         this.renderer.updateClearColor(`rgb(${OBJECT_TO_COLOR['sky']})`)
+        this.renderer.saoPass.enabled = false
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
 
@@ -229,6 +231,7 @@ export default class Experience {
         this.world.city.setMaterialByMode(VIEW_MODES['realWorld'])
         this.world.lights.setDirectionalLight(true)
         this.renderer.updateClearColor(`${REAL_WORLD_OBJECT_TO_COLOR['sky']}`)
+        this.renderer.saoPass.enabled = true
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
 

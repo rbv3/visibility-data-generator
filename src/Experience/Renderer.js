@@ -1,4 +1,9 @@
 import { WebGLRenderer } from 'three'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { SAOPass } from 'three/addons/postprocessing/SAOPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+
 import Experience from './Experience.js'
 import { REAL_WORLD_OBJECT_TO_COLOR } from './Utils/constants.js'
 
@@ -15,7 +20,27 @@ export default class Renderer {
         this.camera = this.experience.camera
 
         this.setInstance()
+        this.enableAmbientOcclusion()
         this.setGUI()
+    }
+
+    enableAmbientOcclusion() {
+
+        this.composer = new EffectComposer( this.instance )
+        const renderPass = new RenderPass( this.scene, this.camera.instance )
+        this.composer.addPass( renderPass )
+        this.saoPass = new SAOPass( this.scene, this.camera.instance )
+
+        this.saoPass.params.saoIntensity = 0.05
+        this.saoPass.params.saoScale = 10
+        this.saoPass.params.saoKernelRadius = 10
+        this.saoPass.params.saoMinResolution = 0.05
+        this.saoPass.params.saoBlurRadius = 50
+        this.saoPass.params.saoBlurStdDev = 15
+
+        this.composer.addPass( this.saoPass )
+        const outputPass = new OutputPass()
+        this.composer.addPass( outputPass )
     }
 
     setInstance() {
@@ -52,6 +77,27 @@ export default class Renderer {
             const randomName = (Math.random() + 1).toString(36).substring(7)
             this.createImage(randomName)
         }}, 'screenshot')
+
+        const saoGUI = this.gui.instance.addFolder('Ambient Occlusion')
+        saoGUI.add( this.saoPass.params, 'output', {
+            'Default': SAOPass.OUTPUT.Default,
+            'SAO Only': SAOPass.OUTPUT.SAO,
+            'Normal': SAOPass.OUTPUT.Normal
+        } ).onChange( function ( value ) {
+            this.saoPass.params.output = value
+        } )
+        saoGUI.add( this.saoPass.params, 'saoBias', - 1, 1 )
+        saoGUI.add( this.saoPass.params, 'saoIntensity', 0, 1 )
+        saoGUI.add( this.saoPass.params, 'saoScale', 0, 10 )
+        saoGUI.add( this.saoPass.params, 'saoKernelRadius', 1, 100 )
+        saoGUI.add( this.saoPass.params, 'saoMinResolution', 0, 1 )
+        saoGUI.add( this.saoPass.params, 'saoBlur' )
+        saoGUI.add( this.saoPass.params, 'saoBlurRadius', 0, 200 )
+        saoGUI.add( this.saoPass.params, 'saoBlurStdDev', 0.5, 150 )
+        saoGUI.add( this.saoPass.params, 'saoBlurDepthCutoff', 0.0, 0.1 )
+
+        saoGUI.add( this.saoPass, 'enabled' ).listen()
+        saoGUI.close()
     }
 
     compile() {
@@ -59,6 +105,6 @@ export default class Renderer {
     }
 
     update() {
-        this.instance.render(this.scene, this.camera.instance)
+        this.composer.render()
     }
 }

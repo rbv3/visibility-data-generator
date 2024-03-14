@@ -31,12 +31,7 @@ export default class Renderer {
         this.composer.addPass( renderPass )
         this.saoPass = new SAOPass( this.scene, this.camera.instance )
 
-        this.saoPass.params.saoIntensity = 0.05
-        this.saoPass.params.saoScale = 10
-        this.saoPass.params.saoKernelRadius = 10
-        this.saoPass.params.saoMinResolution = 0.05
-        this.saoPass.params.saoBlurRadius = 50
-        this.saoPass.params.saoBlurStdDev = 15
+        this.setSaoParameters()
 
         this.composer.addPass( this.saoPass )
         const outputPass = new OutputPass()
@@ -72,6 +67,16 @@ export default class Renderer {
         link.click()
     }
 
+    setSaoParameters() {
+        this.saoPass.params.saoIntensity = 0.05
+        this.saoPass.params.saoScale = 14
+        this.saoPass.params.saoKernelRadius = 15
+        this.saoPass.params.saoMinResolution = 0.05
+        this.saoPass.params.saoBlurRadius = 50
+        this.saoPass.params.saoBlurStdDev = 15
+        this.saoPass.enabled = false
+    }
+
     setGUI() {
         this.gui.instance.add({screenshot: () => {
             const randomName = (Math.random() + 1).toString(36).substring(7)
@@ -88,8 +93,8 @@ export default class Renderer {
         } )
         saoGUI.add( this.saoPass.params, 'saoBias', - 1, 1 )
         saoGUI.add( this.saoPass.params, 'saoIntensity', 0, 1 )
-        saoGUI.add( this.saoPass.params, 'saoScale', 0, 10 )
-        saoGUI.add( this.saoPass.params, 'saoKernelRadius', 1, 100 )
+        saoGUI.add( this.saoPass.params, 'saoScale', 0, 100 )
+        saoGUI.add( this.saoPass.params, 'saoKernelRadius', 1, 30 )
         saoGUI.add( this.saoPass.params, 'saoMinResolution', 0, 1 )
         saoGUI.add( this.saoPass.params, 'saoBlur' )
         saoGUI.add( this.saoPass.params, 'saoBlurRadius', 0, 200 )

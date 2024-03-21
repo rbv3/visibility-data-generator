@@ -13,6 +13,7 @@
     "vite-plugin-glsl": "^1.1.2"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "gsap": "^3.12.2",
     "lil-gui": "^0.18.1",
     "papaparse": "^5.4.1",

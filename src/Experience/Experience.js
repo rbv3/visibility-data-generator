@@ -12,6 +12,7 @@ import StatsMonitor from './Utils/StatsMonitor.js'
 import { COLOR_TO_OBJECT, DEPTH_SKY, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR, VIEW_MODES } from './Utils/constants.js'
 import { createCsvColor, increaseMapFrequency, isGreyColor, roundColor } from './Utils/helpers.js'
 import ScreenshotHelper from './Utils/ScreenshotHelper.js'
+import VisibilityEncoder from '../Services/VisibilityEncoder.js'
 
 let instance = null
 
@@ -22,7 +23,6 @@ export default class Experience {
             return instance
         }
         instance = this
-
         // Console access for debugging purpose
         window.experience = this
 
@@ -33,6 +33,9 @@ export default class Experience {
         this.gui = new GUI()
         this.statsMonitor = new StatsMonitor()
 
+        // Service
+        this.visibilityEncoderService = new VisibilityEncoder()
+        
         // Setup
         this.sizes = new Sizes()
         this.time = new Time()
@@ -64,6 +67,10 @@ export default class Experience {
         this.setGUI()
     }
     setGUI() {
+        this.gui.instance.add({
+            callTestEncoderOnCurrentPosition : () => {
+                this.callTestEncoderOnCurrentPosition()
+            }}, 'callTestEncoderOnCurrentPosition')
         this.gui.instance.add({
             enableDepthMode : () => {
                 this.enableDepthMode()
@@ -235,6 +242,28 @@ export default class Experience {
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
 
+    }
+
+    callTestEncoderOnCurrentPosition() {
+        const mockF_xyz = '[8409,5857,0,743,6027,275462,752078,0]'
+        const requestData = {
+            'x': this.camera.instance.position.x,
+            'y': this.camera.instance.position.y,
+            'z': this.camera.instance.position.z,
+            'xh': this.camera.instance.rotation.x * (180/Math.PI),
+            'yh': this.camera.instance.rotation.y * (180/Math.PI),
+            'zh': this.camera.instance.rotation.z * (180/Math.PI),
+            'f_xyz': mockF_xyz,
+            'image_name':'mockImageName'
+        }
+        this.visibilityEncoderService.testEncoderOnCurrentPosition(requestData)
+            .then(result => {
+                console.log(result.data[0].camera_coordinates)
+                this.visibilityEncoderService.printPredictionArray(
+                    result.data[0].predictions
+                )
+            })
+            .catch(e => console.error(e))
     }
 
     resize() {

@@ -51,10 +51,16 @@ export const float32Flatten = (chunks) => {
 
 export const getDistance = (pointA, pointB) => {
     const deltaX = pointA[0] - pointB[0]
-    // const deltaY = pointA[1] - pointB[1] // height
     const deltaZ = pointA[2] - pointB[2]
 
     return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaZ, 2))
+}
+export const getDistance3D = (pointA, pointB) => {
+    const deltaX = pointA[0] - pointB[0]
+    const deltaY = pointA[1] - pointB[1]
+    const deltaZ = pointA[2] - pointB[2]
+
+    return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2))
 }
 
 export const download_csv = (data, fileName) => {

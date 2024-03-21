@@ -49,7 +49,7 @@ export default class MaterialHelper {
         return {
             default: this.createCustomMaterial('#3d3d3d'),
             // buildings
-            building: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['building']}`),
+            building: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['building']}`, false, 1),
             // surfaces
             water: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['water']}`),
             road: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['road']}`),
@@ -59,14 +59,18 @@ export default class MaterialHelper {
             tree: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['tree']}`),
             //mouse interactions
             hover: this.createCustomMaterial('#66ff00'),
-            click: this.createCustomMaterial('#eb15b2', true, 0.0),
+            click: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['building']}`, true, 1),
         }
     }
 
-    createCustomMaterial(color, transparent = false, opacity = 1) {
+    // histograma
+    // kernel density estimation
+
+    createCustomMaterial(color, transparent = false, opacity = 1, wireframe = false) {
         const customMaterial = new THREE.MeshStandardMaterial({
             color: new THREE.Color(color),
             transparent,
+            wireframe,
             opacity
         })
 

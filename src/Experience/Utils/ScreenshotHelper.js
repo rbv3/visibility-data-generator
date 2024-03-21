@@ -91,10 +91,10 @@ export default class ScreenshotHelper {
         }
         return filteredPositions
     }
-    generateImages(scPositions, shouldCreateImage) {
-        this.generateImageOfMode(scPositions, this.experience.currentMode, shouldCreateImage)
+    generateImages(scPositions, shouldCreateImage, shouldDownloadCsv = true) {
+        return this.generateImageOfMode(scPositions, this.experience.currentMode, shouldCreateImage, shouldDownloadCsv)
     }
-    generateImageOfMode(scPositions, mode, shouldCreateImage) {
+    generateImageOfMode(scPositions, mode, shouldCreateImage, shouldDownloadCsv = true) {
         const start = performance.now()
         const csv = {
             fields: [
@@ -146,9 +146,13 @@ export default class ScreenshotHelper {
         console.log(`Execution time: ${end - start} ms`)
 
         const csvFile = PAPA.unparse(csv)
-        download_csv(csvFile, `${this.experience.currentMode}`)
+        if(shouldDownloadCsv) {
+            download_csv(csvFile, `${this.experience.currentMode}`)
+        }
 
         this.experience.shouldUpdateOnTick = true
+
+        return csvFile
     }
 
     generateBuildingImages(scPositions, buildingName) {

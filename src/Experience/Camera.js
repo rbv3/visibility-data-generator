@@ -28,8 +28,8 @@ export default class Camera {
             1,
             2500
         )
-        // this.instance.position.set(1500, 100, 1650)
-        this.instance.position.set(0, 100, 0)
+        this.instance.position.set(512, 100, 280)
+        // this.instance.position.set(0, 100, 0)
         this.instance.lookAt(733, 55, 714) // random point on the lake
 
         // this.instance.position.set(337.87109375, -11.231389999389648,  -59.07550048828125)
@@ -52,13 +52,14 @@ export default class Camera {
         this.controls.isLocked = true
     }
     setGUI() {
-        this.gui.instance.add({updateQuaternion : () => {
-            this.updateQuaternion()
-        }}, 'updateQuaternion')
+        const folder = this.gui.instance.addFolder('Camera')
+        folder.close()
 
-        this.gui.instance.add({getCameraPosition : () => {
+        folder.add({getCameraPosition : () => {
             console.log(this.instance.position)
         }}, 'getCameraPosition')
+        
+        folder.add(this.instance, 'far').min(100).max(10000).onFinishChange(() => this.instance.updateProjectionMatrix())
     }
     updateQuaternion() {
         this.quaternionIndex += 1

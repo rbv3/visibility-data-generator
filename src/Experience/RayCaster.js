@@ -73,7 +73,7 @@ export default class RayCaster {
     }
     callGetFacadesForClickedBuilding() {
         const basePoint = this.pointsByNormal.get('[0,-1,0]')
-        console.log(basePoint)
+        
         this.visibilityEncoderService.predictFacadeFromBasePoints(basePoint, this.clickedBuildingHeight)
             .then(res => {
                 console.log(res.data)

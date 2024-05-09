@@ -29,6 +29,10 @@ export default class ParticleHelper {
         }
         this.currentVisibility = 'building'
 
+        this.points;
+        this.pointsWithDirection;
+        this.arrowHelpersGroup;
+
         this.currentLookAt = 0
         this.createLookAtParticle()
         this.setGUI()
@@ -110,7 +114,6 @@ export default class ParticleHelper {
             },
             
         ]
-        console.log(this.lookAtResults)
         for(let i=0; i<result.length; ) {
             for(let j=0; j<6; j++) { // we have 6 lookAt positions
                 const lookAtIndex = Math.floor(i / 6) * 3
@@ -125,7 +128,6 @@ export default class ParticleHelper {
             }
         }
         this.lookAtResults.forEach(result => {
-            console.log(result)
             result.geometry.setAttribute(
                 'position',
                 new THREE.BufferAttribute(result.positions, 3)
@@ -134,17 +136,27 @@ export default class ParticleHelper {
                 'color',
                 new THREE.BufferAttribute(result.colors, 3)
             )
-            console.log(result.colors)
         })
 
 
         // points
         this.points = new THREE.Points(this.lookAtResults[this.currentLookAt].geometry, material)
         this.points.geometry.buffersNeedUpdate = true
-        console.log(this.points)
         // points.rotation.set(-1.5707963267948966, 0, 0)
 
         this.scene.add(this.points)
+    }
+    resetArrowGroup(group) {
+        if(!group) {
+            return
+        }
+        this.scene.remove(group)
+        group.traverse(child => {
+            child?.dipose?.()
+            child?.material?.dispose?.()
+            child?.geometry?.dispose?.()
+        })
+        group = undefined
     }
     resetPoints(points) {
         if(!points) {
@@ -191,6 +203,8 @@ export default class ParticleHelper {
     }
     plotParticlesWithDirection(particles) {
         // create particles
+        this.resetPoints(this.pointsWithDirection)
+        this.resetArrowGroup(this.arrowHelpersGroup)
         const material = new THREE.PointsMaterial({
             size: 10,
             color: 'red',
@@ -205,15 +219,17 @@ export default class ParticleHelper {
         }, []);
         const particlePosition = new Float32Array(positions)
         
-        console.log(particlePosition);
         geometry.setAttribute(
             'position',
             new THREE.BufferAttribute(particlePosition, 3)
         )
         const points = new THREE.Points(geometry, material)
+        this.pointsWithDirection = points;
         this.scene.add(points)
 
         // create arrows
+        const arrowGroup = new THREE.Group();
+
         for(const particle of particles) {
             const position = [particle.x, particle.y, particle.z]
             const rotation = [particle.xh, particle.yh, particle.zh]
@@ -230,8 +246,10 @@ export default class ParticleHelper {
             arrowHelper.rotation.set(...rotation)
             arrowHelper.line.material.linewidth = 10;
             
-            this.scene.add( arrowHelper );    
+            arrowGroup.add( arrowHelper );    
         }
+        this.scene.add(arrowGroup)
+        this.arrowHelpersGroup = arrowGroup
     }
     setGUI() {
         this.gui.instance.add({

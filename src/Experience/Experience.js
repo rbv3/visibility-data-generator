@@ -13,6 +13,7 @@ import { COLOR_TO_OBJECT, DEPTH_SKY, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR
 import { createCsvColor, increaseMapFrequency, isGreyColor, roundColor } from './Utils/helpers.js'
 import ScreenshotHelper from './Utils/ScreenshotHelper.js'
 import VisibilityEncoder from '../Services/VisibilityEncoder.js'
+import ParticleHelper from './Utils/ParticleHelper.js'
 
 let instance = null
 
@@ -48,6 +49,7 @@ export default class Experience {
         this.buildingMeshes = this.world.buildingMeshes
         this.raycaster = new RayCaster()
         this.screenshotHelper = new ScreenshotHelper()
+        this.particleHelper = new ParticleHelper() // make it available right after experience on console
 
         this.currentMode = VIEW_MODES.realWorld
 

@@ -42,8 +42,7 @@ export default class World {
                 this.particleHelper.plotParticlesWithDirection(res.data)
             })
             .catch(err => {
-                console.log(err);
-                this.particleHelper.plotParticlesWithDirection(mockResult)
+                console.error(err);
             })
     }
     setGUI() {

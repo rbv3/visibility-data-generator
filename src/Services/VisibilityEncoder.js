@@ -57,7 +57,7 @@ export default class VisibilityEncoder {
         const params = {
             // nmt: 'None'
         }
-        axios(
+        return axios(
             {
                 method: 'post',
                 baseURL: 'http://127.0.0.1:5000/',
@@ -78,5 +78,29 @@ export default class VisibilityEncoder {
         for(let i=0; i<predictions.length; i++) {
             console.log(`${classes[i]}: ${predictions[i]}`)
         }
+    }
+    queryLocation(numLocations, seed, goals) {
+        const params = {
+        }
+        const data = [{
+            f_xyz: goals,
+            num_locations: numLocations,
+        }]
+        return axios(
+            {
+                method: 'post',
+                baseURL: 'http://127.0.0.1:5000/',
+                params,
+                url: '/query_locations',
+                headers: {
+                    scheme: 'http',
+                    'Cache-Control': 'no-cache',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+                data
+            }
+        )
+
     }
 }

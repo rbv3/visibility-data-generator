@@ -192,11 +192,11 @@ export default class ParticleHelper {
     plotParticlesWithDirection(particles) {
         // create particles
         const material = new THREE.PointsMaterial({
-            size: 3,
+            size: 10,
+            color: 'red',
+            sizeAttenuation: false,
         })
-        const geometry = new THREE.BufferGeometry({
-            color: 'red'
-        })
+        const geometry = new THREE.BufferGeometry()
         const positions = particles.reduce((arr, particle) => {
             arr.push(particle.x)
             arr.push(particle.y)
@@ -215,7 +215,6 @@ export default class ParticleHelper {
 
         // create arrows
         for(const particle of particles) {
-            console.log(particle);
             const position = [particle.x, particle.y, particle.z]
             const rotation = [particle.xh, particle.yh, particle.zh]
             const dir = new THREE.Vector3( 1, 2, 0 );
@@ -229,16 +228,12 @@ export default class ParticleHelper {
     
             const arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
             arrowHelper.rotation.set(...rotation)
-            console.log(arrowHelper);
+            arrowHelper.line.material.linewidth = 10;
+            
             this.scene.add( arrowHelper );    
         }
-        
-        // this.points = new THREE.Points(this.lookAtResults[this.currentLookAt].geometry, material)
-        // this.points.geometry.buffersNeedUpdate = true
-
     }
     setGUI() {
-
         this.gui.instance.add({
             updateLookAtParticlesForVisibilityEncoder : () => {
                 this.updateLookAtParticlesForVisibilityEncoder()

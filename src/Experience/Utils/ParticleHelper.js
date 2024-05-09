@@ -5,8 +5,16 @@ import { sc1 } from '../Utils/screenshotPositions.js'
 import { getDistance3D } from './helpers.js'
 import { CAMERA_LOOKAT } from './constants.js'
 
+let instance = null
+
 export default class ParticleHelper {
     constructor() {
+        // singleton
+        if(instance) {
+            return instance
+        }
+        instance = this
+
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.gui = this.experience.gui
@@ -22,7 +30,6 @@ export default class ParticleHelper {
         this.currentVisibility = 'building'
 
         this.currentLookAt = 0
-
         this.createLookAtParticle()
         this.setGUI()
     }
@@ -44,7 +51,6 @@ export default class ParticleHelper {
         this.scene.add(this.lookAtParticle)
     }
     updateLookAtParticle() {
-
     }
     updateLookAtParticlesForVisibilityEncoder() {
         this.currentLookAt += 1
@@ -112,7 +118,6 @@ export default class ParticleHelper {
                 this.lookAtResults[j].positions[lookAtIndex+1] = result[i].camera_coordinates[1]
                 this.lookAtResults[j].positions[lookAtIndex+2] = result[i].camera_coordinates[2]
                 const color = this.setColorBasedOnVisibility(result[i].predictions)
-                // console.log(color)
                 this.lookAtResults[j].colors[lookAtIndex+0] = color[0]
                 this.lookAtResults[j].colors[lookAtIndex+1] = color[1]
                 this.lookAtResults[j].colors[lookAtIndex+2] = color[2]
@@ -183,6 +188,54 @@ export default class ParticleHelper {
             break
         }
         return color
+    }
+    plotParticlesWithDirection(particles) {
+        // create particles
+        const material = new THREE.PointsMaterial({
+            size: 3,
+        })
+        const geometry = new THREE.BufferGeometry({
+            color: 'red'
+        })
+        const positions = particles.reduce((arr, particle) => {
+            arr.push(particle.x)
+            arr.push(particle.y)
+            arr.push(particle.z)
+            return arr;
+        }, []);
+        const particlePosition = new Float32Array(positions)
+        
+        console.log(particlePosition);
+        geometry.setAttribute(
+            'position',
+            new THREE.BufferAttribute(particlePosition, 3)
+        )
+        const points = new THREE.Points(geometry, material)
+        this.scene.add(points)
+
+        // create arrows
+        for(const particle of particles) {
+            console.log(particle);
+            const position = [particle.x, particle.y, particle.z]
+            const rotation = [particle.xh, particle.yh, particle.zh]
+            const dir = new THREE.Vector3( 1, 2, 0 );
+    
+            //normalize the direction vector (convert to vector of length 1)
+            dir.normalize();
+    
+            const origin = new THREE.Vector3( ...position );
+            const length = 15;
+            const hex = 0xff0707;
+    
+            const arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+            arrowHelper.rotation.set(...rotation)
+            console.log(arrowHelper);
+            this.scene.add( arrowHelper );    
+        }
+        
+        // this.points = new THREE.Points(this.lookAtResults[this.currentLookAt].geometry, material)
+        // this.points.geometry.buffersNeedUpdate = true
+
     }
     setGUI() {
 

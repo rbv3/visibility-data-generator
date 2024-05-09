@@ -13,7 +13,6 @@ export default class RayCaster {
     constructor() {
         this.instance = new THREE.Raycaster()
 
-        
         this.experience = new Experience()
         this.camera = this.experience.camera
         this.screenshotHelper = this.experience.world.city.screenshotHelper

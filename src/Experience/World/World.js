@@ -46,14 +46,12 @@ export default class World {
             })
     }
     setGUI() {
-        const queryPositionFolder = this.gui.instance.addFolder('QueryPosition');
-        queryPositionFolder.add(this.numPositionsQueryLocation, 'value', 1, 1000, 1 ).min(1).max(10000).step(1).name('numLocations')
-        queryPositionFolder.add({
+        this.gui.queryPositionFolder.add(this.numPositionsQueryLocation, 'value', 1, 1000, 1 ).min(1).max(10000).step(1).name('numLocations')
+        this.gui.queryPositionFolder.add({
             callQueryLocation: () => {
                 this.callQueryLocation()
             }
         }, 'callQueryLocation')
-        queryPositionFolder.close()
     }
     update() {
         this.city.update()

@@ -69,28 +69,28 @@ export default class Experience {
         this.setGUI()
     }
     setGUI() {
-        this.gui.instance.add({
+        this.gui.endpointsFolder.add({
             callTestEncoderOnCurrentPosition : () => {
                 this.callTestEncoderOnCurrentPosition()
             }}, 'callTestEncoderOnCurrentPosition')
-        this.gui.instance.add({
+        this.gui.dataGenerationFolder.add({
             enableDepthMode : () => {
                 this.enableDepthMode()
             }}, 'enableDepthMode')
-        this.gui.instance.add({
+        this.gui.dataGenerationFolder.add({
             enableVisibilityMode : () => {
                 this.enableVisibilityMode()
             }}, 'enableVisibilityMode')
-        this.gui.instance.add({
+        this.gui.dataGenerationFolder.add({
             enableRealWorldMode : () => {
                 this.enableRealWorldMode()
             }}, 'enableRealWorldMode')
-        this.gui.instance.add({
+        this.gui.dataGenerationFolder.add({
             countColorOfPixels : () => {
                 this.countColorOfPixels(true)
             }}, 'countColorOfPixels')
         
-        this.gui.instance.add({
+        this.gui.dataGenerationFolder.add({
             generateImagesAndCsv: () => {
                 this.screenshotHelper.generateImages(
                     this.world.city.filteredScreenshotPositions,
@@ -98,7 +98,7 @@ export default class Experience {
                 )
             }}, 'generateImagesAndCsv')
 
-        this.gui.instance.add({
+        this.gui.dataGenerationFolder.add({
             generateCsvOnly: () => {
                 this.screenshotHelper.generateImages(
                     this.world.city.filteredScreenshotPositions,

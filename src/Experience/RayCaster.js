@@ -330,25 +330,26 @@ export default class RayCaster {
         )
     }
     setGUI() {
-        this.gui.instance.add({
+        this.gui.dataGenerationFolder.add({
             screenShotSelectedBuilding : () => {
                 this.screenShotBuilding()
             }}, 'screenShotSelectedBuilding')
         
-        this.gui.instance.add({
+        this.gui.dataGenerationFolder.add({
+            plotRadiusSCPosition : () => {
+                this.plotRadiusScreenshotPositions()
+            }}, 'plotRadiusSCPosition')
+            
+        this.gui.endpointsFolder.add({
             callGetFacadesForClickedBuilding : () => {
                 this.callGetFacadesForClickedBuilding()
             }}, 'callGetFacadesForClickedBuilding')
 
-        this.gui.instance.add({
+        this.gui.endpointsFolder.add({
             callTestEnconderOnData : () => {
                 this.callTestEnconderOnData()
             }}, 'callTestEnconderOnData')
 
-        this.gui.instance.add({
-            plotRadiusSCPosition : () => {
-                this.plotRadiusScreenshotPositions()
-            }}, 'plotRadiusSCPosition')
     }
     update() {
         this.instance.setFromCamera(this.mouse, this.camera.instance)

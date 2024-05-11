@@ -78,31 +78,29 @@ export default class Renderer {
     }
 
     setGUI() {
-        this.gui.instance.add({screenshot: () => {
+        this.gui.dataGenerationFolder.add({screenshot: () => {
             const randomName = (Math.random() + 1).toString(36).substring(7)
             this.createImage(randomName)
         }}, 'screenshot')
 
-        const saoGUI = this.gui.instance.addFolder('Ambient Occlusion')
-        saoGUI.add( this.saoPass.params, 'output', {
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'output', {
             'Default': SAOPass.OUTPUT.Default,
             'SAO Only': SAOPass.OUTPUT.SAO,
             'Normal': SAOPass.OUTPUT.Normal
         } ).onChange( function ( value ) {
             this.saoPass.params.output = value
         } )
-        saoGUI.add( this.saoPass.params, 'saoBias', - 1, 1 )
-        saoGUI.add( this.saoPass.params, 'saoIntensity', 0, 1 )
-        saoGUI.add( this.saoPass.params, 'saoScale', 0, 100 )
-        saoGUI.add( this.saoPass.params, 'saoKernelRadius', 1, 30 )
-        saoGUI.add( this.saoPass.params, 'saoMinResolution', 0, 1 )
-        saoGUI.add( this.saoPass.params, 'saoBlur' )
-        saoGUI.add( this.saoPass.params, 'saoBlurRadius', 0, 200 )
-        saoGUI.add( this.saoPass.params, 'saoBlurStdDev', 0.5, 150 )
-        saoGUI.add( this.saoPass.params, 'saoBlurDepthCutoff', 0.0, 0.1 )
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'saoBias', - 1, 1 )
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'saoIntensity', 0, 1 )
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'saoScale', 0, 100 )
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'saoKernelRadius', 1, 30 )
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'saoMinResolution', 0, 1 )
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'saoBlur' )
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'saoBlurRadius', 0, 200 )
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'saoBlurStdDev', 0.5, 150 )
+        this.gui.ambientOcclusionFolder.add( this.saoPass.params, 'saoBlurDepthCutoff', 0.0, 0.1 )
 
-        saoGUI.add( this.saoPass, 'enabled' ).listen()
-        saoGUI.close()
+        this.gui.ambientOcclusionFolder.add( this.saoPass, 'enabled' ).listen()
     }
 
     compile() {

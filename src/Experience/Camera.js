@@ -52,14 +52,11 @@ export default class Camera {
         this.controls.isLocked = true
     }
     setGUI() {
-        const folder = this.gui.instance.addFolder('Camera')
-        folder.close()
-
-        folder.add({getCameraPosition : () => {
+        this.gui.cameraFolder.add({getCameraPosition : () => {
             console.log(this.instance.position)
         }}, 'getCameraPosition')
         
-        folder.add(this.instance, 'far').min(100).max(10000).onFinishChange(() => this.instance.updateProjectionMatrix())
+        this.gui.cameraFolder.add(this.instance, 'far').min(100).max(10000).onFinishChange(() => this.instance.updateProjectionMatrix())
     }
     updateQuaternion() {
         this.quaternionIndex += 1

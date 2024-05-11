@@ -252,27 +252,27 @@ export default class ParticleHelper {
         this.arrowHelpersGroup = arrowGroup
     }
     setGUI() {
-        this.gui.instance.add({
+        this.gui.dataVisualizationFolder.add({
             updateLookAtParticlesForVisibilityEncoder : () => {
                 this.updateLookAtParticlesForVisibilityEncoder()
             }}, 'updateLookAtParticlesForVisibilityEncoder')
-        this.gui.instance.add({
+        this.gui.dataVisualizationFolder.add({
             buildingScores : () => {
                 this.updateParticleColors('building')
             }}, 'buildingScores')
         
-        this.gui.instance.add({
+        this.gui.dataVisualizationFolder.add({
             waterScores : () => {
                 this.updateParticleColors('water')
             }}, 'waterScores')
                 
-        this.gui.instance.add({
+        this.gui.dataVisualizationFolder.add({
             treeScores : () => {
                 this.updateParticleColors('tree')
             }}, 'treeScores')
 
 
-        this.gui.instance.add({
+        this.gui.dataVisualizationFolder.add({
             skyScores : () => {
                 this.updateParticleColors('sky')
             }}, 'skyScores')

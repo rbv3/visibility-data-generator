@@ -17,6 +17,13 @@ body
     left: 0;
     outline: none;
 }
+.webgl-pov
+{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    outline: none;
+}
 
 .loading-bar {
     position: absolute;

@@ -22,6 +22,8 @@ export default class City {
         this.time = this.experience.time
         this.gui = this.experience.gui
 
+        this.povWorld = this.experience.povWorld
+
         this.meshesToUpdateMaterial = []
         this.positionsOfInterest = []
         this.positionsToAvoid = []
@@ -47,6 +49,10 @@ export default class City {
                         console.log(terrainMap)
                         console.log(buildingMap)
                         console.log({removedMeshes})
+
+                        // clone current scene to POV scene
+                        this.povWorld.initScene(this.scene)
+
                         // Create points of interest and to avoid
                         // this.pointsOfInterest = float32Flatten(this.positionsOfInterest)
                         // this.pointToAvoid = float32Flatten(this.positionsToAvoid)

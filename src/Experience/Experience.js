@@ -14,6 +14,7 @@ import { createCsvColor, increaseMapFrequency, isGreyColor, roundColor } from '.
 import ScreenshotHelper from './Utils/ScreenshotHelper.js'
 import VisibilityEncoder from '../Services/VisibilityEncoder.js'
 import ParticleHelper from './Utils/ParticleHelper.js'
+import PovWorld from './povWorld.js'
 
 let instance = null
 
@@ -36,7 +37,7 @@ export default class Experience {
 
         // Service
         this.visibilityEncoderService = new VisibilityEncoder()
-        
+
         // Setup
         this.sizes = new Sizes()
         this.time = new Time()
@@ -45,6 +46,11 @@ export default class Experience {
         this.characterControls = new CharacterControls()
         this.renderer = new Renderer()
         this.loaders = new Loaders()
+
+        // POV
+        this.povWorld = new PovWorld()
+
+        // World
         this.world = new World()
         this.buildingMeshes = this.world.buildingMeshes
         this.raycaster = new RayCaster()

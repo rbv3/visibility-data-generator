@@ -23,6 +23,7 @@ body
     bottom: 0;
     right: 0;
     outline: none;
+    border: 3px solid black
 }
 
 .loading-bar {

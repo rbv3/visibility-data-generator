@@ -17,5 +17,7 @@ export default class GUI {
             .close()
         this.ambientOcclusionFolder = this.instance.addFolder('Ambient Occlusion')
             .close()
+        this.viewportFolder = this.instance.addFolder('Viewport')
+            .close()
     }
 }

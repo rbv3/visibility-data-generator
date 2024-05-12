@@ -11,6 +11,8 @@ export default class World {
         this.visibilityEncoderService = this.experience.visibilityEncoderService
         this.gui = this.experience.gui
 
+        this.povWorld = this.experience.povWorld
+
         this.particleHelper = new ParticleHelper()
 
         this.loaders = new Loaders()
@@ -39,6 +41,12 @@ export default class World {
         )
             .then(res => {
                 console.log(res);
+                this.povWorld.maxLocations = res.data.length
+                this.povWorld.updateViewPort(res.data)
+                for(const gui of this.povWorld.gui.viewportFolder.controllers) {
+                    gui.max(res.data.length - 1)
+                    gui.updateDisplay()
+                }
                 this.particleHelper.plotParticlesWithDirection(res.data)
             })
             .catch(err => {

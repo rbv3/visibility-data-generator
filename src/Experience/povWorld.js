@@ -12,11 +12,23 @@ export default class PovWorld {
         this.camera = null
         this.scene = null
         this.sizes = this.experience.sizes
+
+        this.gui = this.experience.gui
+        
+        this.locations = []
+        this.maxLocations = 1
+        this.currentLocationIndex = {
+            value: 0
+        }
+
+        this.setGUI()
     }
     initScene(scene) {
-        // copy of initial experience scene after loading all models
         const timesSmaller = 7;
-        this.scene = scene
+        
+        // clone of initial experience scene after loading all models
+        this.scene = scene.clone()
+
         this.initCamera()
 
         this.renderer = new WebGLRenderer({
@@ -47,31 +59,39 @@ export default class PovWorld {
 
         this.scene.add(this.camera)
     }
-    updateCamera() {
-        const mockResult = {
-            x: 680.347899243,
-            xh: -147.7311064059,
-            y: 57.1941489662,
-            yh: -39.0195297749,
-            z: 578.882451719,
-            zh: -163.2008019361,
-        }
+    updateViewPort(result) {
+        this.locations = result
+        this.updateCamera(this.locations[0])
+    }
+    updateCamera(location) {
         // update position
         this.camera.position.set(
-            mockResult.x,
-            mockResult.y,
-            mockResult.z,
+            location.x,
+            location.y,
+            location.z,
         )
         this.camera.rotation.set(
-            mockResult.xh,
-            mockResult.yh,
-            mockResult.zh,
-
+            location.xh,
+            location.yh,
+            location.zh,
         )
         this.camera.updateProjectionMatrix()
         this.updateSceneOnce()
     }
     updateSceneOnce() {
         this.renderer.render(this.scene, this.camera)
+    }
+    setGUI() {
+        this.gui.viewportFolder.add(
+            this.currentLocationIndex, 'value'
+        )
+        .min(0)
+        .max(this.maxLocations - 1)
+        .step(1)
+        .name('Position Index')
+        .updateDisplay()
+        .onFinishChange((index) => {
+            this.updateCamera(this.locations[index])
+        })
     }
 }

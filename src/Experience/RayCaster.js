@@ -20,7 +20,7 @@ export default class RayCaster {
         this.visibilityEncoderService = this.experience.visibilityEncoderService
         this.particleHelper = new ParticleHelper()
 
-        this.setTransformControl()
+        // this.setTransformControl()
 
         this.sizes = this.experience.sizes
         this.buildingMeshes = this.experience.buildingMeshes

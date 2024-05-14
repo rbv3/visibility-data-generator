@@ -43,7 +43,8 @@ export default class Renderer {
             canvas: this.canvas,
             antialias: true,
             preserveDrawingBuffer: true,
-            logarithmicDepthBuffer: false
+            logarithmicDepthBuffer: false,
+            powerPreference: "high-performance"
         })
         this.instance.setClearColor(startClearColor)
         this.instance.setSize(this.sizes.width, this.sizes.height)

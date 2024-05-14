@@ -195,6 +195,10 @@ export default class City {
         }
         const childUserData = child.userData
 
+        // Since the objects are not being udpated, we don't need to calculate their values every frame
+        // Setting autoupdate to false helps on performance by removing unnecessary calculations
+        child.matrixAutoUpdate = false
+
         if(child.isMesh) {
             this.createArrayOfPoints(child)
             this.meshesToUpdateMaterial.push(child)

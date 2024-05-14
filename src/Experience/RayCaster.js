@@ -56,10 +56,11 @@ export default class RayCaster {
                 this.previousClicked = this.clickedBuilding
                 this.clickedBuilding = this.hoveredBuilding
                 
+                console.log(this.clickedBuilding);
+                
                 const points = createArrayOfPointsFromGroup(this.clickedBuilding)
                     
                 const boundingBoxHelper = this.createBoundingBox(points)
-                console.log(boundingBoxHelper)
 
                 this.pointsByNormal = this.groupPointsByNormal(boundingBoxHelper.geometry, boundingBoxHelper)
 

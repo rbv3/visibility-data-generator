@@ -4,9 +4,15 @@ import Experience from '../Experience'
 import { OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR } from './constants'
 import { VIEW_MODES } from './constants'
 
-
+let instance = null
 export default class MaterialHelper {
     constructor() {
+        // Singleton
+        if(instance) {
+            return instance
+        }
+        instance = this
+        
         this.experience = new Experience()
         this.materialMap = {
             [VIEW_MODES['depth']]: this.setDepthMaterials(),

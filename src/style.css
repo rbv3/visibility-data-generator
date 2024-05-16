@@ -26,6 +26,20 @@ body
     border: 3px solid black
 }
 
+#webgl-pov-steps
+{
+    position: fixed;
+    bottom: 175px;
+    right: 10px;
+}
+
+#webgl-pov-residual
+{
+    position: fixed;
+    bottom: 150px;
+    right: 10px;
+}
+
 .loading-bar {
     position: absolute;
     top: 50%;

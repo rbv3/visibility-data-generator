@@ -61,10 +61,17 @@ export default class PovWorld {
     }
     updateViewPort(result) {
         this.locations = result
-        this.updateCamera(this.locations[0])
+        this.updateCamera(0)
     }
-    updateCamera(location) {
+    updateCamera(index) {
         // update position
+        const location = this.locations[index]
+        
+        const residual = location.residual
+        const steps = location.steps
+
+        this.updateHTML(residual, steps)
+
         this.camera.position.set(
             location.x,
             location.y,
@@ -77,6 +84,10 @@ export default class PovWorld {
         )
         this.camera.updateProjectionMatrix()
         this.updateSceneOnce()
+    }
+    updateHTML(residual, steps) {
+        document.getElementById("webgl-pov-steps").textContent=`Steps: ${steps}` ;
+        document.getElementById("webgl-pov-residual").textContent=`Residual: ${residual}`;
     }
     updateSceneOnce() {
         this.renderer.render(this.scene, this.camera)
@@ -91,7 +102,7 @@ export default class PovWorld {
         .name('Position Index')
         .updateDisplay()
         .onFinishChange((index) => {
-            this.updateCamera(this.locations[index])
+            this.updateCamera(index)
         })
     }
 }

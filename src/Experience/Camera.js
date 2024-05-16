@@ -56,7 +56,11 @@ export default class Camera {
             console.log(this.instance.position)
         }}, 'getCameraPosition')
         this.gui.cameraFolder.add({getCameraRotation : () => {
-            console.log(this.instance.rotation)
+            console.log(
+                THREE.MathUtils.radToDeg(this.instance.rotation._x),
+                THREE.MathUtils.radToDeg(this.instance.rotation._y),
+                THREE.MathUtils.radToDeg(this.instance.rotation._z),
+            )
         }}, 'getCameraRotation')
         this.gui.cameraFolder.add({getCamera : () => {
             console.log(this.instance)

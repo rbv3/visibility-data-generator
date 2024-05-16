@@ -67,7 +67,6 @@ export default class ScreenshotHelper {
         // points
         const points = new THREE.Points(geometry, material)
         console.log(points)
-        // points.rotation.set(-1.5707963267948966, 0, 0)
 
         this.scene.add(points)
     }

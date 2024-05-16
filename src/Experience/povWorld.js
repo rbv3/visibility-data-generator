@@ -66,7 +66,7 @@ export default class PovWorld {
     updateCamera(index) {
         // update position
         const location = this.locations[index]
-        
+
         const residual = location.residual
         const steps = location.steps
 
@@ -78,9 +78,9 @@ export default class PovWorld {
             location.z,
         )
         this.camera.rotation.set(
-            location.xh,
-            location.yh,
-            location.zh,
+            THREE.MathUtils.degToRad(location.xh),
+            THREE.MathUtils.degToRad(location.yh),
+            THREE.MathUtils.degToRad(location.zh),
         )
         this.camera.updateProjectionMatrix()
         this.updateSceneOnce()

@@ -142,7 +142,6 @@ export default class ParticleHelper {
         // points
         this.points = new THREE.Points(this.lookAtResults[this.currentLookAt].geometry, material)
         this.points.geometry.buffersNeedUpdate = true
-        // points.rotation.set(-1.5707963267948966, 0, 0)
 
         this.scene.add(this.points)
     }
@@ -232,7 +231,11 @@ export default class ParticleHelper {
 
         for(const particle of particles) {
             const position = [particle.x, particle.y, particle.z]
-            const rotation = [particle.xh, particle.yh, particle.zh]
+            const rotation = [
+                THREE.MathUtils.degToRad(particle.xh),
+                THREE.MathUtils.degToRad(particle.yh),
+                THREE.MathUtils.degToRad(particle.zh),
+            ]
             const dir = new THREE.Vector3( 1, 2, 0 );
     
             //normalize the direction vector (convert to vector of length 1)

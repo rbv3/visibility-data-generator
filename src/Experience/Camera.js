@@ -55,6 +55,12 @@ export default class Camera {
         this.gui.cameraFolder.add({getCameraPosition : () => {
             console.log(this.instance.position)
         }}, 'getCameraPosition')
+        this.gui.cameraFolder.add({getCameraRotation : () => {
+            console.log(this.instance.rotation)
+        }}, 'getCameraRotation')
+        this.gui.cameraFolder.add({getCamera : () => {
+            console.log(this.instance)
+        }}, 'getCamera')
         
         this.gui.cameraFolder.add(this.instance, 'far').min(100).max(10000).onFinishChange(() => this.instance.updateProjectionMatrix())
     }

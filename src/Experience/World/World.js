@@ -27,17 +27,36 @@ export default class World {
         this.scene.add(this.lights.ambientLight)
 
         
-        this.numPositionsQueryLocation = {
-            value: 5
+        this.queryLocationParameters = {
+            numLocations: {
+                value: 5
+            },
+            water: {
+                value: 1
+            },
+            building: {
+                value: 0
+            },
+            sky: {
+                value: 0
+            },
+            tree: {
+                value: 0
+            },
         }
 
         this.setGUI()
     }
     callQueryLocation() {        
         this.visibilityEncoderService.queryLocation(
-            this.numPositionsQueryLocation.value,
+            this.queryLocationParameters.numLocations.value,
             1,
-            [0, 1, 0, 0]
+            this.normalizeGoal([
+                this.queryLocationParameters.building.value,
+                this.queryLocationParameters.water.value,
+                this.queryLocationParameters.tree.value,
+                this.queryLocationParameters.sky.value,
+            ])
         )
             .then(res => {
                 console.log(res);
@@ -53,8 +72,20 @@ export default class World {
                 console.error(err);
             })
     }
+    normalizeGoal(goal) {
+        let sum = 0
+        goal.forEach(val => sum += val)
+        
+        return goal.map(val => val / sum)
+    }
     setGUI() {
-        this.gui.queryPositionFolder.add(this.numPositionsQueryLocation, 'value', 1, 1000, 1 ).min(1).max(10000).step(1).name('numLocations')
+        this.gui.queryPositionFolder.add(this.queryLocationParameters.numLocations, 'value').min(1).max(10000).step(1).name('numLocations')
+
+        this.gui.queryPositionFolder.add(this.queryLocationParameters.building, 'value').min(0).max(1).step(0.01).name('building')
+        this.gui.queryPositionFolder.add(this.queryLocationParameters.water, 'value').min(0).max(1).step(0.01).name('water')
+        this.gui.queryPositionFolder.add(this.queryLocationParameters.tree, 'value').min(0).max(1).step(0.01).name('tree')
+        this.gui.queryPositionFolder.add(this.queryLocationParameters.sky, 'value').min(0).max(1).step(0.01).name('sky')
+
         this.gui.queryPositionFolder.add({
             callQueryLocation: () => {
                 this.callQueryLocation()

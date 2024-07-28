@@ -33,6 +33,12 @@ export const hydrateMap = (key, map) => {
         map[key] = 1
     }
 }
+export const normalizeGoal = (goal) => {
+    let sum = 0
+    goal.forEach(val => sum += val)
+    
+    return goal.map(val => val / sum)
+}
 
 export const float32Flatten = (chunks) => {
     const result = []

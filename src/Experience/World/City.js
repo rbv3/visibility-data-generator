@@ -16,7 +16,9 @@ export default class City {
         this.materialHelper = new MaterialHelper()
         this.experience = new Experience()
         this.screenshotHelper = new ScreenshotHelper()
+
         this.characterControls = this.experience.characterControls
+        
         this.loaders = this.experience.loaders
         this.scene = this.experience.scene
         this.time = this.experience.time

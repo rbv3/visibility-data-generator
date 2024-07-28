@@ -25,7 +25,6 @@ export default class Renderer {
     }
 
     enableAmbientOcclusion() {
-
         this.composer = new EffectComposer( this.instance )
         const renderPass = new RenderPass( this.scene, this.camera.instance )
         this.composer.addPass( renderPass )

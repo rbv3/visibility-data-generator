@@ -29,6 +29,7 @@ export default class VisibilityEncoder {
             }
         )
     }
+
     predictFacadeFromBasePoints(facadePoints, buildingHeight) {
         const params = {
             // nmt: 'None'
@@ -53,6 +54,7 @@ export default class VisibilityEncoder {
             }
         )
     }
+
     testEncoderOnData(locationData) {
         const params = {
             // nmt: 'None'
@@ -73,18 +75,35 @@ export default class VisibilityEncoder {
             }
         )
     }
+
     printPredictionArray(predictions) {
         const classes = ['building', ' water', ' tree', ' sky']
         for(let i=0; i<predictions.length; i++) {
             console.log(`${classes[i]}: ${predictions[i]}`)
         }
     }
+    /*
+        Query Location using surfaces
+            - go to controls menu
+            - click on folder with some methods for queryLocation
+            - only of those below at a given moment
+                - use transform controls to place the surface on screen (moves user to birds view)
+                    (https://threejs.org/docs/#examples/en/controls/TransformControls)
+                - add plane/ remove plane -> center, point exterior, length n width
+                - add sphere/remove sphere -> center, point surface (or radius)
+                - add semisphere/remove semisphere -> same as sphere (for the moment, the cut is being hardcoded)
+                - remove all
+            - if we click querLocation we'll use the selected surface with its respective parameters
+            - create a fixed location to show the whole city (bird view)
+            - how to render a big model from the distance and try not to render that much detail
+            - represent results on screen, when you click on the result, go there and having the possibility to move back to birds view
+    */
     queryLocation(numLocations, seed, goals) {
         const params = {
         }
         const data = [{
             f_xyz: goals,
-            num_locations: numLocations,
+            num_locations: numLocations
         }]
         return axios(
             {
@@ -101,6 +120,35 @@ export default class VisibilityEncoder {
                 data
             }
         )
+    }
 
+    queryLocationOnPlane({numLocations, seed, goals, pointOnPlane, direction1, direction2, radius}) {
+        const params = {
+        }
+        const data = [{
+            f_xyz: goals,
+            point_on_plane: pointOnPlane,
+            direction_1: direction1,
+            direction_2: direction2,
+            r: radius,
+            num_locations: numLocations,
+            seed: seed
+        }]
+        console.log(data);
+        return axios(
+            {
+                method: 'post',
+                baseURL: 'http://127.0.0.1:5000/',
+                params,
+                url: '/query_plane_locations',
+                headers: {
+                    scheme: 'http',
+                    'Cache-Control': 'no-cache',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+                data
+            }
+        )
     }
 }

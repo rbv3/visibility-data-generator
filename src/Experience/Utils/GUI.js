@@ -16,7 +16,7 @@ export default class GUI {
         this.ambientOcclusionFolder = this.instance.addFolder('Ambient Occlusion')
             .close()
         this.queryPositionFolder = this.instance.addFolder('Query Position')
-        .close()
+            .close()
         this.viewportFolder = this.instance.addFolder('Viewport')
             .close()
     }

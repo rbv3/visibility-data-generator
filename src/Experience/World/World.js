@@ -3,6 +3,8 @@ import Loaders from '../Utils/Loaders'
 import Lights from '../Lights'
 import City from './City'
 import ParticleHelper from '../Utils/ParticleHelper'
+import { normalizeGoal } from '../Utils/helpers'
+import BirdsEye from '../Utils/BirdsEye'
 
 export default class World {
     constructor() {
@@ -10,6 +12,7 @@ export default class World {
         this.scene = this.experience.scene
         this.visibilityEncoderService = this.experience.visibilityEncoderService
         this.gui = this.experience.gui
+        this.birdsEye = new BirdsEye()
 
         this.povWorld = this.experience.povWorld
 
@@ -51,7 +54,7 @@ export default class World {
         this.visibilityEncoderService.queryLocation(
             this.queryLocationParameters.numLocations.value,
             1,
-            this.normalizeGoal([
+            normalizeGoal([
                 this.queryLocationParameters.building.value,
                 this.queryLocationParameters.water.value,
                 this.queryLocationParameters.tree.value,
@@ -72,12 +75,37 @@ export default class World {
                 console.error(err);
             })
     }
-    normalizeGoal(goal) {
-        let sum = 0
-        goal.forEach(val => sum += val)
-        
-        return goal.map(val => val / sum)
+
+    callQueryLocationOnPlane() {        
+        this.visibilityEncoderService.queryLocationOnPlane({
+            numLocations: this.queryLocationParameters.numLocations.value,
+            seed: 20,
+            goals: normalizeGoal([
+                this.queryLocationParameters.building.value,
+                this.queryLocationParameters.water.value,
+                this.queryLocationParameters.tree.value,
+                this.queryLocationParameters.sky.value,
+            ]),
+            pointOnPlane: [-300, 60, -292],
+            direction1: [1, 0, 0],
+            direction2: [0, 0, 1],
+            radius: [3500, 2500]
+        })
+            .then(res => {
+                console.log(res);
+                this.povWorld.maxLocations = res.data.length
+                this.povWorld.updateViewPort(res.data)
+                for(const gui of this.povWorld.gui.viewportFolder.controllers) {
+                    gui.max(res.data.length - 1)
+                    gui.updateDisplay()
+                }
+                this.particleHelper.plotParticlesWithDirection(res.data)
+            })
+            .catch(err => {
+                console.error(err);
+            })
     }
+
     setGUI() {
         this.gui.queryPositionFolder.add(this.queryLocationParameters.numLocations, 'value').min(1).max(10000).step(1).name('numLocations')
 
@@ -91,6 +119,18 @@ export default class World {
                 this.callQueryLocation()
             }
         }, 'callQueryLocation')
+
+        this.gui.queryPositionFolder.add({
+            callQueryLocationOnPlane: () => {
+                this.callQueryLocationOnPlane()
+            }
+        }, 'callQueryLocationOnPlane')
+
+        this.gui.queryPositionFolder.add({
+            setBirdsEyeCamera: () => {
+                this.birdsEye.setBirdsEyeCamera()
+            }
+        }, 'setBirdsEyeCamera')
     }
     update() {
         this.city.update()

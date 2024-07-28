@@ -1,6 +1,4 @@
 import * as THREE from 'three'
-import { TransformControls } from 'three/addons/controls/TransformControls.js'
-
 import Experience from './Experience'
 import MaterialHelper from './Utils/MaterialHelper'
 import { createArrayOfPointsFromGroup, createOBBHelper, updateChildrenMaterial } from './Utils/helpers'
@@ -32,6 +30,7 @@ export default class RayCaster {
         this.hoveredBuilding = undefined
 
         this.previousClicked = undefined
+
         this.clickedBuilding = undefined
         this.clickedBuildingHeight = undefined
         this.clickedBuildingCenter = undefined

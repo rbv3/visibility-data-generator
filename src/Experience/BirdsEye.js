@@ -42,11 +42,10 @@ export default class BirdsEye {
         geometry.rotateX(Math.PI * 0.5)
 
         const material = new THREE.MeshBasicMaterial({
-            color: 'red',
+            color: 'teal',
             transparent: true,
             opacity: 0.3,
             side: THREE.DoubleSide,
-            wireframe: true
         })
         this.plane = new THREE.Mesh(geometry, material)
         this.transformControls.attach(this.plane)

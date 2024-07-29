@@ -20,6 +20,7 @@ export default class CharacterControls {
         this.moveDownwards = false
         this.isPaused = false
         this.controls.isLocked = false
+        this.outsideLock = false
 
         this.setControlledCameraEvents()
     }
@@ -76,7 +77,9 @@ export default class CharacterControls {
     }
     
     onMousePress(event, isPressed) {
-        if(!this.isPaused) {
+        if(this.outsideLock) {
+            this.controls.isLocked = false
+        } else if(!this.isPaused) {
             if(isPressed) {
                 this.controls.isLocked = true
             } else {

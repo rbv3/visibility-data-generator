@@ -19,5 +19,7 @@ export default class GUI {
             .close()
         this.viewportFolder = this.instance.addFolder('Viewport')
             .close()
+        this.birdsEyeFolder = this.instance.addFolder('BirdsEye')
+            .close()
     }
 }

@@ -4,7 +4,6 @@ import Lights from '../Lights'
 import City from './City'
 import ParticleHelper from '../Utils/ParticleHelper'
 import { normalizeGoal } from '../Utils/helpers'
-import BirdsEye from '../Utils/BirdsEye'
 
 export default class World {
     constructor() {
@@ -12,7 +11,7 @@ export default class World {
         this.scene = this.experience.scene
         this.visibilityEncoderService = this.experience.visibilityEncoderService
         this.gui = this.experience.gui
-        this.birdsEye = new BirdsEye()
+        this.birdsEye = this.experience.birdsEye
 
         this.povWorld = this.experience.povWorld
 
@@ -125,12 +124,6 @@ export default class World {
                 this.callQueryLocationOnPlane()
             }
         }, 'callQueryLocationOnPlane')
-
-        this.gui.queryPositionFolder.add({
-            setBirdsEyeCamera: () => {
-                this.birdsEye.setBirdsEyeCamera()
-            }
-        }, 'setBirdsEyeCamera')
     }
     update() {
         this.city.update()

@@ -33,6 +33,24 @@ export const hydrateMap = (key, map) => {
         map[key] = 1
     }
 }
+
+export const getVertex = (position, index) => {
+    const i3 = index*3
+    return [
+        position[i3 + 0],
+        position[i3 + 1],
+        position[i3 + 2],
+    ]
+}
+
+export const subtractVectors = (vec1, vec2) => {
+    return [
+        vec1[0] - vec2[0],
+        vec1[1] - vec2[1],
+        vec1[2] - vec2[2],
+    ]
+}
+
 export const normalizeGoal = (goal) => {
     let sum = 0
     goal.forEach(val => sum += val)
@@ -67,6 +85,14 @@ export const getDistance3D = (pointA, pointB) => {
     const deltaZ = pointA[2] - pointB[2]
 
     return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2))
+}
+export const normalize3DCoord = (coord) => {
+    const magnitude = Math.sqrt(Math.pow(coord[0], 2) + Math.pow(coord[1], 2) + Math.pow(coord[2], 2))
+    return [
+        coord[0] / magnitude,
+        coord[1] / magnitude,
+        coord[2] / magnitude,
+    ]
 }
 
 export const download_csv = (data, fileName) => {

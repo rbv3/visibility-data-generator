@@ -15,6 +15,7 @@ import ScreenshotHelper from './Utils/ScreenshotHelper.js'
 import VisibilityEncoder from '../Services/VisibilityEncoder.js'
 import ParticleHelper from './Utils/ParticleHelper.js'
 import PovWorld from './povWorld.js'
+import BirdsEye from './BirdsEye.js'
 
 let instance = null
 
@@ -46,6 +47,7 @@ export default class Experience {
         this.characterControls = new CharacterControls()
         this.renderer = new Renderer()
         this.loaders = new Loaders()
+        this.birdsEye = new BirdsEye()
 
         // POV
         this.povWorld = new PovWorld()

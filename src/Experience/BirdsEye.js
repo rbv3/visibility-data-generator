@@ -70,19 +70,13 @@ export default class BirdsEye {
         AC = subtractVectors(p0, p2)
         AD = subtractVectors(p0, p3)
 
-        console.log(AB)
-        console.log(AC)
-        console.log(AD)
-
         let distAB, distAC, distAD
         distAB = getDistance3D(p0, p1)
         distAC = getDistance3D(p0, p2)
         distAD = getDistance3D(p0, p3)
         const distances = [distAB, distAC, distAD]
-        console.log(distances);
 
         const maxDistance = Math.max(...distances)
-        console.log(maxDistance);
         if(distAB != maxDistance) {
             directions.push(normalize3DCoord(AB))
         }
@@ -92,7 +86,6 @@ export default class BirdsEye {
         if(distAD != maxDistance) {
             directions.push(normalize3DCoord(AD))
         }
-        console.log(directions);
 
         return directions
     }

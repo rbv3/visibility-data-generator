@@ -75,7 +75,12 @@ export default class World {
             })
     }
 
-    callQueryLocationOnPlane() {        
+    callQueryLocationOnPlane() {     
+        const plane = this.birdsEye.plane
+        const planeCenter = plane.position
+        const planeWidth = plane.geometry.parameters.width
+        const planeHeight = plane.geometry.parameters.height
+        const planeDirections = this.birdsEye.getPlaneDirections()
         this.visibilityEncoderService.queryLocationOnPlane({
             numLocations: this.queryLocationParameters.numLocations.value,
             seed: 20,
@@ -85,19 +90,13 @@ export default class World {
                 this.queryLocationParameters.tree.value,
                 this.queryLocationParameters.sky.value,
             ]),
-            pointOnPlane: [-300, 60, -292],
-            direction1: [1, 0, 0],
-            direction2: [0, 0, 1],
-            radius: [3500, 2500]
+            pointOnPlane: [...planeCenter],
+            direction1: planeDirections[0],
+            direction2: planeDirections[1],
+            radius: [planeWidth, planeHeight]
         })
             .then(res => {
                 console.log(res);
-                this.povWorld.maxLocations = res.data.length
-                this.povWorld.updateViewPort(res.data)
-                for(const gui of this.povWorld.gui.viewportFolder.controllers) {
-                    gui.max(res.data.length - 1)
-                    gui.updateDisplay()
-                }
                 this.particleHelper.plotParticlesWithDirection(res.data)
             })
             .catch(err => {

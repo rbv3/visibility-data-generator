@@ -77,9 +77,16 @@ export default class World {
 
     callQueryLocationOnPlane() {     
         const plane = this.birdsEye.plane
+        const planeScale = plane.scale
         const planeCenter = plane.position
-        const planeWidth = plane.geometry.parameters.width
-        const planeHeight = plane.geometry.parameters.height
+        const planeWidth = plane.geometry.parameters.width * planeScale.x
+        const planeHeight = plane.geometry.parameters.height * planeScale.y
+        const planeStart = [
+            planeCenter.x + planeWidth/2, 
+            planeCenter.y, 
+            planeCenter.z
+        ] 
+
         const planeDirections = this.birdsEye.getPlaneDirections()
         this.visibilityEncoderService.queryLocationOnPlane({
             numLocations: this.queryLocationParameters.numLocations.value,
@@ -90,7 +97,7 @@ export default class World {
                 this.queryLocationParameters.tree.value,
                 this.queryLocationParameters.sky.value,
             ]),
-            pointOnPlane: [...planeCenter],
+            pointOnPlane: planeStart,
             direction1: planeDirections[0],
             direction2: planeDirections[1],
             radius: [planeWidth, planeHeight]

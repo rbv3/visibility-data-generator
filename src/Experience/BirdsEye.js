@@ -21,13 +21,13 @@ export default class BirdsEye {
     setBirdsEyeCamera() {
         const cameraPosition = [
             1222.9460847744015,
-            483.0482763224882,
-            -4474.680415156037
+            798.3564726279227,
+            -4474.680415156037,
         ]
         const cameraRotation = [
-            THREE.MathUtils.degToRad(-174.4967106570212), 
-            THREE.MathUtils.degToRad(-1.8555140622514954), 
-            THREE.MathUtils.degToRad(-179.82125863104804)
+            THREE.MathUtils.degToRad(-171.40058214768743), 
+            THREE.MathUtils.degToRad(-1.9564645442454736), 
+            THREE.MathUtils.degToRad(-179.7041930116)
         ]
         const cameraFar = 7500
 
@@ -96,6 +96,9 @@ export default class BirdsEye {
         this.scene.add(this.transformControls)
         this.transformControls.addEventListener( 'dragging-changed', (event) => {
             this.controls.outsideLock = event.value
+            if(event.value == false && this.transformControls.mode == 'rotate') {
+                console.log('Update geometry after rotation');
+            }
         } );
 
         window.addEventListener( 'keydown', (event) => {

@@ -26,4 +26,7 @@ export default class Time extends EventEmitter {
             this.tick()
         })
     }
+
+    // brush(){
+    // }
 }

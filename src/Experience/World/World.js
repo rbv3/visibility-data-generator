@@ -4,6 +4,7 @@ import Lights from '../Lights'
 import City from './City'
 import ParticleHelper from '../Utils/ParticleHelper'
 import { normalizeGoal } from '../Utils/helpers'
+import Histogram from '../D3Selection/Histogram/histogram'
 
 export default class World {
     constructor() {
@@ -16,6 +17,9 @@ export default class World {
         this.povWorld = this.experience.povWorld
 
         this.particleHelper = new ParticleHelper()
+
+        // this.histogram = new Histogram(this.particleHelper)
+        this.histogram = new Histogram()
 
         this.loaders = new Loaders()
 
@@ -101,6 +105,7 @@ export default class World {
             .then(res => {
                 console.log(res);
                 this.particleHelper.plotParticlesWithDirection(res.data)
+                this.histogram.createHistogram(res.data)
             })
             .catch(err => {
                 console.error(err);

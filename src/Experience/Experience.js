@@ -16,6 +16,7 @@ import VisibilityEncoder from '../Services/VisibilityEncoder.js'
 import ParticleHelper from './Utils/ParticleHelper.js'
 import PovWorld from './povWorld.js'
 import BirdsEye from './BirdsEye.js'
+import Histogram from './D3Selection/Histogram/histogram.js'
 
 let instance = null
 
@@ -49,6 +50,7 @@ export default class Experience {
         this.loaders = new Loaders()
         this.birdsEye = new BirdsEye()
 
+
         // POV
         this.povWorld = new PovWorld()
 
@@ -63,10 +65,15 @@ export default class Experience {
 
         this.shouldUpdateOnTick = true
 
+
+        //Histogram
+        this.histogram = new Histogram();
+        console.log("Histogram created");
+
         // Events
-        this.sizes.on('resize', () => {
-            this.resize()
-        })
+        // this.sizes.on('resize', () => {
+        //     this.resize()
+        // })
 
         this.time.on('tick', () => {
             if(this.shouldUpdateOnTick) {

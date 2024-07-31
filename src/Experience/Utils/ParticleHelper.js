@@ -4,15 +4,17 @@ import Experience from '../Experience'
 import { sc1 } from '../Utils/screenshotPositions.js'
 import { getDistance3D } from './helpers.js'
 import { CAMERA_LOOKAT } from './constants.js'
+import EventEmitter from './EventEmitter'
 
 let instance = null
 
-export default class ParticleHelper {
+export default class ParticleHelper extends EventEmitter {
     constructor() {
         // singleton
         if(instance) {
             return instance
         }
+        super()
         instance = this
 
         this.experience = new Experience()
@@ -73,7 +75,8 @@ export default class ParticleHelper {
         })
         material.vertexColors = true
 
-        this.lastResult = result
+        this.lastResult = result;
+        this.trigger("updatedQueryResult");
 
         this.lookAtResults = [
             {

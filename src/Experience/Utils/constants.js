@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 export const MIN_HEIGHT = 10
-export const MAX_HEIGHT = 1500
+export const MAX_HEIGHT = 150000
 
 export const AMORTIZE_SPEED_X = 2.0
 export const AMORTIZE_SPEED_Y = 2.0

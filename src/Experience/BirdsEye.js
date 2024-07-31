@@ -55,8 +55,12 @@ export default class BirdsEye {
 
     getPlaneDirections() {
         const directions = []
-        const planePosition = this.plane.geometry.attributes.position.array
-
+        
+        // get position attribute after applying rotation to the plane
+        const newGeometry = this.plane.geometry.clone()
+        newGeometry.applyMatrix4( this.plane.matrix );
+        
+        const planePosition = newGeometry.attributes.position.array
         let AB, AC, AD
         let p0, p1, p2, p3
 
@@ -96,9 +100,6 @@ export default class BirdsEye {
         this.scene.add(this.transformControls)
         this.transformControls.addEventListener( 'dragging-changed', (event) => {
             this.controls.outsideLock = event.value
-            if(event.value == false && this.transformControls.mode == 'rotate') {
-                console.log('Update geometry after rotation');
-            }
         } );
 
         window.addEventListener( 'keydown', (event) => {

@@ -39,14 +39,6 @@ export default class Camera {
         this.instance.quaternion.set(...CAMERA_QUATERNIONS[this.quaternionIndex])
         this.scene.add(this.instance)
     }
-    setOrbitControls() {
-        this.controls = new OrbitControls(this.instance, this.canvas)
-
-        this.controls.enableDamping = true
-        this.controls.rotateSpeed = 0.1
-        this.controls.zoomSpeed = 0.5
-        this.controls.panSpeed = 0.1
-    }
     setControls() {
         this.controls = new CustomPointerLockControls(this.instance, this.canvas)
         this.controls.isLocked = true

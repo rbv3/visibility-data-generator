@@ -1,4 +1,5 @@
 import ParticleHelper from "../../Utils/ParticleHelper";
+import { pxStringToInt } from "../../Utils/helpers";
 
 let global_locations = [];
 let selected_locations = [];
@@ -9,18 +10,20 @@ export default class Histogram {
     constructor() {
         this.particleHelper = new ParticleHelper()
     };
-
     createHistogram(data) {
         console.log("Creating histogram...", data)
 
         global_locations = data;
         selected_locations = data;
 
-        const svg = d3.select("svg");
+        const svg = d3.select(".residualsGraph");
+        
         const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-        const width = +svg.attr("width") - margin.left - margin.right;
-        const height = +svg.attr("height") - margin.top - margin.bottom;
+        const width = +pxStringToInt(svg.style("width")) - margin.left - margin.right;
+        const height = +pxStringToInt(svg.style("height")) - margin.top - margin.bottom;
+        
         const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
 
         const x = d3.scaleLinear()
             .domain([0, 0.6])
@@ -63,7 +66,6 @@ export default class Histogram {
     }
     
     brushEnded(event, x) {
-        console.log(event);
         if (!event.selection) {
             selected_locations = global_locations;
         } else {

@@ -250,3 +250,7 @@ export const createArrayOfPointsFromGroup = (group) => {
     })
     return points
 }
+
+export const pxStringToInt = (string) => {
+    return Number(string.split("px")[0])
+}

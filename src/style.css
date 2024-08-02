@@ -1,3 +1,5 @@
+/* Crossfilter css */
+@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700);
 *
 {
     margin: 0;
@@ -56,9 +58,29 @@ body
     transition: transform 1.5s ease-in-out;
 }
 
-
-/* Crossfilter css */
-@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700);
+.graphsContainer {
+  display: flex;
+  flex-direction: row;
+  width: 800;
+  height: 200;
+}
+.residualsContainer {
+  display: flex;
+  flex-direction: column;
+}
+.residualsGraph {
+  width: 360;
+  height: 200;
+}
+.parallelCoordinatesContainer{
+  display: flex;
+  flex-direction: column;
+  margin-left: 400px;
+}
+.parallelCoordinates {
+  width: 360;
+  height: 200;
+}
     
 /* body { font-family: Arial, sans-serif; } */
 .container { display: flex; }

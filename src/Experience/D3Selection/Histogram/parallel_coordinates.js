@@ -12,7 +12,7 @@ d3.json("./D3Selection/Histogram/queried_many_locations_plane.csv").then(functio
 });
 
 function createHistogram(data) {
-    const svg = d3.select(".parallel_coordinates");
+    const svg = d3.select(".parallelCoordinates");
     const margin = {top: 20, right: 30, bottom: 30, left: 40};
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;

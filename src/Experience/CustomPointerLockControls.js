@@ -38,7 +38,6 @@ class CustomPointerLockControls extends EventDispatcher {
         const scope = this
 
         function onMouseMove( event ) {
-
             if ( scope.isLocked === false ) {
                 return
             }
@@ -84,17 +83,17 @@ class CustomPointerLockControls extends EventDispatcher {
 
         this.connect = function () {
 
-            scope.domElement.ownerDocument.addEventListener( 'mousemove', onMouseMove )
-            scope.domElement.ownerDocument.addEventListener( 'pointerlockchange', onPointerlockChange )
-            scope.domElement.ownerDocument.addEventListener( 'pointerlockerror', onPointerlockError )
+            scope.domElement.addEventListener( 'mousemove', onMouseMove )
+            scope.domElement.addEventListener( 'pointerlockchange', onPointerlockChange )
+            scope.domElement.addEventListener( 'pointerlockerror', onPointerlockError )
 
         }
 
         this.disconnect = function () {
 
-            scope.domElement.ownerDocument.removeEventListener( 'mousemove', onMouseMove )
-            scope.domElement.ownerDocument.removeEventListener( 'pointerlockchange', onPointerlockChange )
-            scope.domElement.ownerDocument.removeEventListener( 'pointerlockerror', onPointerlockError )
+            scope.domElement.removeEventListener( 'mousemove', onMouseMove )
+            scope.domElement.removeEventListener( 'pointerlockchange', onPointerlockChange )
+            scope.domElement.removeEventListener( 'pointerlockerror', onPointerlockError )
 
         }
 

@@ -14,7 +14,6 @@ export default class BirdsEye {
 
         this.plane = null;
 
-        this.setTransformControls()
         this.setGUI()
     }
 
@@ -38,6 +37,8 @@ export default class BirdsEye {
     }
 
     addPlane() {
+        this.setTransformControls()
+
         const geometry = new THREE.PlaneGeometry(1000, 1000, 1, 1)
         geometry.rotateX(Math.PI * 0.5)
 
@@ -95,6 +96,8 @@ export default class BirdsEye {
 
 
     setTransformControls() {
+        if(this.transformControls != null) return;
+        
         this.transformControls = new TransformControls( this.camera.instance, this.canvas );
 
         this.scene.add(this.transformControls)

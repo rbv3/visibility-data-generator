@@ -66,12 +66,7 @@ export default class World {
         )
             .then(res => {
                 console.log(res);
-                this.povWorld.maxLocations = res.data.length
-                this.povWorld.updateViewPort(res.data)
-                for(const gui of this.povWorld.gui.viewportFolder.controllers) {
-                    gui.max(res.data.length - 1)
-                    gui.updateDisplay()
-                }
+                this.updatePovInterface(res);
                 this.particleHelper.plotParticlesWithDirection(res.data)
             })
             .catch(err => {
@@ -104,12 +99,22 @@ export default class World {
         })
             .then(res => {
                 console.log(res);
+                this.updatePovInterface(res);
                 this.particleHelper.plotParticlesWithDirection(res.data)
                 this.histogram.createHistogram(res.data)
             })
             .catch(err => {
                 console.error(err);
             })
+    }
+
+    updatePovInterface(res) {
+        this.povWorld.maxLocations = res.data.length
+        this.povWorld.updateViewPort(res.data)
+        for(const gui of this.povWorld.gui.viewportFolder.controllers) {
+            gui.max(res.data.length - 1)
+            gui.updateDisplay()
+        }
     }
 
     setGUI() {

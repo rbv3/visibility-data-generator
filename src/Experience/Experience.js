@@ -49,6 +49,7 @@ export default class Experience {
         this.renderer = new Renderer()
         this.loaders = new Loaders()
         this.birdsEye = new BirdsEye()
+        this.queryLocationParticles = [];
 
 
         // POV
@@ -59,7 +60,8 @@ export default class Experience {
         this.buildingMeshes = this.world.buildingMeshes
         this.raycaster = new RayCaster()
         this.screenshotHelper = new ScreenshotHelper()
-        this.particleHelper = new ParticleHelper() // make it available right after experience on console
+
+        this.particleHelper = new ParticleHelper() 
 
         this.currentMode = VIEW_MODES.realWorld
 

@@ -67,7 +67,7 @@ export default class World {
             .then(res => {
                 console.log(res);
                 this.updatePovInterface(res);
-                this.particleHelper.plotParticlesWithDirection(res.data)
+                this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(res.data)
             })
             .catch(err => {
                 console.error(err);
@@ -100,7 +100,7 @@ export default class World {
             .then(res => {
                 console.log(res);
                 this.updatePovInterface(res);
-                this.particleHelper.plotParticlesWithDirection(res.data)
+                this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(res.data)
                 this.histogram.createHistogram(res.data)
             })
             .catch(err => {

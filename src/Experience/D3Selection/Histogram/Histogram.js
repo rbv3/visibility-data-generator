@@ -1,3 +1,4 @@
+import Experience from "../../Experience";
 import ParticleHelper from "../../Utils/ParticleHelper";
 import { pxStringToInt } from "../../Utils/helpers";
 
@@ -8,6 +9,7 @@ let selected_locations = [];
 
 export default class Histogram {
     constructor() {
+        this.experience = new Experience();
         this.particleHelper = new ParticleHelper()
     };
     createHistogram(data) {
@@ -72,7 +74,7 @@ export default class Histogram {
             const [x0, x1] = event.selection.map(x.invert);
             selected_locations = global_locations.filter(d => d.residual >= x0 && d.residual <= x1);
         }
-        this.particleHelper.plotParticlesWithDirection(selected_locations)
+        this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(selected_locations)
         console.log(selected_locations); // For debugging purposes
     }
 }

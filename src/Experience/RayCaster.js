@@ -24,6 +24,9 @@ export default class RayCaster {
         this.buildingMeshes = this.experience.buildingMeshes
         this.mouse = new THREE.Vector2()
 
+        this.canvas = document.getElementsByClassName('webgl')[0].getBoundingClientRect();
+        console.log(this.canvas);
+
         this.materialHelper = new MaterialHelper()
 
         this.previousHovered = undefined
@@ -352,8 +355,12 @@ export default class RayCaster {
 
     }
     update() {
+        // verificar camera bugada, entender onde estou atualizando-a e onde falho em chamar updates
         this.instance.setFromCamera(this.mouse, this.camera.instance)
-        const intersects = this.instance.intersectObjects(this.buildingMeshes)
+        // console.log(this.experience.queryLocationParticles);
+        const locationParticles = this.experience.queryLocationParticles ? this.experience.queryLocationParticles : [];
+        const intersects = this.instance.intersectObjects([...this.buildingMeshes, ...locationParticles])
+        // console.log(intersects);
         this.hoveredBuilding = intersects[0]?.object?.parent
     }
 }

@@ -26,23 +26,33 @@
 </head>
 
 <body>
-    <canvas class="webgl"></canvas>
-    <p id="webgl-pov-steps">Steps: X</p>
-    <p id="webgl-pov-residual">Residual: Y</p>
-    <canvas class="webgl-pov"></canvas>
-    <div class="loading-bar"></div>
-    <script type="module" src="./script.js"></script>
+    <div class="containerRow">
+        <div class="canvasColumn">
+            <canvas class="webgl"></canvas>
+        </div>
+        <div class="uiColumn">
+            <div class="graphsContainer">
+                <div class="residualsContainer">
+                    <span>Residuals</span>
+                    <svg class="residualsGraph"></svg>
+                </div>
+                <div class="parallelCoordinatesContainer">
+                    <span>Parralel Query Coordinates</span>
+                    <div class="parallelCoordinates"></div>
+                </div>
+            </div>
 
-    <br>
-    <div class="graphsContainer">
-        <div class="residualsContainer">
-            <span>Residuals</span>
-            <svg class="residualsGraph"></svg>
+
+            <div className="povWorld">
+                <p id="webgl-pov-steps">Steps: X</p>
+                <p id="webgl-pov-residual">Residual: Y</p>
+                <canvas class="webgl-pov"></canvas>
+            </div>
+
+            <br>
         </div>
-        <div class="parallelCoordinatesContainer">
-            <span>Parralel Query Coordinates</span>
-            <div class="parallelCoordinates"></div>
-        </div>
+        <div class="loading-bar"></div>
+        <script type="module" src="./script.js"></script>
     </div>
 
     <!-- <script src="./Experience/D3Selection/Histogram/histogram.js"></script> -->

@@ -12,10 +12,30 @@ body
     overflow: hidden;
 }
 
+.containerRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.canvasColumn{
+  display: flex;
+  flex-direction: column;
+  width: 850px;
+  height: 850px;
+}
+
+.uiColumn {
+  left: 850px;
+  top: 300px;
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+}
+
 .webgl
 {
     position: fixed;
-    top: 300px;
+    top: 0;
     left: 0;
     outline: none;
 }
@@ -60,7 +80,7 @@ body
 
 .graphsContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 800;
   height: 200;
 }
@@ -75,7 +95,7 @@ body
 .parallelCoordinatesContainer{
   display: flex;
   flex-direction: column;
-  margin-left: 400px;
+  margin-left: 0;
 }
 .parallelCoordinates {
   width: 360;
@@ -193,7 +213,7 @@ h1, h2 {
 }
 
 #flight-list {
-  min-height: 1024px;
+  min-height: 850px;
 }
 
 #flight-list .date,

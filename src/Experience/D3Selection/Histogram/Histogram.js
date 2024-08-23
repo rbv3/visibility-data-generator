@@ -67,6 +67,22 @@ export default class Histogram {
                 }));
     }
     
+    resetHistogram() {
+        // Reset the selected locations to the full global locations
+        selected_locations = [];
+        global_locations   = [];
+    
+        // Clear any existing brush selections on the histogram
+        d3.select(".residualsGraph .brush").call(d3.brushX().clear);
+    
+        // Redraw the histogram with the original data
+        d3.select(".residualsGraph").selectAll("*").remove();
+        // createHistogram(global_locations);
+        
+        // Optionally, reset the parallel coordinates as well
+        // updateParallelCoordinates();
+    }
+
     brushEnded(event, x) {
         if (!event.selection) {
             selected_locations = global_locations;

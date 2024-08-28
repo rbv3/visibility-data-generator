@@ -34,6 +34,16 @@ export default class ParticleHelper extends EventEmitter {
         this.points;
         this.pointsWithDirection;
         this.arrowHelpersGroup;
+        this.material = new THREE.PointsMaterial({
+            size: 10,
+            color: 'red',
+            sizeAttenuation: false,
+        })
+        this.selectedMaterial = new THREE.PointsMaterial({
+            size: 10,
+            color: new THREE.Color('#ffff00'),
+            sizeAttenuation: false,
+        })
 
         this.currentLookAt = 0
         this.createLookAtParticle()
@@ -230,11 +240,7 @@ export default class ParticleHelper extends EventEmitter {
         // create particles
         this.resetQueryLocationPoints(this.pointsWithDirection)
         this.resetArrowGroup(this.arrowHelpersGroup)
-        const material = new THREE.PointsMaterial({
-            size: 10,
-            color: 'red',
-            sizeAttenuation: false,
-        })
+        
         const geometry = new THREE.BufferGeometry()
         const positions = particles.reduce((arr, particle) => {
             arr.push(particle.x)
@@ -255,6 +261,7 @@ export default class ParticleHelper extends EventEmitter {
         const arrowGroup = new THREE.Group();
         const pointGroup = new THREE.Group();
 
+        let index = 0;
         for (const particle of particles) {
             const position = [particle.x, particle.y, particle.z]
             const rotation = [
@@ -263,14 +270,20 @@ export default class ParticleHelper extends EventEmitter {
                 THREE.MathUtils.degToRad(particle.zh),
             ]
 
-
             const pointGeometry = new THREE.BufferGeometry()
             const pointPosition = new Float32Array(position)
             pointGeometry.setAttribute(
                 'position',
                 new THREE.BufferAttribute(pointPosition, 3)
             )
-            const point = new THREE.Points(pointGeometry, material)
+
+            let point;
+            if(index == 0) {
+                point = new THREE.Points(pointGeometry, this.selectedMaterial)
+            } else {
+                point = new THREE.Points(pointGeometry, this.material)
+            }
+
             points.push(point)
 
             const dir = new THREE.Vector3(1, 2, 0);
@@ -288,6 +301,7 @@ export default class ParticleHelper extends EventEmitter {
 
             arrowGroup.add(arrowHelper);
             pointGroup.add(point);
+            index++;
         }
         this.pointsWithDirection = pointGroup;
         this.scene.add(arrowGroup)
@@ -367,5 +381,15 @@ export default class ParticleHelper extends EventEmitter {
         })
         console.log(filteredPoints)
         return filteredPoints
+    }
+    updateParticleColorAtIndex(index) {
+        const particles = this.pointsWithDirection.children
+        for(let i=0; i<particles.length; i++) {
+            if(i == index) {
+                particles[i].material = this.selectedMaterial
+            } else {
+                particles[i].material = this.material
+            }
+        }
     }
 }

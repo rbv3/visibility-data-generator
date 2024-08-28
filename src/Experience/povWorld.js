@@ -103,6 +103,7 @@ export default class PovWorld {
         .updateDisplay()
         .onFinishChange((index) => {
             this.updateCamera(index)
+            this.experience.particleHelper.updateParticleColorAtIndex(index)
         })
     }
 }

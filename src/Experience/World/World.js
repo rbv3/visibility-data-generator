@@ -118,6 +118,14 @@ export default class World {
         }
     }
 
+    updatePovInterfaceAfterBrushOnHistogram(res) {
+        this.povWorld.updateViewPort(res)
+        for(const gui of this.povWorld.gui.viewportFolder.controllers) {
+            gui.max(res.length - 1)
+            gui.updateDisplay()
+        }
+    }
+
     setGUI() {
         this.gui.queryPositionFolder.add(this.queryLocationParameters.numLocations, 'value').min(1).max(10000).step(1).name('numLocations')
 

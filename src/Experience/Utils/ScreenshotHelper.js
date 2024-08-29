@@ -143,10 +143,10 @@ export default class ScreenshotHelper {
 
                 //replicating the blocks above for multiple hieghts.
                 const additionalHeights = [120, 170, 220, 270]
-                for (h in addtionalHeights){
+                for (let h in additionalHeights){
                     const cameraPosOff = [...scPositions[i]]
                     const additionalHeight = additionalHeights[h]
-                    cameraPosOff[1] += addtionalHeight
+                    cameraPosOff[1] += additionalHeight
 
                     this.camera.instance.position.set(...cameraPosOff)
                     this.camera.instance.lookAt(CAMERA_LOOKAT[j])
@@ -155,10 +155,9 @@ export default class ScreenshotHelper {
                     csv.data.push(this.createCsvLineForScene(`${imageName}-${additionalHeight}`))
                     if(shouldCreateImage) {
                         this.renderer.createImage(`${imageName}-${additionalHeight}`)
-                }
+                    }
 
                 }
-
             }
         }
         const end = performance.now()

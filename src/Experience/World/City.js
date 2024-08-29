@@ -53,7 +53,9 @@ export default class City {
                         console.log({removedMeshes})
 
                         // clone current scene to POV scene
-                        this.povWorld.initScene(this.scene)
+                        this.povWorld.forEach(world => {
+                            world.initScene(this.scene)
+                        })
 
                         // Create points of interest and to avoid
                         // this.pointsOfInterest = float32Flatten(this.positionsOfInterest)

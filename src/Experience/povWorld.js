@@ -6,7 +6,9 @@ import { CAMERA_QUATERNIONS, REAL_WORLD_OBJECT_TO_COLOR } from "./Utils/constant
 
 const startClearColor = REAL_WORLD_OBJECT_TO_COLOR['sky']
 export default class PovWorld {
-    constructor() {
+    constructor(index) {
+        this.index = index;
+
         this.experience = new Experience()
 
         this.camera = null
@@ -18,24 +20,22 @@ export default class PovWorld {
         this.locations = []
         this.maxLocations = 1
         this.currentLocationIndex = {
-            value: 0
+            value: this.index
         }
-
         this.setGUI()
     }
     initScene(scene) {
-        const timesSmaller = 7;
-        
+        const povCanvas = document.querySelector(`.webgl-pov${this.index}`);
         // clone of initial experience scene after loading all models
         this.scene = scene.clone()
 
         this.initCamera()
 
         this.renderer = new WebGLRenderer({
-            canvas: document.querySelector('canvas.webgl-pov')
+            canvas: document.querySelector(`canvas.webgl-pov${this.index}`)
         })
         this.renderer.setClearColor(startClearColor)
-        this.renderer.setSize(this.sizes.width / timesSmaller, this.sizes.height / timesSmaller)
+        this.renderer.setSize(povCanvas.clientWidth, povCanvas.clientHeight)
         this.renderer.setPixelRatio(this.sizes.pixelRatio)
 
         this.updateSceneOnce()
@@ -61,7 +61,7 @@ export default class PovWorld {
     }
     updateViewPort(result) {
         this.locations = result
-        this.updateCamera(0)
+        this.updateCamera(this.index)
     }
     updateCamera(index) {
         // update position
@@ -70,7 +70,7 @@ export default class PovWorld {
         const residual = location.residual
         const steps = location.steps
 
-        this.updateHTML(residual, steps)
+        // this.updateHTML(residual, steps)
 
         this.camera.position.set(
             location.x,
@@ -99,7 +99,7 @@ export default class PovWorld {
         .min(0)
         .max(this.maxLocations - 1)
         .step(1)
-        .name('Position Index')
+        .name(`POV ${this.index} Index`)
         .updateDisplay()
         .onFinishChange((index) => {
             this.updateCamera(index)

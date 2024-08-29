@@ -20,8 +20,7 @@ body
 .canvasColumn{
   display: flex;
   flex-direction: column;
-  width: 850px;
-  height: 850px;
+  height: 80vh;
 }
 
 .uiColumn {
@@ -38,12 +37,56 @@ body
     top: 0;
     left: 0;
     outline: none;
+    height: 83vh;
+    width: 83vh;
 }
-.webgl-pov
+.webgl-pov0
 {
     position: fixed;
     bottom: 0;
-    right: 0;
+    left: 0;
+    height: 16vh;
+    width: 16vh;
+    outline: none;
+    border: 3px solid black
+}
+.webgl-pov1
+{
+    position: fixed;
+    bottom: 0;
+    left: 16vh;
+    height: 16vh;
+    width: 16vh;
+    outline: none;
+    border: 3px solid black
+}
+.webgl-pov2
+{
+    position: fixed;
+    bottom: 0;
+    left: 32vh;
+    height: 16vh;
+    width: 16vh;
+    outline: none;
+    border: 3px solid black
+}
+.webgl-pov3
+{
+    position: fixed;
+    bottom: 0;
+    left: 48vh;
+    height: 16vh;
+    width: 16vh;
+    outline: none;
+    border: 3px solid black
+}
+.webgl-pov4
+{
+    position: fixed;
+    bottom: 0;
+    left: 64vh;
+    height: 16vh;
+    width: 16vh;
     outline: none;
     border: 3px solid black
 }

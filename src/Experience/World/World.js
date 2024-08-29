@@ -110,20 +110,24 @@ export default class World {
     }
 
     updatePovInterface(res) {
-        this.povWorld.maxLocations = res.data.length
-        this.povWorld.updateViewPort(res.data)
-        for(const gui of this.povWorld.gui.viewportFolder.controllers) {
-            gui.max(res.data.length - 1)
-            gui.updateDisplay()
-        }
+        this.povWorld.forEach((world) => {
+            world.maxLocations = res.data.length
+            world.updateViewPort(res.data)
+            for(const gui of world.gui.viewportFolder.controllers) {
+                gui.max(res.data.length - 1)
+                gui.updateDisplay()
+            }
+        })
     }
 
     updatePovInterfaceAfterBrushOnHistogram(res) {
-        this.povWorld.updateViewPort(res)
-        for(const gui of this.povWorld.gui.viewportFolder.controllers) {
-            gui.max(res.length - 1)
-            gui.updateDisplay()
-        }
+        this.povWorld.forEach((world) => {
+            world.updateViewPort(res)
+            for(const gui of world.gui.viewportFolder.controllers) {
+                gui.max(res.length - 1)
+                gui.updateDisplay()
+            }
+        })
     }
 
     setGUI() {

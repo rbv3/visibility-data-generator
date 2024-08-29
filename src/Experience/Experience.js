@@ -53,7 +53,13 @@ export default class Experience {
 
 
         // POV
-        this.povWorld = new PovWorld()
+        this.povWorld = [
+            new PovWorld(0),
+            new PovWorld(1),
+            new PovWorld(2),
+            new PovWorld(3),
+            new PovWorld(4),
+        ]
 
         // World
         this.world = new World()
@@ -61,7 +67,7 @@ export default class Experience {
         this.raycaster = new RayCaster()
         this.screenshotHelper = new ScreenshotHelper()
 
-        this.particleHelper = new ParticleHelper() 
+        this.particleHelper = new ParticleHelper()
 
         this.currentMode = VIEW_MODES.realWorld
 
@@ -78,7 +84,7 @@ export default class Experience {
         // })
 
         this.time.on('tick', () => {
-            if(this.shouldUpdateOnTick) {
+            if (this.shouldUpdateOnTick) {
                 this.update()
             }
         })
@@ -87,33 +93,39 @@ export default class Experience {
     }
     setGUI() {
         this.gui.endpointsFolder.add({
-            callTestEncoderOnCurrentPosition : () => {
+            callTestEncoderOnCurrentPosition: () => {
                 this.callTestEncoderOnCurrentPosition()
-            }}, 'callTestEncoderOnCurrentPosition')
+            }
+        }, 'callTestEncoderOnCurrentPosition')
         this.gui.dataGenerationFolder.add({
-            enableDepthMode : () => {
+            enableDepthMode: () => {
                 this.enableDepthMode()
-            }}, 'enableDepthMode')
+            }
+        }, 'enableDepthMode')
         this.gui.dataGenerationFolder.add({
-            enableVisibilityMode : () => {
+            enableVisibilityMode: () => {
                 this.enableVisibilityMode()
-            }}, 'enableVisibilityMode')
+            }
+        }, 'enableVisibilityMode')
         this.gui.dataGenerationFolder.add({
-            enableRealWorldMode : () => {
+            enableRealWorldMode: () => {
                 this.enableRealWorldMode()
-            }}, 'enableRealWorldMode')
+            }
+        }, 'enableRealWorldMode')
         this.gui.dataGenerationFolder.add({
-            countColorOfPixels : () => {
+            countColorOfPixels: () => {
                 this.countColorOfPixels(true)
-            }}, 'countColorOfPixels')
-        
+            }
+        }, 'countColorOfPixels')
+
         this.gui.dataGenerationFolder.add({
             generateImagesAndCsv: () => {
                 this.screenshotHelper.generateImages(
                     this.world.city.filteredScreenshotPositions,
                     true
                 )
-            }}, 'generateImagesAndCsv')
+            }
+        }, 'generateImagesAndCsv')
 
         this.gui.dataGenerationFolder.add({
             generateCsvOnly: () => {
@@ -121,21 +133,22 @@ export default class Experience {
                     this.world.city.filteredScreenshotPositions,
                     false
                 )
-            }}, 'generateCsvOnly')
+            }
+        }, 'generateCsvOnly')
     }
     countColorOfPixels(shouldLogResults = false) {
-        if(this.currentMode == VIEW_MODES['realWorld']) {
+        if (this.currentMode == VIEW_MODES['realWorld']) {
             console.warn('This method should not be used on Real World Rendering')
             return
         }
         const gl = this.renderer.instance.getContext()
         const readPixelBuffer = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4)
         gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, readPixelBuffer)
-        
-        if(this.currentMode == VIEW_MODES['visibility']) {
+
+        if (this.currentMode == VIEW_MODES['visibility']) {
             return this.countColorVisiblityMode(readPixelBuffer, shouldLogResults)
         }
-        if(this.currentMode == VIEW_MODES['depth']) {
+        if (this.currentMode == VIEW_MODES['depth']) {
             this.countColorDepthMode(readPixelBuffer)
             return
         }
@@ -145,7 +158,7 @@ export default class Experience {
     countColorVisiblityMode(readPixelBuffer, shouldLogResults) {
         let csvLine = []
         const colorMap = {}
-        for(let i = 0; i < readPixelBuffer.length; i += 4) {
+        for (let i = 0; i < readPixelBuffer.length; i += 4) {
             let color = [
                 readPixelBuffer[i],
                 readPixelBuffer[i + 1],
@@ -153,7 +166,7 @@ export default class Experience {
             ]
             color = roundColor(color)
 
-            if(!(color in COLOR_TO_OBJECT)) {
+            if (!(color in COLOR_TO_OBJECT)) {
                 increaseMapFrequency('unknown', colorMap)
 
                 continue
@@ -162,22 +175,22 @@ export default class Experience {
         }
         // console.log('Camera position and quaternion:')
         // console.log(this.camera.instance.position)
-        
+
         csvLine.push(`${this.camera.instance.position.x}`)
         csvLine.push(`${this.camera.instance.position.y}`)
         csvLine.push(`${this.camera.instance.position.z}`)
-        
+
         // console.log(this.camera.instance.quaternion)
-        
-        csvLine.push(`${this.camera.instance.rotation.x * (180/Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.y * (180/Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.z * (180/Math.PI)}`)
-        
+
+        csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+
         const totalPixels = readPixelBuffer.length / 4
-        if(shouldLogResults) {
+        if (shouldLogResults) {
             console.log('Visibility of canvas:')
-            for(const color in colorMap) {
-                if(color in COLOR_TO_OBJECT) {
+            for (const color in colorMap) {
+                if (color in COLOR_TO_OBJECT) {
                     console.log(`${COLOR_TO_OBJECT[color]}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
                 } else {
                     console.log(`${color}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
@@ -193,13 +206,13 @@ export default class Experience {
         const colorMap = {}
         let totalGreyPixel = 0
         let sumGreyColor = 0
-        for(let i = 0; i < readPixelBuffer.length; i += 4) {
+        for (let i = 0; i < readPixelBuffer.length; i += 4) {
             let color = [
                 readPixelBuffer[i],
                 readPixelBuffer[i + 1],
                 readPixelBuffer[i + 2]
             ]
-            if(isGreyColor(color)) {
+            if (isGreyColor(color)) {
                 increaseMapFrequency(color, colorMap)
                 sumGreyColor += color[0]
                 totalGreyPixel += 1
@@ -211,7 +224,7 @@ export default class Experience {
         console.log('Visibility of canvas:')
         const averageGreyColor = sumGreyColor / totalGreyPixel
         console.log(`Average grey color: ${averageGreyColor}, ${averageGreyColor}, ${averageGreyColor}`)
-        console.log(`Avg visibility depth is ${averageGreyColor*100/255}%`)
+        console.log(`Avg visibility depth is ${averageGreyColor * 100 / 255}%`)
     }
     getCameraCoordinates() {
         let csvLine = []
@@ -219,11 +232,11 @@ export default class Experience {
         csvLine.push(`${this.camera.instance.position.x}`)
         csvLine.push(`${this.camera.instance.position.y}`)
         csvLine.push(`${this.camera.instance.position.z}`)
-        
-        csvLine.push(`${this.camera.instance.rotation.x * (180/Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.y * (180/Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.z * (180/Math.PI)}`)
-        
+
+        csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+
         return csvLine
     }
 
@@ -269,11 +282,11 @@ export default class Experience {
             'x': this.camera.instance.position.x,
             'y': this.camera.instance.position.y,
             'z': this.camera.instance.position.z,
-            'xh': this.camera.instance.rotation.x * (180/Math.PI),
-            'yh': this.camera.instance.rotation.y * (180/Math.PI),
-            'zh': this.camera.instance.rotation.z * (180/Math.PI),
+            'xh': this.camera.instance.rotation.x * (180 / Math.PI),
+            'yh': this.camera.instance.rotation.y * (180 / Math.PI),
+            'zh': this.camera.instance.rotation.z * (180 / Math.PI),
             'f_xyz': mockF_xyz,
-            'image_name':'mockImageName'
+            'image_name': 'mockImageName'
         }
         this.visibilityEncoderService.testEncoderOnCurrentPosition(requestData)
             .then(result => {
@@ -291,7 +304,7 @@ export default class Experience {
     }
     update() {
         this.statsMonitor.instance.begin()
-		
+
         this.camera.update()
         this.renderer.update()
         this.raycaster.update()

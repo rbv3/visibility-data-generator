@@ -114,6 +114,7 @@ export default class ScreenshotHelper {
         console.log(scPositions.length)
         
         for(let i = 0; i < scPositions.length; i++) {
+            //add multiple heights here:
             const cameraPosOff20 = [...scPositions[i]]
             cameraPosOff20[1] += 20
             const cameraPosOff70 = [...scPositions[i]]
@@ -139,6 +140,25 @@ export default class ScreenshotHelper {
                 if(shouldCreateImage) {
                     this.renderer.createImage(`${imageName}-70`)
                 }
+
+                //replicating the blocks above for multiple hieghts.
+                addtionalHeights = [120, 170, 220, 270]
+                for (h in addtionalHeights){
+                    const cameraPosOff = [...scPositions[i]]
+                    addtionalHeight = addtionalHeights[h]
+                    cameraPosOff[1] += addtionalHeight
+
+                    this.camera.instance.position.set(...cameraPosOff)
+                    this.camera.instance.lookAt(CAMERA_LOOKAT[j])
+                    this.experience.update() // force update b4 screenshot
+
+                    csv.data.push(this.createCsvLineForScene(`${imageName}-${addtionalHeight}`))
+                    if(shouldCreateImage) {
+                        this.renderer.createImage(`${imageName}-${addtionalHeight}`)
+                }
+
+                }
+
             }
         }
         const end = performance.now()

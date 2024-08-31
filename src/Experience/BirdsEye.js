@@ -54,6 +54,40 @@ export default class BirdsEye {
         this.camera.instance.far = cameraFar
         this.camera.instance.updateProjectionMatrix()
     }
+    setTopViewCamera() {
+        const cameraPosition = {
+            x: 1231.608912861777,
+            y:5292.627571294003,
+            z:367.8714101460512,
+        }
+        const cameraRotation = {
+            x: -1.5762670718082101, 
+            y: -0.04848892572073814, 
+            z: -1.6831906282366547
+        }
+        const cameraFar = 6000
+
+        new JEASINGS.JEasing(this.camera.instance.position)
+            .to(
+                {
+                    ...cameraPosition
+                },
+                500
+            )
+            .easing(JEASINGS.Cubic.Out)
+            .start()
+            new JEASINGS.JEasing(this.camera.instance.rotation)
+                .to(
+                    {
+                        ...cameraRotation
+                    },
+                    500
+                )
+                .easing(JEASINGS.Cubic.Out)
+                .start()
+        this.camera.instance.far = cameraFar
+        this.camera.instance.updateProjectionMatrix()
+    }
 
     disposePlane() {
         if(this.plane == null) return;
@@ -161,6 +195,11 @@ export default class BirdsEye {
                 this.setBirdsEyeCamera()
             }
         }, 'setBirdsEyeCamera')
+        this.gui.birdsEyeFolder.add({
+            setTopViewCamera: () => {
+                this.setTopViewCamera()
+            }
+        }, 'setTopViewCamera')
         this.gui.birdsEyeFolder.add({
             addPlane: () => {
                 this.addPlane()

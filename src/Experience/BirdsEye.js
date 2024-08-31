@@ -1,5 +1,8 @@
 import Experience from "./Experience"
+
 import * as THREE from 'three'
+import JEASINGS from 'jeasings'
+
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { getDistance3D, getVertex, normalize3DCoord, subtractVectors } from "./Utils/helpers";
 
@@ -18,20 +21,36 @@ export default class BirdsEye {
     }
 
     setBirdsEyeCamera() {
-        const cameraPosition = [
-            1222.9460847744015,
-            798.3564726279227,
-            -4474.680415156037,
-        ]
-        const cameraRotation = [
-            THREE.MathUtils.degToRad(-171.40058214768743), 
-            THREE.MathUtils.degToRad(-1.9564645442454736), 
-            THREE.MathUtils.degToRad(-179.7041930116)
-        ]
+        const cameraPosition = {
+            x: 1222.9460847744015,
+            y: 798.3564726279227,
+            z: -4474.680415156037,
+        }
+        const cameraRotation = {
+            x: THREE.MathUtils.degToRad(-171.40058214768743), 
+            y: THREE.MathUtils.degToRad(-1.9564645442454736), 
+            z: THREE.MathUtils.degToRad(-179.7041930116)
+        }
         const cameraFar = 7500
 
-        this.camera.instance.position.set(...cameraPosition)
-        this.camera.instance.rotation.set(...cameraRotation)
+        new JEASINGS.JEasing(this.camera.instance.position)
+            .to(
+                {
+                    ...cameraPosition
+                },
+                500
+            )
+            .easing(JEASINGS.Cubic.Out)
+            .start()
+            new JEASINGS.JEasing(this.camera.instance.rotation)
+                .to(
+                    {
+                        ...cameraRotation
+                    },
+                    500
+                )
+                .easing(JEASINGS.Cubic.Out)
+                .start()
         this.camera.instance.far = cameraFar
         this.camera.instance.updateProjectionMatrix()
     }

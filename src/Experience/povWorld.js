@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+import JEASINGS from 'jeasings'
+
 import Experience from "./Experience"
 
 import { WebGLRenderer } from 'three'
@@ -16,16 +18,22 @@ export default class PovWorld {
         this.sizes = this.experience.sizes
 
         this.gui = this.experience.gui
-        
+
         this.locations = []
         this.maxLocations = 1
         this.currentLocationIndex = {
             value: this.index
         }
+
+        this.canvas = document.querySelector(`.webgl-pov${this.index}`);
+        this.canvas.addEventListener('click', () => {
+            this.switchCameras();
+        })
+        this.animationDuration = 750
+
         this.setGUI()
     }
     initScene(scene) {
-        const povCanvas = document.querySelector(`.webgl-pov${this.index}`);
         // clone of initial experience scene after loading all models
         this.scene = scene.clone()
 
@@ -35,15 +43,47 @@ export default class PovWorld {
             canvas: document.querySelector(`canvas.webgl-pov${this.index}`)
         })
         this.renderer.setClearColor(startClearColor)
-        this.renderer.setSize(povCanvas.clientWidth, povCanvas.clientHeight)
+        this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight)
         this.renderer.setPixelRatio(this.sizes.pixelRatio)
 
         this.updateSceneOnce()
     }
-    changePOV(pov) {
-        this.initCamera(pov.cameraSettings)
-        this.updateSceneOnce()
+    switchCameras() {
+        this.experience.lastCameraPosition = this.camera.position;
+        this.experience.lastCameraRotation = this.camera.rotation;
+
+        this.animateCameraMovement();
     }
+    animateCameraMovement() {
+        new JEASINGS.JEasing(this.experience.camera.instance.position)
+            .to(
+                {
+                    x: this.camera.position.x,
+                    y: this.camera.position.y,
+                    z: this.camera.position.z
+                },
+                this.animationDuration
+            )
+            .easing(JEASINGS.Cubic.Out)
+            .start()
+            .delay(250)
+            .onComplete(() => this.animateCameraRotation())
+    }
+    animateCameraRotation() {
+        new JEASINGS.JEasing(this.experience.camera.instance.quaternion)
+            .to(
+                {
+                    x: this.camera.quaternion.x,
+                    y: this.camera.quaternion.y,
+                    z: this.camera.quaternion.z,
+                    w: this.camera.quaternion.w,
+                },
+                this.animationDuration
+            )
+            .easing(JEASINGS.Cubic.Out)
+            .start()
+    }
+
     initCamera() {
         this.camera = new THREE.PerspectiveCamera(
             35,
@@ -86,8 +126,8 @@ export default class PovWorld {
         this.updateSceneOnce()
     }
     updateHTML(residual, steps) {
-        document.getElementById("webgl-pov-steps").textContent=`Steps: ${steps}` ;
-        document.getElementById("webgl-pov-residual").textContent=`Residual: ${residual}`;
+        document.getElementById("webgl-pov-steps").textContent = `Steps: ${steps}`;
+        document.getElementById("webgl-pov-residual").textContent = `Residual: ${residual}`;
     }
     updateSceneOnce() {
         this.renderer.render(this.scene, this.camera)
@@ -96,14 +136,14 @@ export default class PovWorld {
         this.gui.viewportFolder.add(
             this.currentLocationIndex, 'value'
         )
-        .min(0)
-        .max(this.maxLocations - 1)
-        .step(1)
-        .name(`POV ${this.index} Index`)
-        .updateDisplay()
-        .onFinishChange((index) => {
-            this.updateCamera(index)
-            this.experience.particleHelper.updateParticleColorAtIndex(index)
-        })
+            .min(0)
+            .max(this.maxLocations - 1)
+            .step(1)
+            .name(`POV ${this.index} Index`)
+            .updateDisplay()
+            .onFinishChange((index) => {
+                this.updateCamera(index)
+                this.experience.particleHelper.updateParticleColorAtIndex(index)
+            })
     }
 }

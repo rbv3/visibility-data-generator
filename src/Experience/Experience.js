@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+import JEASINGS from 'jeasings'
+
 import Sizes from './Utils/Sizes.js'
 import Time from './Utils/Time.js'
 import Camera from './Camera.js'
@@ -53,6 +55,8 @@ export default class Experience {
 
 
         // POV
+        this.lastCameraPosition = null;
+        this.lastCameraRotation = null;
         this.povWorld = [
             new PovWorld(0),
             new PovWorld(1),
@@ -310,6 +314,8 @@ export default class Experience {
         this.raycaster.update()
         this.world.update()
         this.characterControls.update()
+        JEASINGS.update()
+
 
         this.statsMonitor.instance.end()
     }

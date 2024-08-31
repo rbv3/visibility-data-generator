@@ -79,7 +79,7 @@ export default class World {
         const planeScale = plane.scale
         const planeCenter = plane.position
         const planeWidth = plane.geometry.parameters.width * planeScale.x
-        const planeHeight = plane.geometry.parameters.height * planeScale.y
+        const planeHeight = plane.geometry.parameters.height * planeScale.z
         
         const planeDirections = this.birdsEye.getPlaneDirections()
         

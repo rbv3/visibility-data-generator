@@ -55,6 +55,18 @@ export default class BirdsEye {
         this.camera.instance.updateProjectionMatrix()
     }
 
+    disposePlane() {
+        if(this.plane == null) return;
+
+        this.scene.remove(this.plane);
+        this.scene.remove(this.transformControls);
+        this.plane.geometry.dispose();
+        this.plane.material.dispose();
+        this.transformControls.dispose()
+        this.plane = null;
+        this.transformControls = null;
+    }
+
     addPlane() {
         this.setTransformControls()
 
@@ -154,6 +166,11 @@ export default class BirdsEye {
                 this.addPlane()
             }
         }, 'addPlane')
+        this.gui.birdsEyeFolder.add({
+            removePlane: () => {
+                this.disposePlane()
+            }
+        }, 'removePlane')
         this.gui.birdsEyeFolder.add({
             logPlane: () => {
                 if(this.plane != null) {

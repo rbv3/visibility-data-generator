@@ -40,6 +40,36 @@ body
     height: 83vh;
     width: 83vh;
 }
+.webgl-global0
+{
+    position: fixed;
+    bottom: 18vh;
+    left: 90vh;
+    height: 32vh;
+    width: 16vh;
+    outline: none;
+    border: 3px solid black
+}
+.webgl-global1
+{
+    position: fixed;
+    bottom: 18vh;
+    left: 106vh;
+    height: 32vh;
+    width: 16vh;
+    outline: none;
+    border: 3px solid black
+}
+.webgl-global2
+{
+    position: fixed;
+    bottom: 2vh;
+    left: 90vh;
+    height: 16vh;
+    width: 32vh;
+    outline: none;
+    border: 3px solid black
+}
 .webgl-pov0
 {
     position: fixed;

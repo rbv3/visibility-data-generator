@@ -19,6 +19,7 @@ import ParticleHelper from './Utils/ParticleHelper.js'
 import PovWorld from './povWorld.js'
 import BirdsEye from './BirdsEye.js'
 import Histogram from './D3Selection/Histogram/Histogram.js'
+import GlobalWorld from './globalWorld.js'
 
 let instance = null
 
@@ -64,6 +65,11 @@ export default class Experience {
             new PovWorld(3),
             new PovWorld(4),
         ]
+
+        //Global
+        this.globalWorld = [new GlobalWorld(0)
+            , new GlobalWorld(1)
+            , new GlobalWorld(2)]
 
         // World
         this.world = new World()

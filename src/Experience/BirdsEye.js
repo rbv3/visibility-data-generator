@@ -54,6 +54,9 @@ export default class BirdsEye {
         this.camera.instance.far = cameraFar
         this.camera.instance.updateProjectionMatrix()
     }
+
+    //setFrontalViewCamera() { pos = {-1920, 1730, 560}, rot = {-105, -60, -105} }
+
     setTopViewCamera() {
         const cameraPosition = {
             x: 1231.608912861777,
@@ -66,6 +69,9 @@ export default class BirdsEye {
             z: -1.6831906282366547
         }
         const cameraFar = 6000
+
+        
+        console.log(cameraRotation, cameraPosition)
 
         new JEASINGS.JEasing(this.camera.instance.position)
             .to(
@@ -117,6 +123,11 @@ export default class BirdsEye {
         this.transformControls.attach(this.plane)
 
         this.scene.add(this.plane)
+
+        console.log("Updating global views:")
+        // this.experience.globalWorld.forEach(world => {
+        //     world.updateSceneOnce()
+        // })
     }
 
     getPlaneDirections() {

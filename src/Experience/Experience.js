@@ -21,6 +21,8 @@ import BirdsEye from './BirdsEye.js'
 import Histogram from './D3Selection/Histogram/Histogram.js'
 import GlobalWorld from './globalWorld.js'
 
+// import require from 'require';
+
 let instance = null
 
 export default class Experience {
@@ -100,7 +102,45 @@ export default class Experience {
         })
 
         this.setGUI()
+
+        //Download json file of the building meshes if download_buildings_data is set to true.
+        let downloadBuildingMeshes = false;
+        if(downloadBuildingMeshes == true){
+            this.downloadBuildingsData(20000) //Set a timeout enough for full model to be loaded on the interface.
+        }
+            
     }
+
+    downloadBuildingsData(timeout){
+        //Download json file of the building meshes
+        console.log("Retrieved building meshes:")
+        console.log(this.buildingMeshes.length)
+        console.log(this.buildingMeshes)
+        console.log(Array.isArray(this.buildingMeshes))
+        
+        setTimeout(() => {
+            console.log("Waited logging")
+            console.log(this.buildingMeshes[0]); // Logs: [1, 2, 3]
+            console.log(this.buildingMeshes.length); // Logs: [1, 2, 3]
+            // let buildingData = this.buildingMeshes.map(mesh => mesh.userData)
+            // let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.matrixWorld.elements.slice(12,15)}))
+            // let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.geometry.boundingSphere.center}))
+            let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.parent.position}))
+            console.log(buildingData)
+            const jsonBuildingData= JSON.stringify(buildingData, null, 4);
+            const blob = new Blob([jsonBuildingData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob); // Create a URL for the Blob
+            const a = document.createElement('a'); // Create a <a> element
+            a.href = url;
+            a.download = 'buildingsData.json'; // Set the file name
+            document.body.appendChild(a); // Append the link to the body
+            a.click(); // Programmatically click the link to trigger the download
+            document.body.removeChild(a); // Remove the link when done
+            URL.revokeObjectURL(url); // Release the URL object to free memory
+
+        }, timeout);
+    }
+
     setGUI() {
         this.gui.endpointsFolder.add({
             callTestEncoderOnCurrentPosition: () => {

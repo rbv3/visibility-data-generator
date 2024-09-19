@@ -4,15 +4,18 @@ import Experience from '../Experience'
 import { OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR } from './constants'
 import { VIEW_MODES } from './constants'
 
+import buildingVertexShader from '../shaders/building/vertex.glsl'
+import buildingFragmentShader from '../shaders/building/fragment.glsl'
+
 let instance = null
 export default class MaterialHelper {
     constructor() {
         // Singleton
-        if(instance) {
+        if (instance) {
             return instance
         }
         instance = this
-        
+
         this.experience = new Experience()
         this.materialMap = {
             [VIEW_MODES['depth']]: this.setDepthMaterials(),
@@ -55,7 +58,7 @@ export default class MaterialHelper {
         return {
             default: this.createCustomMaterial('#3d3d3d'),
             // buildings
-            building: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['building']}`, false, 1),
+            building: (height) => this.createRealWorldBuildingMaterial(height),
             // surfaces
             water: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['water']}`),
             road: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['road']}`),
@@ -82,7 +85,21 @@ export default class MaterialHelper {
 
         return customMaterial
     }
-    
+
+    createRealWorldBuildingMaterial(height=0) {
+        const material = new THREE.ShaderMaterial({
+            vertexShader: buildingVertexShader,
+            fragmentShader: buildingFragmentShader,
+            uniforms: {
+                uHeight: { value: height },
+                uMaxHeight: { value: 121 },
+                uColorA: { value: new THREE.Color(REAL_WORLD_OBJECT_TO_COLOR['building']) },
+                uColorB: { value: new THREE.Color(REAL_WORLD_OBJECT_TO_COLOR['buildingB']) },
+            }
+        })
+        return material;
+    }
+
     setCustomMeshDepthMaterial() {
         const material = new THREE.MeshDepthMaterial()
         const customUniforms = {

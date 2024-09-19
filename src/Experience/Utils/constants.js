@@ -44,12 +44,13 @@ export const COLOR_TO_OBJECT = {
 }
 // Real world look like rendering
 export const REAL_WORLD_OBJECT_TO_COLOR = {
-    'building': '#9c9b89',
+    'building': '#9dadaa',
+    'buildingB': '#5a84bb',
     'water': '#4f759c',
-    'road': '#7e7e7e',
-    'sidewalk': '#848791',
-    'surface': '#876645',
-    'tree':'#2f663c',
+    'road': '#b5bbca',
+    'sidewalk': '#8e96b1',
+    'surface': '#87b5b1',
+    'tree':'#6aac79',
     'sky':'#bce0df',
 }
 // Depth Color

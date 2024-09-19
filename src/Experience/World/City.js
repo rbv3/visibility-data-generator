@@ -170,11 +170,12 @@ export default class City {
     }
     setMaterialBuildingChild(child, materialMap) {
         const key = child.userData.building
+        const buildingHeight = child.userData.height ?? 0
         hydrateMap(key, buildingMap)
         this.buildingMeshes.push(...child.children)
         this.recursiveSetMaterial(
             child,
-            materialMap['building'],
+            materialMap['building'](buildingHeight),
             child.userData
         )
     }

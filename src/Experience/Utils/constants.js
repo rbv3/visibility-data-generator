@@ -42,17 +42,30 @@ export const COLOR_TO_OBJECT = {
     '0,0,0': 'sky',
     '255,255,255': 'miscelaneous'
 }
-// Real world look like rendering
+// // Real world look like rendering
+// export const REAL_WORLD_OBJECT_TO_COLOR = {
+//     'building': '#9dadaa',
+//     'buildingB': '#5a84bb',
+//     'water': '#4f759c',
+//     'road': '#b5bbca',
+//     'sidewalk': '#8e96b1',
+//     'surface': '#87b5b1',
+//     'tree':'#6aac79',
+//     'sky':'#bce0df',
+// }
+
+// Color schema taken from maplibre and OSM: https://maplibre.org/maplibre-gl-js/docs/examples/3d-buildings/
 export const REAL_WORLD_OBJECT_TO_COLOR = {
-    'building': '#9dadaa',
-    'buildingB': '#5a84bb',
-    'water': '#4f759c',
-    'road': '#b5bbca',
-    'sidewalk': '#8e96b1',
-    'surface': '#87b5b1',
-    'tree':'#6aac79',
+    'building': '#d3d3d3',
+    'buildingB': '#d3d3d3',
+    'water': '#9EBFDE',//#9EBFDE
+    'road': '#FFFFFF',
+    'sidewalk': '#EBEADF',
+    'surface': '#CDDDB6',//'#CDDDB6' '#D2DFBE'
+    'tree':'#9DB97F', //'#9DB97F'
     'sky':'#bce0df',
 }
+
 // Depth Color
 export const DEPTH_SKY = '255, 0, 0'
 

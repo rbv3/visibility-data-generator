@@ -4,9 +4,6 @@ import Experience from '../Experience'
 import { OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR } from './constants'
 import { VIEW_MODES } from './constants'
 
-import buildingVertexShader from '../shaders/building/vertex.glsl'
-import buildingFragmentShader from '../shaders/building/fragment.glsl'
-
 let instance = null
 export default class MaterialHelper {
     constructor() {
@@ -87,16 +84,45 @@ export default class MaterialHelper {
     }
 
     createRealWorldBuildingMaterial(height=0) {
-        const material = new THREE.ShaderMaterial({
-            vertexShader: buildingVertexShader,
-            fragmentShader: buildingFragmentShader,
-            uniforms: {
-                uHeight: { value: height },
-                uMaxHeight: { value: 121 },
-                uColorA: { value: new THREE.Color(REAL_WORLD_OBJECT_TO_COLOR['building']) },
-                uColorB: { value: new THREE.Color(REAL_WORLD_OBJECT_TO_COLOR['buildingB']) },
-            }
-        })
+        const customUniforms = {
+            uHeight: { value: height },
+            uMaxHeight: { value: 100 },
+            uColorA: { value: new THREE.Color(REAL_WORLD_OBJECT_TO_COLOR['building']) },
+            uColorB: { value: new THREE.Color(REAL_WORLD_OBJECT_TO_COLOR['buildingB']) },
+        }
+        const material = new THREE.MeshStandardMaterial();
+
+        const fragmentUniforms = `
+            #include <common>
+
+            uniform vec3 uColorA;
+            uniform vec3 uColorB;
+            uniform float uMaxHeight;
+            uniform float uHeight;
+        `
+        const fragmentMain = `
+            #include <color_fragment>
+            float mixStrength = uHeight; 
+            
+            vec3 color = mix(uColorA, uColorB, max(0.0, (uHeight * 1.25 / uMaxHeight) - 0.5) * 2.0);
+            
+            diffuseColor.rgb *= vec4(color, 1.0).xyz;
+        `
+        material.onBeforeCompile = (shader) => {
+            shader.uniforms.uHeight = customUniforms.uHeight
+            shader.uniforms.uMaxHeight = customUniforms.uMaxHeight
+            shader.uniforms.uColorA = customUniforms.uColorA
+            shader.uniforms.uColorB = customUniforms.uColorB
+            shader.fragmentShader = shader.fragmentShader.replace(
+                "#include <common>",
+                fragmentUniforms,
+            )
+            shader.fragmentShader = shader.fragmentShader.replace(
+                '#include <color_fragment>',
+                fragmentMain
+            )
+        }
+        
         return material;
     }
 

@@ -13,6 +13,8 @@ export default class GUI {
             .close()
         this.cameraFolder = this.instance.addFolder('Camera')
             .close()
+        this.lightsFolder = this.instance.addFolder('Lights')
+            .close()
         this.ambientOcclusionFolder = this.instance.addFolder('Ambient Occlusion')
             .close()
         this.queryPositionFolder = this.instance.addFolder('Query Position')

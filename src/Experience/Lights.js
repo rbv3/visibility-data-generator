@@ -5,17 +5,30 @@ export default class Lights {
     constructor() {
         this.experience = new Experience()
 
-        this.gui = this.experience.gui
-        this.directionalLight = new THREE.DirectionalLight('#ffffff', 0.5)
-        this.directionalLight.position.set(3.5, 2, - 1.25)
-        this.ambientLight = new THREE.AmbientLight('#ffffff', 1.5)
+        this.gui = this.experience.gui.lightsFolder
+        this.directionalLightA = new THREE.DirectionalLight('#ffffff', 0.8)
+        this.directionalLightA.position.set(3.5, 2, - 1.25)
+        this.directionalLightB = new THREE.DirectionalLight('#ffffff', 0.8)
+        this.directionalLightB.position.set(-1.25, 2, 3.5)
+        this.ambientLight = new THREE.AmbientLight('#ffffff', 0.6)
         this.ambientLight.castShadow = false
+
+        this.setGUI()
     }
+
     setDirectionalLight(isEnabled) {
         if(isEnabled) {
-            this.directionalLight.intensity = 0.5
+            this.directionalLightA.intensity = 0.8
+            this.directionalLightB.intensity = 0.8
         } else {
-            this.directionalLight.intensity = 0
+            this.directionalLightA.intensity = 0
+            this.directionalLightB.intensity = 0
         }
+    }
+
+    setGUI() {
+        this.gui.add(this.directionalLightA, 'intensity').min(0).max(3).name('directionalA intensity')
+        this.gui.add(this.directionalLightB, 'intensity').min(0).max(3).name('directionalB intensity')
+        this.gui.add(this.ambientLight, 'intensity').min(0).max(3).name('ambient intensity')
     }
 }

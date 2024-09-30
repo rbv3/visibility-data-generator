@@ -18,7 +18,7 @@ export default class City {
         this.screenshotHelper = new ScreenshotHelper()
 
         this.characterControls = this.experience.characterControls
-        
+
         this.loaders = this.experience.loaders
         this.scene = this.experience.scene
         this.time = this.experience.time
@@ -36,7 +36,7 @@ export default class City {
         const toLoad = collada_models.length
         let loaded = 0
         this.experience.characterControls.isPaused = true
-        for(const model of collada_models) {
+        for (const model of collada_models) {
             this.loaders.colladaLoader.load(
                 model.path,
                 (gltf) => {
@@ -44,13 +44,13 @@ export default class City {
                     this.auxRecursiveIterator(gltf.scene, gltf.metadataMap)
                     loaded++
                     console.log(`loaded ${loaded} /${toLoad}`)
-                    if(loaded == toLoad) {
+                    if (loaded == toLoad) {
                         this.experience.characterControls.isPaused = false
 
                         console.log(map)
                         console.log(terrainMap)
                         console.log(buildingMap)
-                        console.log({removedMeshes})
+                        console.log({ removedMeshes })
 
                         // clone current scene to POV scene
                         this.povWorld.forEach(world => {
@@ -82,7 +82,7 @@ export default class City {
                         // this.screenshotHelper.createParticleOnPosition(this.filteredScreenshotPositions)
                     }
                 },
-                () => {}, // progress callback
+                () => { }, // progress callback
                 (err) => console.log(err)
             )
         }
@@ -92,9 +92,9 @@ export default class City {
     }
     setMaterial(materialMap) {
         this.meshesToUpdateMaterial.forEach(child => {
-            if(child.userData.type === 'entity') {
+            if (child.userData.type === 'entity') {
                 this.setMaterialEntityChild(child, materialMap)
-            } else if(child.userData.terrain?.length > 0) {
+            } else if (child.userData.terrain?.length > 0) {
                 this.setMaterialTerrainChild(child, materialMap)
             } else {
                 this.setMaterialBuildingChild(child, materialMap)
@@ -103,74 +103,90 @@ export default class City {
     }
     setMaterialEntityChild(child, materialMap) {
         const key = child.userData['entity:type']
-        
-        switch(key) {
-        case 'tree':
-            hydrateMap(key, map)
-            this.recursiveSetMaterial(
-                child,
-                materialMap['tree'],
-                child.userData
-            )
-            break
-        case 'street_light':
-        case 'subway_entrance':
-        case 'waste_receptacle':
-            hydrateMap(key, map)
-            this.recursiveSetMaterial(
-                child,
-                materialMap['default'],
-                child.userData
-            )
-            break
-        case 'bus_shelter':
-        case 'bus_stop':
-        case 'collection_box':
-        case 'hydrant':
-        case 'street_sign_sign':
-        default:
-            // to enhance performance we're removing any child
-            this.recursiveRemoveChild(child)
-            break
+
+        switch (key) {
+            case 'tree':
+                hydrateMap(key, map)
+                this.recursiveSetMaterial(
+                    child,
+                    materialMap['tree'],
+                    child.userData
+                )
+                break
+            case 'street_light':
+            case 'subway_entrance':
+            case 'waste_receptacle':
+                hydrateMap(key, map)
+                this.recursiveSetMaterial(
+                    child,
+                    materialMap['default'],
+                    child.userData
+                )
+                break
+            case 'bus_shelter':
+            case 'bus_stop':
+            case 'collection_box':
+            case 'hydrant':
+            case 'street_sign_sign':
+            default:
+                // to enhance performance we're removing any child
+                this.recursiveRemoveChild(child)
+                break
         }
     }
     setMaterialTerrainChild(child, materialMap) {
         const key = child.userData['terrain']
         hydrateMap(key, terrainMap)
-        switch(key) {
-        case 'water':
-            this.recursiveSetMaterial(
-                child,
-                materialMap['water'],
-                child.userData
-            )
-            break
-        case 'road':
-            this.recursiveSetMaterial(
-                child,
-                materialMap['road'],
-                child.userData
-            )
-            break
-        case 'sidewalk':
-            this.recursiveSetMaterial(
-                child,
-                materialMap['sidewalk'],
-                child.userData
-            )
-            break
-        case 'surface':
-            this.recursiveSetMaterial(
-                child,
-                materialMap['surface'],
-                child.userData
-            )
-            break
+        switch (key) {
+            case 'water':
+                this.recursiveSetMaterial(
+                    child,
+                    materialMap['water'],
+                    child.userData
+                )
+                break
+            case 'road':
+                this.recursiveSetMaterial(
+                    child,
+                    materialMap['road'],
+                    child.userData
+                )
+                break
+            case 'sidewalk':
+                this.recursiveSetMaterial(
+                    child,
+                    materialMap['sidewalk'],
+                    child.userData
+                )
+                break
+            case 'surface':
+                this.recursiveSetMaterial(
+                    child,
+                    materialMap['surface'],
+                    child.userData
+                )
+                break
+        }
+    }
+    buildingMaterialToInteger(material) {
+        switch (material) {
+            case 'marble':
+                return 10;
+            case 'plaster':
+                return 20;
+            case 'concrete':
+                return 40;
+            case 'brick':
+                return 60;
+            case 'metal':
+                return 80;
+            default:
+                return 0;
         }
     }
     setMaterialBuildingChild(child, materialMap) {
         const key = child.userData.building
-        const buildingHeight = child.userData.height ?? 0
+        const buildingHeight = this.buildingMaterialToInteger(child.userData["building:material"])
         hydrateMap(key, buildingMap)
         this.buildingMeshes.push(...child.children)
         this.recursiveSetMaterial(
@@ -181,17 +197,17 @@ export default class City {
     }
     auxRecursiveIterator(object3d, metadataMap) {
         const children = object3d.children
-        for(const child of children) {
+        for (const child of children) {
             this.recursiveChildAction(child, metadataMap)
         }
     }
     recursiveChildAction(child, metadataMap) {
-        if(child.name in metadataMap) {
+        if (child.name in metadataMap) {
             child.userData = metadataMap[child.name]
-            
-            if(child.userData.type === 'entity') {
+
+            if (child.userData.type === 'entity') {
                 this.setMaterialEntityChild(child, this.materialHelper.materialMap['realWorld'])
-            } else if(child.userData.terrain?.length > 0) {
+            } else if (child.userData.terrain?.length > 0) {
                 this.setMaterialTerrainChild(child, this.materialHelper.materialMap['realWorld'])
             } else {
                 this.setMaterialBuildingChild(child, this.materialHelper.materialMap['realWorld'])
@@ -201,7 +217,7 @@ export default class City {
 
     }
     recursiveSetMaterial(child, material, userData) {
-        if(Object.keys(child.userData).length == 0) {
+        if (Object.keys(child.userData).length == 0) {
             child.userData = userData
         }
         const childUserData = child.userData
@@ -210,18 +226,18 @@ export default class City {
         // Setting autoupdate to false helps on performance by removing unnecessary calculations
         child.matrixAutoUpdate = false
 
-        if(child.isMesh) {
+        if (child.isMesh) {
             this.createArrayOfPoints(child)
             this.meshesToUpdateMaterial.push(child)
             child.material = material
             return
         }
-        if(child.children.length > 0) {
+        if (child.children.length > 0) {
             child.children.forEach(c => this.recursiveSetMaterial(c, material, childUserData))
         }
     }
     recursiveRemoveChild(child) {
-        if(child.isMesh && child instanceof THREE.Object3D) {
+        if (child.isMesh && child instanceof THREE.Object3D) {
             // for better memory management and performance
             if (child.geometry) {
                 child.geometry.dispose()
@@ -229,10 +245,10 @@ export default class City {
 
             if (child.material) {
                 Object.keys(child.material).forEach(prop => {
-                    if(!child.material[prop]) {
+                    if (!child.material[prop]) {
                         return
                     }
-                    if(child.material[prop] !== null && typeof child.material[prop].dispose === 'function') {
+                    if (child.material[prop] !== null && typeof child.material[prop].dispose === 'function') {
                         child.material[prop].dispose()
                     }
                 })
@@ -244,13 +260,13 @@ export default class City {
                     child.material.dispose()
                 }
             }
-            
+
             child.removeFromParent()
             removedMeshes++
-            
+
             return
         }
-        if(child.children.length > 0) {
+        if (child.children.length > 0) {
             child.children.forEach(c => this.recursiveRemoveChild(c))
         }
     }
@@ -259,19 +275,19 @@ export default class City {
         const entityType = child.userData['entity:type']
         const isBuilding = !terrain && !entityType
         const geometry = child.geometry
-        const position = geometry.getAttribute( 'position' )
+        const position = geometry.getAttribute('position')
         const vertexArr = []
-        for(let i = 0; i < position.array.length; i += 3) {
+        for (let i = 0; i < position.array.length; i += 3) {
             let index = i / 3
             //convert from local to world position
             const vertex = new THREE.Vector3()
-            vertex.fromBufferAttribute( position, index )
-            child.localToWorld( vertex )
+            vertex.fromBufferAttribute(position, index)
+            child.localToWorld(vertex)
             vertexArr.push(...vertex)
         }
-        if(isBuilding) {
+        if (isBuilding) {
             this.positionsToAvoid.push(vertexArr)
-        } else if(terrain) {
+        } else if (terrain) {
             this.positionsOfInterest.push(vertexArr)
         }
     }
@@ -279,7 +295,7 @@ export default class City {
         const currentHover = this.experience.raycaster.hoveredBuilding
         const previousHovered = this.experience.raycaster.previousHovered
 
-        if(
+        if (
             currentHover &&
             previousHovered?.name != currentHover.name &&
             this.experience.raycaster.clickedBuilding?.name !== currentHover.name
@@ -291,7 +307,7 @@ export default class City {
             // }
             this.experience.raycaster.previousHovered = currentHover
         }
-        if(!currentHover && previousHovered) {
+        if (!currentHover && previousHovered) {
             // if(previousHovered.name !== this.experience.raycaster.clickedBuilding?.name) {
             //     updateChildrenMaterial(previousHovered, this.materialHelper.materialMap['realWorld'].building)
             // }

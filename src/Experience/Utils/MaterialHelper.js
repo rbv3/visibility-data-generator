@@ -92,6 +92,15 @@ export default class MaterialHelper {
         }
         const material = new THREE.MeshStandardMaterial();
 
+        const setVaryingUvFromVertex = `
+            #include <clipping_planes_pars_vertex>
+            varying vec2 vUv;
+        `
+        const exportUvFromVertex = `
+	        #include <fog_vertex>
+            vUv = uv;
+        
+        `
         const fragmentUniforms = `
             #include <common>
 
@@ -99,20 +108,31 @@ export default class MaterialHelper {
             uniform vec3 uColorB;
             uniform float uMaxHeight;
             uniform float uHeight;
+
+            varying vec2 vUv;
         `
         const fragmentMain = `
             #include <color_fragment>
             float mixStrength = uHeight; 
             
             vec3 color = mix(uColorA, uColorB, max(0.0, (uHeight * 1.25 / uMaxHeight) - 0.5) * 2.0);
-            
+
             diffuseColor.rgb *= vec4(color, 1.0).xyz;
         `
+
         material.onBeforeCompile = (shader) => {
             shader.uniforms.uHeight = customUniforms.uHeight
             shader.uniforms.uMaxHeight = customUniforms.uMaxHeight
             shader.uniforms.uColorA = customUniforms.uColorA
             shader.uniforms.uColorB = customUniforms.uColorB
+            shader.vertexShader = shader.vertexShader.replace(
+                '#include <clipping_planes_pars_vertex>',
+                setVaryingUvFromVertex,
+            )
+            shader.vertexShader = shader.vertexShader.replace(
+                '#include <fog_vertex>',
+                exportUvFromVertex,
+            )
             shader.fragmentShader = shader.fragmentShader.replace(
                 "#include <common>",
                 fragmentUniforms,

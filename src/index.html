@@ -216,7 +216,7 @@
                     event.preventDefault();
                     document.body.style.cursor = 'initial';
                     // Send new query values to World
-                    console.log("end of change");
+                    experience.world.setQueryParameters(tags);
                     console.log(tags);
                     removeEventListener();
                 };

@@ -33,7 +33,7 @@ export default class World {
         this.scene.add(this.lights.directionalLightB)
         this.scene.add(this.lights.ambientLight)
 
-        
+        this.queryParameters = {};
         this.queryLocationParameters = {
             numLocations: {
                 value: 5
@@ -53,6 +53,15 @@ export default class World {
         }
 
         this.setGUI()
+    }
+    setQueryParameters(dictionary) {
+        this.queryParameters = {};
+        dictionary.forEach(val => {
+            const name = val['name'].toLowerCase()
+            const percentage = val['value'] / 100;
+            this.queryParameters[name] = percentage;
+        })
+        console.log(this.queryParameters);
     }
     callQueryLocation() {        
         this.visibilityEncoderService.queryLocation(

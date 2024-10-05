@@ -308,11 +308,6 @@ export default class ParticleHelper extends EventEmitter {
         this.scene.add(pointGroup)
         this.arrowHelpersGroup = arrowGroup
 
-        //Add the same things to the global worlds
-        this.experience.globalWorld.forEach(world => {
-            world.updateSceneOnce()
-        })
-
         console.log(points);
         return points;
     }

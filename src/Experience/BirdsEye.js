@@ -123,11 +123,6 @@ export default class BirdsEye {
         this.transformControls.attach(this.plane)
 
         this.scene.add(this.plane)
-
-        // console.log("Updating global views:")
-        this.experience.globalWorld.forEach(world => {
-            world.updateSceneOnce()
-        })
     }
 
     getPlaneDirections() {
@@ -179,9 +174,6 @@ export default class BirdsEye {
         this.scene.add(this.transformControls)
         this.transformControls.addEventListener( 'dragging-changed', (event) => {
             this.controls.outsideLock = event.value
-            this.experience.globalWorld.forEach(world => {
-                world.updateSceneOnce()
-            })
         } );
 
         window.addEventListener( 'keydown', (event) => {

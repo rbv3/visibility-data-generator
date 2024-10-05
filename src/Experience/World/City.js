@@ -57,12 +57,6 @@ export default class City {
                             world.initScene(this.scene)
                         })
 
-                        // console.log("intializing experience global view from city.js")
-                        //Do same thing for global overview worlds:
-                        this.experience.globalWorld.forEach(world => {
-                            world.initScene(this.scene)
-                        })
-
                         // Create points of interest and to avoid
                         // this.pointsOfInterest = float32Flatten(this.positionsOfInterest)
                         // this.pointToAvoid = float32Flatten(this.positionsToAvoid)

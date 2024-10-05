@@ -44,11 +44,11 @@
                 <div class="userQueries">
                     <div class="tabs">
                         <button class="tabButton tabButton--active"
-                            onclick="openQuery(event, 'Scenario')">Scenario</button>
+                            onclick="openQuery(event, 'scenario')">Scenario</button>
                         <button class="tabButton tabButton--inactive"
-                            onclick="openQuery(event, 'Openess')">Openess</button>
+                            onclick="openQuery(event, 'openess')">Openess</button>
                         <button class="tabButton tabButton--inactive"
-                            onclick="openQuery(event, 'Building')">Building</button>
+                            onclick="openQuery(event, 'building')">Building</button>
                     </div>
                     <div class="queryContainer">
                         <div class="querySliders">
@@ -98,46 +98,15 @@
     <div class="loading-bar"></div>
     <script type="module" src="./script.js"></script>
     <script>
-        let sliderElement = document.querySelector('.slider');
-        // Adapted into vanilla CSS/JavaScript from React/TypeScript in article
-        // https://newsakmi.com/news/tech-news/software/lets-make-a-multi-thumb-slider-that-calculates-the-width-between-thumbs
-        // Unlike the original article, the tags here are not removed if value becomes 0.
-        const demoScript = (function (sliderElement) {
-            /**
-             * Self reference - all public properties/methods are stored here and returned as public interface
-             *
-             * @public
-             * @type {object}
-             */
-            const self = {};
+        function tagsToHtml(tags) {
+            let html = '';
 
-            /**
-             * Tags, i.e. sections, in slider
-             *
-             * At any one time, the sum of values for all the tags will always be
-             * the sum of the initial values here, and not fixed at 100 (percent).
-             * The values shown in this demo just happen to add up to 100.
-             *
-             * @private
-             * @type {object[]}
-             */
-
-            // Change tags accordingly to QueryMode
-            let tags = [
-                { name: 'Water', color: '#9EBFDE', value: 25 },
-                { name: 'Tree', color: '#9DB97F', value: 25 },
-                { name: 'Building', color: '#d3d3d3', value: 25 },
-                { name: 'Sky', color: '#bce0df', value: 25 },
-            ];
-
-            window.addEventListener('DOMContentLoaded', (event) => {
-                let html = '';
-                tags.forEach((tag, index) => {
-                    // Using pointerdown instead of mousedown to capture both mouse and touchscreen
-                    // events. See
-                    // https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onpointerdown
-                    // for more info.
-                    html += `
+            tags.forEach((tag, index) => {
+                // Using pointerdown instead of mousedown to capture both mouse and touchscreen
+                // events. See
+                // https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onpointerdown
+                // for more info.
+                html += `
                     <div class="tag" data-tag-index="${index}"
                       style="background:${tag.color}; width:${tag.value}%;">
                       <div class="tag-container">
@@ -148,9 +117,50 @@
                         onpointerdown="demoScript.onSliderSelect(event, this);"><span>⬌</span></div>
                     </div>
                 `;
-                });
+            });
 
-                sliderElement.innerHTML = html;
+            document.querySelector('.slider').innerHTML = html;
+        }
+        const queryModesToTags = {
+            'scenario': [
+                { name: 'Water', color: '#9EBFDE', value: 25 },
+                { name: 'Tree', color: '#9DB97F', value: 25 },
+                { name: 'Building', color: '#d3d3d3', value: 25 },
+                { name: 'Sky', color: '#bce0df', value: 25 },
+            ],
+            'openess': [
+                { name: 'Depthness', color: '#505050', value: 34 },
+                { name: 'Greeness', color: '#7b8f1e', value: 33 },
+                { name: 'Walkability', color: '#8f6b1e', value: 33 },
+            ],
+            'building': [
+                { name: 'Apple', color: '#8f1e5b', value: 25 },
+                { name: 'Melon', color: '#1e8f89', value: 25 },
+                { name: 'Guava', color: '#bcb833', value: 25 },
+                { name: 'Pear', color: '#d7e2a7', value: 25 },
+            ]
+        }
+        let tags = queryModesToTags['scenario'];
+        let sliderElement = document.querySelector('.slider');
+        // Adapted into vanilla CSS/JavaScript from React/TypeScript in article
+        // https://newsakmi.com/news/tech-news/software/lets-make-a-multi-thumb-slider-that-calculates-the-width-between-thumbs
+        const demoScript = (function (sliderElement) {
+            /**
+             * Self reference - all public properties/methods are stored here and returned as public interface
+             *
+             * @public
+             * @type {object}
+             */
+            const self = {};
+
+            /**
+             * @private
+             * @type {object[]}
+             */
+
+
+            window.addEventListener('DOMContentLoaded', (event) => {
+                tagsToHtml(tags);
             });
 
             /**
@@ -262,14 +272,15 @@
 <script src="./D3Selection/crossfilterHistogram/d3.v3.min.js"></script>
 <script src="./D3Selection/crossfilterHistogram/d3_script.js"></script> -->
     <script>
-        function openQuery(evt, cityName) {
+        function openQuery(evt, queryMode) {
             var tablinks;
             tablinks = document.getElementsByClassName("tabButton");
 
             for (let i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" tabButton--active", " tabButton--inactive");
             }
-
+            tags = queryModesToTags[queryMode];
+            tagsToHtml(tags);
             evt.currentTarget.className = evt.currentTarget.className.replace(" tabButton--inactive", " tabButton--active");
         }
     </script>

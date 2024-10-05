@@ -31,42 +31,67 @@
             <canvas class="webgl"></canvas>
         </div>
         <div class="uiColumn">
+            <div class="controlsContainer">
+                <div class="userButtons">
+                    <button class="userButton" type="button" onclick="experience.birdsEye.setBirdsEyeCamera()">Birds Eye
+                        View</button>
+                    <button class="userButton" type="button" onclick="experience.birdsEye.setTopViewCamera()">Above
+                        View</button>
+                    <button class="userButton" type="button" onclick="experience.birdsEye.addPlane()">Add Plane</button>
+                    <button class="userButton" type="button" onclick="experience.birdsEye.disposePlane()">Remove
+                        Plane</button>
+                </div>
+                <div class="userQueries">
+                    <div class="tabs">
+                        <button class="tabButton tabButton--active" onclick="openQuery(event, 'Scenario')">Scenario</button>
+                        <button class="tabButton tabButton--inactive" onclick="openQuery(event, 'Openess')">Openess</button>
+                        <button class="tabButton tabButton--inactive" onclick="openQuery(event, 'Building')">Building</button>
+                    </div>
+                    <div class="queryContainer">
+                        <div class="querySliders"></div>
+                        <div class="queryButtons">
+                            <button class="userButton" type="button"
+                                onclick="experience.world.callQueryLocationOnPlane()">Query
+                                on Plane</button>
+                            <button class="userButton" type="button"
+                                onclick="experience.world.callQueryLocation()">Query
+                                on World</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="graphsContainer">
-                <div class="residualsContainer">
-                    <span>Residuals</span>
-                    <svg class="residualsGraph"></svg>
+                <div class="graphsContent">
                 </div>
-                <div class="parallelCoordinatesContainer">
-                    <span>Parralel Query Coordinates</span>
-                    <div class="parallelCoordinates"></div>
+            </div>
+            <div class="galleryContainer">
+                <div class="galleryContent">
                 </div>
             </div>
 
-
-            <div className="povWorld">
-                <!-- <p id="webgl-pov-steps">Steps: X</p>
-                <p id="webgl-pov-residual">Residual: Y</p> -->
-                <canvas class="webgl-pov0"></canvas>
-                <canvas class="webgl-pov1"></canvas>
-                <canvas class="webgl-pov2"></canvas>
-                <canvas class="webgl-pov3"></canvas>
-                <canvas class="webgl-pov4"></canvas>
-            </div>
-
-            <div className="GlobalwWorld">
-                <!-- top view -->
-                <canvas class="webgl-global0"></canvas> 
-                <!-- bird view -->
-                <canvas class="webgl-global1"></canvas>
-                <!-- front view -->
-                <canvas class="webgl-global2"></canvas>
-            </div>
-
-            <br>
         </div>
-        <div class="loading-bar"></div>
-        <script type="module" src="./script.js"></script>
     </div>
+    <div class="graphsContainer" style="display: none;">
+        <div class="residualsContainer">
+            <span>Residuals</span>
+            <svg class="residualsGraph"></svg>
+        </div>
+        <div class="parallelCoordinatesContainer">
+            <span>Parralel Query Coordinates</span>
+            <div class="parallelCoordinates"></div>
+        </div>
+    </div>
+
+
+    <div className="povWorld" style="display: none;">
+        <canvas class="webgl-pov0"></canvas>
+        <canvas class="webgl-pov1"></canvas>
+        <canvas class="webgl-pov2"></canvas>
+        <canvas class="webgl-pov3"></canvas>
+        <canvas class="webgl-pov4"></canvas>
+    </div>
+    <div class="loading-bar"></div>
+    <script type="module" src="./script.js"></script>
 
     <!-- <script src="./Experience/D3Selection/Histogram/histogram.js"></script> -->
     <!-- <script src="./Experience/D3Selection/Histogram/parallel_coordinates.js"></script> -->
@@ -76,7 +101,18 @@
     <!-- <script src="./D3Selection/crossfilterHistogram/crossfilter.v1.min.js"></script>
 <script src="./D3Selection/crossfilterHistogram/d3.v3.min.js"></script>
 <script src="./D3Selection/crossfilterHistogram/d3_script.js"></script> -->
+    <script>
+        function openQuery(evt, cityName) {
+            var tablinks;
+            tablinks = document.getElementsByClassName("tabButton");
 
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" tabButton--active", " tabButton--inactive");
+            }
+
+            evt.currentTarget.className = evt.currentTarget.className.replace(" tabButton--inactive", " tabButton--active");
+        }
+    </script>
 </body>
 
 

@@ -2,8 +2,13 @@ import * as dat from 'lil-gui'
 
 export default class GUI {
     constructor() {
+        const enableGUI = import.meta.env.DEV
         this.instance = new dat.GUI()
         this.debugObject = {}
+
+        if(!enableGUI) {
+            this.instance.hide()
+        }
 
         this.dataVisualizationFolder = this.instance.addFolder('Data Visualization')
             .close()

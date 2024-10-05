@@ -43,12 +43,17 @@
                 </div>
                 <div class="userQueries">
                     <div class="tabs">
-                        <button class="tabButton tabButton--active" onclick="openQuery(event, 'Scenario')">Scenario</button>
-                        <button class="tabButton tabButton--inactive" onclick="openQuery(event, 'Openess')">Openess</button>
-                        <button class="tabButton tabButton--inactive" onclick="openQuery(event, 'Building')">Building</button>
+                        <button class="tabButton tabButton--active"
+                            onclick="openQuery(event, 'Scenario')">Scenario</button>
+                        <button class="tabButton tabButton--inactive"
+                            onclick="openQuery(event, 'Openess')">Openess</button>
+                        <button class="tabButton tabButton--inactive"
+                            onclick="openQuery(event, 'Building')">Building</button>
                     </div>
                     <div class="queryContainer">
-                        <div class="querySliders"></div>
+                        <div class="querySliders">
+                            <div class="slider"></div>
+                        </div>
                         <div class="queryButtons">
                             <button class="userButton" type="button"
                                 onclick="experience.world.callQueryLocationOnPlane()">Query
@@ -92,6 +97,161 @@
     </div>
     <div class="loading-bar"></div>
     <script type="module" src="./script.js"></script>
+    <script>
+        let sliderElement = document.querySelector('.slider');
+        // Adapted into vanilla CSS/JavaScript from React/TypeScript in article
+        // https://newsakmi.com/news/tech-news/software/lets-make-a-multi-thumb-slider-that-calculates-the-width-between-thumbs
+        // Unlike the original article, the tags here are not removed if value becomes 0.
+        const demoScript = (function (sliderElement) {
+            /**
+             * Self reference - all public properties/methods are stored here and returned as public interface
+             *
+             * @public
+             * @type {object}
+             */
+            const self = {};
+
+            /**
+             * Tags, i.e. sections, in slider
+             *
+             * At any one time, the sum of values for all the tags will always be
+             * the sum of the initial values here, and not fixed at 100 (percent).
+             * The values shown in this demo just happen to add up to 100.
+             *
+             * @private
+             * @type {object[]}
+             */
+
+            // Change tags accordingly to QueryMode
+            let tags = [
+                { name: 'Water', color: '#9EBFDE', value: 25 },
+                { name: 'Tree', color: '#9DB97F', value: 25 },
+                { name: 'Building', color: '#d3d3d3', value: 25 },
+                { name: 'Sky', color: '#bce0df', value: 25 },
+            ];
+
+            window.addEventListener('DOMContentLoaded', (event) => {
+                let html = '';
+                tags.forEach((tag, index) => {
+                    // Using pointerdown instead of mousedown to capture both mouse and touchscreen
+                    // events. See
+                    // https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onpointerdown
+                    // for more info.
+                    html += `
+                    <div class="tag" data-tag-index="${index}"
+                      style="background:${tag.color}; width:${tag.value}%;">
+                      <div class="tag-container">
+                        <span class="tag-text tag-name">${tag.name}</span>
+                        <span class="tag-text tag-value">${tag.value}%</span>
+                      </div>
+                      <div class="slider-thumb"
+                        onpointerdown="demoScript.onSliderSelect(event, this);"><span>⬌</span></div>
+                    </div>
+                `;
+                });
+
+                sliderElement.innerHTML = html;
+            });
+
+            /**
+             * Handler when user clicks on slider thumb
+             *
+             * @param {Event} event
+             * @returns {void}
+             */
+            self.onSliderSelect = function (event, sliderThumb) {
+                event.preventDefault();
+                document.body.style.cursor = 'ew-resize';
+
+                let tagIndex = parseInt(sliderThumb.parentNode.getAttribute('data-tag-index'));
+                let tag = tags[tagIndex];
+                let startDragX = event.pageX;
+                let sliderWidth = sliderElement.offsetWidth;
+                let values = tags.map((tag) => tag.value); // initial values
+
+                // The onResize and onEventUp listeners are specific to each
+                // onSliderSelect event hence created inside
+                let onResize = function (event) {
+                    event.preventDefault();
+
+                    let endDragX = event.touches ? event.touches[0].pageX : event.pageX;
+                    let distanceMoved = endDragX - startDragX;
+
+                    values = tags.map((tag) => tag.value); // read in updated values
+                    let maxValue = values[tagIndex] + values[tagIndex + 1];
+                    let valueMoved = nearestMultiple(1, getPercent(sliderWidth, distanceMoved));
+                    let prevValue = values[tagIndex];
+                    let newValue = prevValue + valueMoved;
+
+                    let currTagValue = clamp(newValue, 0, maxValue);
+                    values[tagIndex] = currTagValue;
+
+                    let nextTagIndex = tagIndex + 1;
+                    let nextTagNewValue = values[nextTagIndex] - valueMoved;
+                    let nextTagValue = clamp(nextTagNewValue, 0, maxValue);
+                    values[nextTagIndex] = nextTagValue;
+
+                    // Update slider
+                    Array.from(document.querySelectorAll('.tag')).forEach((tagElement) => {
+                        let tagIndex = parseInt(tagElement.getAttribute('data-tag-index'));
+                        let value = values[tagIndex];
+
+                        tagElement.style.width = value + '%';
+                        tagElement.querySelector('.tag-value').innerHTML = value + '%';
+                    });
+                };
+
+                let removeEventListener = function () {
+                    window.removeEventListener('pointermove', onResize);
+                    window.removeEventListener('touchmove', onResize);
+
+                    // Update values only when user stops moving slider thumb
+                    tags.forEach((tag, tagIndex) => {
+                        tag.value = values[tagIndex];
+                    });
+
+                    emitEvent();
+                };
+                let onEventUp = function (event) {
+                    event.preventDefault();
+                    document.body.style.cursor = 'initial';
+                    // Send new query values to World
+                    console.log("end of change");
+                    console.log(tags);
+                    removeEventListener();
+                };
+
+                window.addEventListener('pointermove', onResize);
+                window.addEventListener('touchmove', onResize);
+                window.addEventListener("touchend", onEventUp);
+                window.addEventListener("pointerup", onEventUp);
+            };
+
+            function clamp(value, min, max) {
+                return Math.min(Math.max(value, min), max);
+            }
+
+            function emitEvent() {
+                sliderElement.dispatchEvent(new CustomEvent('demo.slider.tags', {
+                    bubbles: false,
+                    detail: {
+                        tags: tags,
+                    }
+                }));
+            }
+
+            function getPercent(containerWidth, distanceMoved) {
+                return (distanceMoved / containerWidth) * 100;
+            }
+
+            function nearestMultiple(divisor, number) {
+                return Math.ceil(number / divisor) * divisor;
+            }
+
+            // Return public interface of IIFE
+            return self;
+        })(sliderElement);
+    </script>
 
     <!-- <script src="./Experience/D3Selection/Histogram/histogram.js"></script> -->
     <!-- <script src="./Experience/D3Selection/Histogram/parallel_coordinates.js"></script> -->

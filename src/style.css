@@ -394,6 +394,7 @@ aside {
 .userButton {
   width: 50%;
   min-width: 150px;
+  max-width: 200px;
   color: white;
 
   box-sizing: border-box;
@@ -426,6 +427,7 @@ aside {
 }
 
 .tabButton {
+  font-size: 18px;
   padding: 4px 12px;
   background-color: transparent;
   border: 0;
@@ -442,17 +444,21 @@ aside {
 .queryContainer {
   flex-grow: 1;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .querySliders {
   flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .queryButtons {
   flex: 2;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-around;
   align-items: center;
 }
@@ -477,4 +483,74 @@ aside {
 .galleryContent {
   flex: 1;
   background-color: #B2B2B2;
+}
+
+/* Slider */
+.slider {
+  background-color: transparent;
+  display: flex;
+  width: 90%;
+  height: 50%;
+}
+.tag-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+.tag {
+  border-left-width: 0.1em;
+  border-left-style: solid;
+  border-left-color: white;
+  border-right-width: 0.1em;
+  border-right-style: solid;
+  border-right-color: white;
+  box-sizing: border-box;
+  padding: 0.5em;
+  position: relative;
+  text-align: center;
+}
+
+.tag-text {
+  color: white;
+  display: block;
+  font-family: sans-serif;
+  font-weight: bold;
+  overflow: hidden;
+  user-select: none;
+}
+
+.tag:first-of-type {
+  border-radius: 4px 0px 0px 4px;
+}
+
+.tag:last-of-type {
+  border-radius: 0px 4px 4px 0px;
+}
+
+.tag:last-of-type > .slider-thumb {
+  display: none !important;
+}
+
+.slider-thumb {
+  align-items: center;
+  background-color: white;
+  border-radius: 2em;
+  bottom: 0;
+  cursor: ew-resize;
+  display: flex;
+  height: 2em;
+  justify-content: center;
+  margin: auto;
+  width: 2em;
+  position: absolute;
+  right: calc(-1.1em);
+  top: 0;
+  user-select: none;
+  z-index: 10;
+}
+
+.slider-thumb span {
+  font-size: 1.5em;
+  font-weight: bold;
 }

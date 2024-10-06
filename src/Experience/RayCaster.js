@@ -25,7 +25,6 @@ export default class RayCaster {
         this.mouse = new THREE.Vector2()
 
         this.canvas = document.getElementsByClassName('webgl')[0].getBoundingClientRect();
-        console.log(this.canvas);
 
         this.materialHelper = new MaterialHelper()
 
@@ -144,7 +143,6 @@ export default class RayCaster {
             g.computeBoundingBox()
             var centroid = new THREE.Vector3()
             centroid.addVectors(g.boundingBox.min, g.boundingBox.max).divideScalar(2)
-            console.log(centroid)
             g.center()
 
             child.position.copy(centroid)
@@ -183,7 +181,6 @@ export default class RayCaster {
 
         
         this.transformControl.attach( this.clickedBuilding )
-        console.log(this.transformControl)
     }
     setTransformControl() {
         this.transformControl =  new TransformControls( this.camera.instance, this.experience.renderer.instance.domElement )

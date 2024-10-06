@@ -3,7 +3,7 @@ let selected_locations = [];
 
 // Load the data from data.json
 // d3.json("data.json").then(function(data) {
-d3.json("./D3Selection/Histogram/queried_many_locations_plane.csv").then(function(data){
+d3.json("./D3Charts/Histogram/queried_many_locations_plane.csv").then(function(data){
     global_locations = data;
     selected_locations = data;
 

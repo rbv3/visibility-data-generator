@@ -18,7 +18,7 @@ import VisibilityEncoder from '../Services/VisibilityEncoder.js'
 import ParticleHelper from './Utils/ParticleHelper.js'
 import PovWorld from './povWorld.js'
 import BirdsEye from './BirdsEye.js'
-import Histogram from './D3Selection/Histogram/Histogram.js'
+import Histogram from './D3Charts/Histogram/Histogram.js'
 
 // import require from 'require';
 

@@ -19,6 +19,8 @@ import ParticleHelper from './Utils/ParticleHelper.js'
 import PovWorld from './povWorld.js'
 import BirdsEye from './BirdsEye.js'
 import Histogram from './D3Charts/Histogram/Histogram.js'
+import QueryTabs from './UserControls/QueryTabs.js'
+import MultiThumbSlider from './UserControls/MultiThumbSLider.js'
 
 // import require from 'require';
 
@@ -80,9 +82,13 @@ export default class Experience {
         this.shouldUpdateOnTick = true
 
 
-        //Histogram
+        // Histogram
         this.histogram = new Histogram();
         console.log("Histogram created");
+
+        // User Controls
+        this.multiThumbSlider = new MultiThumbSlider();
+        this.queryTabs = new QueryTabs();
 
         // Events
         // this.sizes.on('resize', () => {

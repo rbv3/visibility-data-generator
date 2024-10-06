@@ -44,11 +44,11 @@
                 <div class="userQueries">
                     <div class="tabs">
                         <button class="tabButton tabButton--active"
-                            onclick="openQuery(event, 'scenario')">Scenario</button>
+                            onclick="experience.queryTabs.openQuery(event, 'scenario')">Scenario</button>
                         <button class="tabButton tabButton--inactive"
-                            onclick="openQuery(event, 'openess')">Openess</button>
+                            onclick="experience.queryTabs.openQuery(event, 'openess')">Openess</button>
                         <button class="tabButton tabButton--inactive"
-                            onclick="openQuery(event, 'building')">Building</button>
+                            onclick="experience.queryTabs.openQuery(event, 'building')">Building</button>
                     </div>
                     <div class="queryContainer">
                         <div class="querySliders">
@@ -136,182 +136,10 @@
 
     <!-- Multithumb Slider Script -->
     <script>
-        function tagsToHtml(tags) {
-            let html = '';
-
-            tags.forEach((tag, index) => {
-                // Using pointerdown instead of mousedown to capture both mouse and touchscreen
-                // events. See
-                // https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onpointerdown
-                // for more info.
-                html += `
-                    <div class="tag" data-tag-index="${index}"
-                      style="background:${tag.color}; width:${tag.value}%;">
-                      <div class="tag-container">
-                        <span class="tag-text tag-name">${tag.name}</span>
-                        <span class="tag-text tag-value">${tag.value}%</span>
-                      </div>
-                      <div class="slider-thumb"
-                        onpointerdown="demoScript.onSliderSelect(event, this);"><span>⬌</span></div>
-                    </div>
-                `;
-            });
-
-            document.querySelector('.slider').innerHTML = html;
-        }
-        const queryModesToTags = {
-            'scenario': [
-                { name: 'Water', color: '#9EBFDE', value: 25 },
-                { name: 'Tree', color: '#9DB97F', value: 25 },
-                { name: 'Building', color: '#d3d3d3', value: 25 },
-                { name: 'Sky', color: '#bce0df', value: 25 },
-            ],
-            'openess': [
-                { name: 'Depthness', color: '#505050', value: 34 },
-                { name: 'Greeness', color: '#7b8f1e', value: 33 },
-                { name: 'Walkability', color: '#8f6b1e', value: 33 },
-            ],
-            'building': [
-                { name: 'Apple', color: '#8f1e5b', value: 25 },
-                { name: 'Melon', color: '#1e8f89', value: 25 },
-                { name: 'Guava', color: '#bcb833', value: 25 },
-                { name: 'Pear', color: '#d7e2a7', value: 25 },
-            ]
-        }
-        let tags = queryModesToTags['scenario'];
-        let sliderElement = document.querySelector('.slider');
-        // Adapted into vanilla CSS/JavaScript from React/TypeScript in article
-        // https://newsakmi.com/news/tech-news/software/lets-make-a-multi-thumb-slider-that-calculates-the-width-between-thumbs
-        const demoScript = (function (sliderElement) {
-            /**
-             * Self reference - all public properties/methods are stored here and returned as public interface
-             *
-             * @public
-             * @type {object}
-             */
-            const self = {};
-
-            /**
-             * @private
-             * @type {object[]}
-             */
-
-
-            window.addEventListener('DOMContentLoaded', (event) => {
-                tagsToHtml(tags);
-            });
-
-            /**
-             * Handler when user clicks on slider thumb
-             *
-             * @param {Event} event
-             * @returns {void}
-             */
-            self.onSliderSelect = function (event, sliderThumb) {
-                event.preventDefault();
-                document.body.style.cursor = 'ew-resize';
-
-                let tagIndex = parseInt(sliderThumb.parentNode.getAttribute('data-tag-index'));
-                let tag = tags[tagIndex];
-                let startDragX = event.pageX;
-                let sliderWidth = sliderElement.offsetWidth;
-                let values = tags.map((tag) => tag.value); // initial values
-
-                // The onResize and onEventUp listeners are specific to each
-                // onSliderSelect event hence created inside
-                let onResize = function (event) {
-                    event.preventDefault();
-
-                    let endDragX = event.touches ? event.touches[0].pageX : event.pageX;
-                    let distanceMoved = endDragX - startDragX;
-
-                    values = tags.map((tag) => tag.value); // read in updated values
-                    let maxValue = values[tagIndex] + values[tagIndex + 1];
-                    let valueMoved = nearestMultiple(1, getPercent(sliderWidth, distanceMoved));
-                    let prevValue = values[tagIndex];
-                    let newValue = prevValue + valueMoved;
-
-                    let currTagValue = clamp(newValue, 0, maxValue);
-                    values[tagIndex] = currTagValue;
-
-                    let nextTagIndex = tagIndex + 1;
-                    let nextTagNewValue = values[nextTagIndex] - valueMoved;
-                    let nextTagValue = clamp(nextTagNewValue, 0, maxValue);
-                    values[nextTagIndex] = nextTagValue;
-
-                    // Update slider
-                    Array.from(document.querySelectorAll('.tag')).forEach((tagElement) => {
-                        let tagIndex = parseInt(tagElement.getAttribute('data-tag-index'));
-                        let value = values[tagIndex];
-
-                        tagElement.style.width = value + '%';
-                        tagElement.querySelector('.tag-value').innerHTML = value + '%';
-                    });
-                };
-
-                let removeEventListener = function () {
-                    window.removeEventListener('pointermove', onResize);
-                    window.removeEventListener('touchmove', onResize);
-
-                    // Update values only when user stops moving slider thumb
-                    tags.forEach((tag, tagIndex) => {
-                        tag.value = values[tagIndex];
-                    });
-
-                    emitEvent();
-                };
-                let onEventUp = function (event) {
-                    event.preventDefault();
-                    document.body.style.cursor = 'initial';
-                    // Send new query values to World
-                    experience.world.setQueryParameters(tags);
-                    console.log(tags);
-                    removeEventListener();
-                };
-
-                window.addEventListener('pointermove', onResize);
-                window.addEventListener('touchmove', onResize);
-                window.addEventListener("touchend", onEventUp);
-                window.addEventListener("pointerup", onEventUp);
-            };
-
-            function clamp(value, min, max) {
-                return Math.min(Math.max(value, min), max);
-            }
-
-            function emitEvent() {
-                sliderElement.dispatchEvent(new CustomEvent('demo.slider.tags', {
-                    bubbles: false,
-                    detail: {
-                        tags: tags,
-                    }
-                }));
-            }
-
-            function getPercent(containerWidth, distanceMoved) {
-                return (distanceMoved / containerWidth) * 100;
-            }
-
-            function nearestMultiple(divisor, number) {
-                return Math.ceil(number / divisor) * divisor;
-            }
-
-            // Return public interface of IIFE
-            return self;
-        })(sliderElement);
+        
     </script>
     <script>
-        function openQuery(evt, queryMode) {
-            var tablinks;
-            tablinks = document.getElementsByClassName("tabButton");
-
-            for (let i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" tabButton--active", " tabButton--inactive");
-            }
-            tags = queryModesToTags[queryMode];
-            tagsToHtml(tags);
-            evt.currentTarget.className = evt.currentTarget.className.replace(" tabButton--inactive", " tabButton--active");
-        }
+        
     </script>
 </body>
 

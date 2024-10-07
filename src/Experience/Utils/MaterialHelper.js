@@ -145,7 +145,31 @@ export default class MaterialHelper {
         
         return material;
     }
+    
+    getBuildingMaterial(child, materialMap, mode) {
+        const buildingHeight = this.buildingMaterialToInteger(child.userData["building:material"])
 
+        return (mode == VIEW_MODES['realWorld']) ?
+        materialMap['building'](buildingHeight) :
+        materialMap['building'];
+    }
+    buildingMaterialToInteger(material) {
+        switch (material) {
+            case 'marble':
+                return 10;
+            case 'plaster':
+                return 20;
+            case 'concrete':
+                return 40;
+            case 'brick':
+                return 60;
+            case 'metal':
+                return 80;
+            default:
+                return 0;
+        }
+    }
+    
     setCustomMeshDepthMaterial() {
         const material = new THREE.MeshDepthMaterial()
         const customUniforms = {

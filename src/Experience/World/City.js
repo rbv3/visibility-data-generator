@@ -5,6 +5,7 @@ import MaterialHelper from '../Utils/MaterialHelper.js'
 import { float32Flatten, hydrateMap, updateChildrenMaterial } from '../Utils/helpers.js'
 import ScreenshotHelper from '../Utils/ScreenshotHelper.js'
 import { sc1 } from '../Utils/screenshotPositions.js'
+import { VIEW_MODES } from '../Utils/constants.js'
 
 const map = {}
 const terrainMap = {}
@@ -82,16 +83,16 @@ export default class City {
         }
     }
     setMaterialByMode(mode) {
-        this.setMaterial(this.materialHelper.materialMap[mode])
+        this.setMaterial(this.materialHelper.materialMap[mode], mode)
     }
-    setMaterial(materialMap) {
+    setMaterial(materialMap, mode) {
         this.meshesToUpdateMaterial.forEach(child => {
             if (child.userData.type === 'entity') {
                 this.setMaterialEntityChild(child, materialMap)
             } else if (child.userData.terrain?.length > 0) {
                 this.setMaterialTerrainChild(child, materialMap)
             } else {
-                this.setMaterialBuildingChild(child, materialMap)
+                this.setMaterialBuildingChild(child, materialMap, mode)
             }
         })
     }
@@ -162,30 +163,17 @@ export default class City {
                 break
         }
     }
-    buildingMaterialToInteger(material) {
-        switch (material) {
-            case 'marble':
-                return 10;
-            case 'plaster':
-                return 20;
-            case 'concrete':
-                return 40;
-            case 'brick':
-                return 60;
-            case 'metal':
-                return 80;
-            default:
-                return 0;
-        }
-    }
-    setMaterialBuildingChild(child, materialMap) {
+    
+    setMaterialBuildingChild(child, materialMap, mode) {
         const key = child.userData.building
-        const buildingHeight = this.buildingMaterialToInteger(child.userData["building:material"])
+
+        const buildingMaterial = this.materialHelper.getBuildingMaterial(child, materialMap, mode);
+
         hydrateMap(key, buildingMap)
         this.buildingMeshes.push(...child.children)
         this.recursiveSetMaterial(
             child,
-            materialMap['building'](buildingHeight),
+            buildingMaterial,
             child.userData
         )
     }
@@ -204,7 +192,7 @@ export default class City {
             } else if (child.userData.terrain?.length > 0) {
                 this.setMaterialTerrainChild(child, this.materialHelper.materialMap['realWorld'])
             } else {
-                this.setMaterialBuildingChild(child, this.materialHelper.materialMap['realWorld'])
+                this.setMaterialBuildingChild(child, this.materialHelper.materialMap['realWorld'], VIEW_MODES['realWorld'])
             }
         }
         return

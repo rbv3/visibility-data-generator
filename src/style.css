@@ -465,7 +465,23 @@ aside {
 }
 
 /* chart */
-#chart {
+#chart0 {
+  width: 100%;
+  height: 100%;
+}
+#chart1 {
+  width: 100%;
+  height: 100%;
+}
+#chart2 {
+  width: 100%;
+  height: 100%;
+}
+#chart3 {
+  width: 100%;
+  height: 100%;
+}
+#chart4 {
   width: 100%;
   height: 100%;
 }

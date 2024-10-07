@@ -112,6 +112,12 @@ export default class World {
                 this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(res.data)
                 this.histogram.resetHistogram()
                 this.histogram.createHistogram(res.data)
+                console.log(this.experience.pieCharts);
+                this.experience.pieCharts.forEach((pieChart, index) => {
+                    console.log(index);
+                    console.log(pieChart);
+                    pieChart.createPieChart(index, [])
+                })
             })
             .catch(err => {
                 console.error(err);

@@ -21,6 +21,7 @@ import BirdsEye from './BirdsEye.js'
 import Histogram from './D3Charts/Histogram/Histogram.js'
 import QueryTabs from './UserControls/QueryTabs.js'
 import MultiThumbSlider from './UserControls/MultiThumbSLider.js'
+import PieChart from './D3Charts/PieChart/pieChart.js'
 
 // import require from 'require';
 
@@ -29,7 +30,7 @@ let instance = null
 export default class Experience {
     constructor(canvas) {
         // Singleton
-        if(instance) {
+        if (instance) {
             return instance
         }
         instance = this
@@ -82,9 +83,17 @@ export default class Experience {
         this.shouldUpdateOnTick = true
 
 
-        // Histogram
+        // Charts
         this.histogram = new Histogram();
         console.log("Histogram created");
+        this.pieCharts = [
+            new PieChart(0),
+            new PieChart(1),
+            new PieChart(2),
+            new PieChart(3),
+            new PieChart(4),
+        ]
+        console.log("PieCharts created");
 
         // User Controls
         this.multiThumbSlider = new MultiThumbSlider();
@@ -105,19 +114,19 @@ export default class Experience {
 
         //Download json file of the building meshes if download_buildings_data is set to true.
         let downloadBuildingMeshes = false;
-        if(downloadBuildingMeshes == true){
+        if (downloadBuildingMeshes == true) {
             this.downloadBuildingsData(20000) //Set a timeout enough for full model to be loaded on the interface.
         }
-            
+
     }
 
-    downloadBuildingsData(timeout){
+    downloadBuildingsData(timeout) {
         //Download json file of the building meshes
         console.log("Retrieved building meshes:")
         console.log(this.buildingMeshes.length)
         console.log(this.buildingMeshes)
         console.log(Array.isArray(this.buildingMeshes))
-        
+
         setTimeout(() => {
             console.log("Waited logging")
             console.log(this.buildingMeshes[0]); // Logs: [1, 2, 3]
@@ -125,9 +134,9 @@ export default class Experience {
             // let buildingData = this.buildingMeshes.map(mesh => mesh.userData)
             // let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.matrixWorld.elements.slice(12,15)}))
             // let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.geometry.boundingSphere.center}))
-            let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.parent.position}))
+            let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, { "location": mesh.parent.position }))
             console.log(buildingData)
-            const jsonBuildingData= JSON.stringify(buildingData, null, 4);
+            const jsonBuildingData = JSON.stringify(buildingData, null, 4);
             const blob = new Blob([jsonBuildingData], { type: 'application/json' });
             const url = URL.createObjectURL(blob); // Create a URL for the Blob
             const a = document.createElement('a'); // Create a <a> element

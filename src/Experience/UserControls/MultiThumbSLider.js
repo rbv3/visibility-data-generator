@@ -11,7 +11,7 @@ export default class MultiThumbSlider {
                 { name: 'Sky', color: '#bce0df', value: 25 },
             ],
             'openess': [
-                { name: 'Depthness', color: '#505050', value: 34 },
+                { name: 'Openness', color: '#505050', value: 34 },
                 { name: 'Greeness', color: '#7b8f1e', value: 33 },
                 { name: 'Walkability', color: '#8f6b1e', value: 33 },
             ],

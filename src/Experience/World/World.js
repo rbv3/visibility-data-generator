@@ -37,18 +37,6 @@ export default class World {
             numLocations: {
                 value: 5
             },
-            water: {
-                value: 1
-            },
-            building: {
-                value: 0
-            },
-            sky: {
-                value: 0
-            },
-            tree: {
-                value: 0
-            },
         }
 
         this.setGUI()
@@ -66,12 +54,7 @@ export default class World {
         this.visibilityEncoderService.queryLocation(
             this.queryLocationParameters.numLocations.value,
             1,
-            normalizeGoal([
-                this.queryLocationParameters.building.value,
-                this.queryLocationParameters.water.value,
-                this.queryLocationParameters.tree.value,
-                this.queryLocationParameters.sky.value,
-            ])
+            this.queryParameters
         )
             .then(res => {
                 console.log(res);
@@ -95,12 +78,7 @@ export default class World {
         this.visibilityEncoderService.queryLocationOnPlane({
             numLocations: this.queryLocationParameters.numLocations.value,
             seed: 20,
-            goals: normalizeGoal([
-                this.queryLocationParameters.building.value,
-                this.queryLocationParameters.water.value,
-                this.queryLocationParameters.tree.value,
-                this.queryLocationParameters.sky.value,
-            ]),
+            goals: this.queryParameters,
             pointOnPlane: [...planeCenter],
             direction1: planeDirections[0],
             direction2: planeDirections[1],
@@ -148,10 +126,10 @@ export default class World {
     setGUI() {
         this.gui.queryPositionFolder.add(this.queryLocationParameters.numLocations, 'value').min(1).max(10000).step(1).name('numLocations')
 
-        this.gui.queryPositionFolder.add(this.queryLocationParameters.building, 'value').min(0).max(1).step(0.01).name('building')
-        this.gui.queryPositionFolder.add(this.queryLocationParameters.water, 'value').min(0).max(1).step(0.01).name('water')
-        this.gui.queryPositionFolder.add(this.queryLocationParameters.tree, 'value').min(0).max(1).step(0.01).name('tree')
-        this.gui.queryPositionFolder.add(this.queryLocationParameters.sky, 'value').min(0).max(1).step(0.01).name('sky')
+        // this.gui.queryPositionFolder.add(this.queryLocationParameters.building, 'value').min(0).max(1).step(0.01).name('building')
+        // this.gui.queryPositionFolder.add(this.queryLocationParameters.water, 'value').min(0).max(1).step(0.01).name('water')
+        // this.gui.queryPositionFolder.add(this.queryLocationParameters.tree, 'value').min(0).max(1).step(0.01).name('tree')
+        // this.gui.queryPositionFolder.add(this.queryLocationParameters.sky, 'value').min(0).max(1).step(0.01).name('sky')
 
         this.gui.queryPositionFolder.add({
             callQueryLocation: () => {

@@ -313,17 +313,25 @@ export default class Experience {
     enableVisibilityMode() {
         const start = performance.now()
 
+        THREE.ColorManagement.enabled = true;
+        THREE.ColorManagement.legacyMode = false;
+
         this.currentMode = VIEW_MODES['visibility']
         this.world.city.setMaterialByMode(VIEW_MODES['visibility'])
         this.world.lights.setDirectionalLight(false)
         this.renderer.updateClearColor(`rgb(${OBJECT_TO_COLOR['sky']})`)
         this.renderer.saoPass.enabled = false
+        
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
 
     }
     enableRealWorldMode() {
         const start = performance.now()
+
+
+        THREE.ColorManagement.enabled = false;
+        THREE.ColorManagement.legacyMode = true;
 
         this.currentMode = VIEW_MODES['realWorld']
         this.world.city.setMaterialByMode(VIEW_MODES['realWorld'])

@@ -22,18 +22,18 @@ export default class MaterialHelper {
     }
     setVisibilityMaterials() {
         return {
-            default: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['miscelaneous']})`),
+            default: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['miscelaneous']})`, toneMapped: false }),
             // buildings
             building: (material) => this.createVisibilityBuildingMaterial(material),
             // surfaces
-            water: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['water']})`),
-            road: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['road']})`),
-            sidewalk: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['sidewalk']})`),
-            surface: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['surface']})`),
+            water: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['water']})`, toneMapped: false }),
+            road: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['road']})`, toneMapped: false }),
+            sidewalk: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['sidewalk']})`, toneMapped: false }),
+            surface: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['surface']})`, toneMapped: false }),
             // entities
-            tree: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['tree']})`),
+            tree: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['tree']})`, toneMapped: false }),
             //mouse interactions
-            click: this.createCustomMaterial('#eb15b2', true, 0.0),
+            click: this.createCustomMaterial({ color: '#eb15b2', transparent: true, opacity: 0.0, toneMapped: false }),
         }
     }
     setDepthMaterials() {
@@ -53,26 +53,26 @@ export default class MaterialHelper {
     }
     setRealWorldMaterials() {
         return {
-            default: this.createCustomMaterial('#3d3d3d'),
+            default: this.createCustomMaterial({ color: '#3d3d3d' }),
             // buildings
             building: (height) => this.createRealWorldBuildingMaterial(height),
             // surfaces
-            water: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['water']}`),
-            road: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['road']}`),
-            sidewalk: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['sidewalk']}`),
-            surface: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['surface']}`),
+            water: this.createCustomMaterial({ color: `${REAL_WORLD_OBJECT_TO_COLOR['water']}` }),
+            road: this.createCustomMaterial({ color: `${REAL_WORLD_OBJECT_TO_COLOR['road']}` }),
+            sidewalk: this.createCustomMaterial({ color: `${REAL_WORLD_OBJECT_TO_COLOR['sidewalk']}` }),
+            surface: this.createCustomMaterial({ color: `${REAL_WORLD_OBJECT_TO_COLOR['surface']}` }),
             // entities
-            tree: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['tree']}`),
+            tree: this.createCustomMaterial({ color: `${REAL_WORLD_OBJECT_TO_COLOR['tree']}` }),
             //mouse interactions
-            hover: this.createCustomMaterial('#66ff00'),
-            click: this.createCustomMaterial(`${REAL_WORLD_OBJECT_TO_COLOR['building']}`, true, 1),
+            hover: this.createCustomMaterial({ color: '#66ff00' }),
+            click: this.createCustomMaterial({ color: `${REAL_WORLD_OBJECT_TO_COLOR['building']}`, transparent: true, opacity: 1 }),
         }
     }
 
     // histograma
     // kernel density estimation
 
-    createCustomMaterial(color, transparent = false, opacity = 1, wireframe = false) {
+    createCustomMaterial({ color, transparent = false, opacity = 1, wireframe = false, toneMapped = true }) {
         const customMaterial = new THREE.MeshStandardMaterial({
             color: new THREE.Color(color),
             transparent,
@@ -84,20 +84,22 @@ export default class MaterialHelper {
     }
     getColorByMaterial(material) {
         switch (material) {
-            case 'bricks':
-                return new THREE.Color('#962d26');
+            case 'brick':
+                return new THREE.Color('#e46e65');
             case 'concrete':
                 return new THREE.Color('#7c7c7c');
             case 'marble':
-                return new THREE.Color('#8c5f96');
+                return new THREE.Color('#a17ca9');
             case 'plaster':
-                return new THREE.Color('#ccca6c');
+                return new THREE.Color('#d3d185');
+            case 'metal':
+                return new THREE.Color('#ffffff');
 
         }
     }
     createVisibilityBuildingMaterial(material) {
         const color = this.getColorByMaterial(material);
-        return this.createCustomMaterial(color);
+        return this.createCustomMaterial({ color, toneMapped: false });
     }
     createRealWorldBuildingMaterial(height = 0) {
         const customUniforms = {

@@ -25,6 +25,8 @@ export default class MultiThumbSlider {
         this.tags = this.queryModesToTags['scenario'];
         this.sliderElement = document.querySelector('.slider');
 
+        experience.world.setQueryParameters(this.tags);
+
         window.addEventListener('DOMContentLoaded', (event) => {
             this.tagsToHtml(this.tags);
         });

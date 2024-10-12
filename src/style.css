@@ -402,6 +402,20 @@ aside {
   align-items: center;
 }
 
+.queryNumLocations {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#numLocations {
+  height: 20px;
+  margin-left: 5px;
+  padding-left: 5px;
+}
+
 .queryButtons {
   flex: 2;
   display: flex;
@@ -469,18 +483,22 @@ aside {
   width: 100%;
   height: 100%;
 }
+
 #chart1 {
   width: 100%;
   height: 100%;
 }
+
 #chart2 {
   width: 100%;
   height: 100%;
 }
+
 #chart3 {
   width: 100%;
   height: 100%;
 }
+
 #chart4 {
   width: 100%;
   height: 100%;

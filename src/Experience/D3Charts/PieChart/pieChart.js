@@ -8,11 +8,13 @@ var dataset = [
 
 export default class PieChart {
   constructor(id) {
+    this.data = [];
   };
   createPieChart(id, data) {
-    // chart dimensions
+    this.data = this.formatData(data)
+
     const chartElement = document.querySelector(`#chart${id}`)
-    
+
     var width = chartElement.clientWidth;
     var height = chartElement.clientHeight;
 
@@ -37,7 +39,7 @@ export default class PieChart {
       .outerRadius(radius); // size of overall chart
 
     var pie = d3.pie() // start and end angles of the segments
-      .value(function (d) { return d.count; }) // how to extract the numerical data from each entry in our dataset
+      .value((d) => { return d.count; }) // how to extract the numerical data from each entry in our dataset
       .sort(null); // by default, data sorts in oescending value. this will mess with our animation so we set it to null
 
     // define tooltip
@@ -67,26 +69,23 @@ export default class PieChart {
     //   </div>
     // </div>
 
-    dataset.forEach(function (d) {
+    this.data.forEach((d) => {
       d.count = +d.count; // calculate count as we iterate through the data
       d.enabled = true; // add enabled property to track which entries are checked
     });
 
     // creating the chart
     var path = svg.selectAll('path') // select all path elements inside the svg. specifically the 'g' element. they don't exist yet but they will be created below
-      .data(pie(dataset)) //associate dataset wit he path elements we're about to create. must pass through the pie function. it magically knows how to extract values and bakes it into the pie
+      .data(pie(this.data)) //associate dataset wit he path elements we're about to create. must pass through the pie function. it magically knows how to extract values and bakes it into the pie
       .enter() //creates placeholder nodes for each of the values
       .append('path') // replace placeholders with path elements
       .attr('d', arc) // define d attribute with arc function above
-      .attr('fill', function (d) { return color(d.data.label); }) // use color scale to define fill of each label in dataset
-      .each(function (d) { this._current - d; }); // creates a smooth animation for each track
+      .attr('fill', (d) => { return color(d.data.label); }) // use color scale to define fill of each label in dataset
+      .each((d) => { this._current - d; }); // creates a smooth animation for each track
 
     // mouse event handlers are attached to path so they need to come after its definition
-    path.on('mouseover', function (event, d) {
-      console.log(d);
-      console.log(event);
-      console.log(d3.layerY);
-      var total = d3.sum(dataset.map(function (d) { // calculate the total number of tickets in the dataset         
+    path.on('mouseover', (event, d) => {
+      var total = d3.sum(this.data.map((d) => { // calculate the total number of tickets in the dataset         
         return (d.enabled) ? d.count : 0; // checking to see if the entry is enabled. if it isn't, we return 0 and cause other percentages to increase                                      
       }));
       var percent = Math.round(1000 * d.data.count / total) / 10; // calculate percent
@@ -95,11 +94,11 @@ export default class PieChart {
       tooltip.style('display', 'block'); // set display                     
     });
 
-    path.on('mouseout', function () { // when mouse leaves div                        
+    path.on('mouseout', () => { // when mouse leaves div                        
       tooltip.style('display', 'none'); // hide tooltip for that element
     });
 
-    path.on('mousemove', function (event, d) { // when mouse moves   
+    path.on('mousemove', (event, d) => { // when mouse moves   
       tooltip
         .style('top', (event.clientY + 10) + 'px') // always 10px below the cursor
         .style('left', (event.clientX + 10) + 'px'); // always 10px to the right of the mouse
@@ -111,7 +110,7 @@ export default class PieChart {
       .enter() // creates placeholder
       .append('g') // replace placeholders with g elements
       .attr('class', 'legend') // each g is given a legend class
-      .attr('transform', function (d, i) {
+      .attr('transform', (d, i) => {
         var height = legendRectSize + legendSpacing; // height of element is the height of the colored square plus the spacing      
         var offset = height * color.domain().length / 2; // vertical offset of the entire legend = height of a single element & half the total number of elements  
         var horz = 18 * legendRectSize; // the legend is shifted to the left to make room for the text
@@ -125,10 +124,10 @@ export default class PieChart {
       .attr('height', legendRectSize) // height of rect size is defined above                      
       .style('fill', color) // each fill is passed a color
       .style('stroke', color) // each stroke is passed a color
-      .on('click', function (label) {
+      .on('click', (label) => {
         var rect = d3.select(this); // this refers to the colored squared just clicked
         var enabled = true; // set enabled true to default
-        var totalEnabled = d3.sum(dataset.map(function (d) { // can't disable all options
+        var totalEnabled = d3.sum(this.data.map((d) => { // can't disable all options
           return (d.enabled) ? 1 : 0; // return 1 for each enabled entry. and summing it up
         }));
 
@@ -140,19 +139,19 @@ export default class PieChart {
           enabled = false; // set enabled to false
         }
 
-        pie.value(function (d) {
+        pie.value((d) => {
           if (d.label === label) d.enabled = enabled; // if entry label matches legend label
           return (d.enabled) ? d.count : 0; // update enabled property and return count or 0 based on the entry's status
         });
 
-        path = path.data(pie(dataset)); // update pie with new data
+        path = path.data(pie(this.data)); // update pie with new data
 
         path.transition() // transition of redrawn pie
           .duration(750) // 
-          .attrTween('d', function (d) { // 'd' specifies the d attribute that we'll be animating
+          .attrTween('d', (d) => { // 'd' specifies the d attribute that we'll be animating
             var interpolate = d3.interpolate(this._current, d); // this = current path element
             this._current = interpolate(0); // interpolate between current value and the new value of 'd'
-            return function (t) {
+            return (t) => {
               return arc(interpolate(t));
             };
           });
@@ -162,6 +161,22 @@ export default class PieChart {
     legend.append('text')
       .attr('x', legendRectSize + legendSpacing)
       .attr('y', legendRectSize - legendSpacing)
-      .text(function (d) { return d; }); // return label
+      .text((d) => { return d; }); // return label
+  }
+  resetPieChart(id) {
+    // this.data = [];
+
+    d3.select(`#chart${id}`).selectAll("*").remove();
+  }
+  formatData(data) {
+    let tempData = [];
+    
+    for(const key in data) {
+      tempData.push({
+        "label": [key.trim()],
+        "count": data[key] * 100
+      })
+    }
+    return tempData
   }
 }

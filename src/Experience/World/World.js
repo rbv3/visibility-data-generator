@@ -76,7 +76,7 @@ export default class World {
         const planeDirections = this.birdsEye.getPlaneDirections()
         
         this.visibilityEncoderService.queryLocationOnPlane({
-            numLocations: this.queryLocationParameters.numLocations.value,
+            numLocations: parseInt(document.querySelector('#numLocations').value),
             seed: 20,
             goals: this.queryParameters,
             pointOnPlane: [...planeCenter],
@@ -92,9 +92,8 @@ export default class World {
                 this.histogram.createHistogram(res.data)
                 console.log(this.experience.pieCharts);
                 this.experience.pieCharts.forEach((pieChart, index) => {
-                    console.log(index);
-                    console.log(pieChart);
-                    pieChart.createPieChart(index, [])
+                    pieChart.resetPieChart(index)
+                    pieChart.createPieChart(index, res.data[index]['f_xyz'])
                 })
             })
             .catch(err => {

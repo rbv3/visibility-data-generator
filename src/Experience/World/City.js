@@ -10,6 +10,7 @@ import { VIEW_MODES } from '../Utils/constants.js'
 const map = {}
 const terrainMap = {}
 const buildingMap = {}
+const buildingMaterialMap = {}
 let removedMeshes = 0
 
 export default class City {
@@ -51,6 +52,7 @@ export default class City {
                         console.log(map)
                         console.log(terrainMap)
                         console.log(buildingMap)
+                        console.log(buildingMaterialMap)
                         console.log({ removedMeshes })
 
                         // clone current scene to POV scene
@@ -170,6 +172,8 @@ export default class City {
         const buildingMaterial = this.materialHelper.getBuildingMaterial(child, materialMap, mode);
 
         hydrateMap(key, buildingMap)
+        hydrateMap(child.userData['building:material'], buildingMaterialMap)
+
         this.buildingMeshes.push(...child.children)
         this.recursiveSetMaterial(
             child,

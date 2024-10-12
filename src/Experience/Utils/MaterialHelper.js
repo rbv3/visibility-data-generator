@@ -24,7 +24,7 @@ export default class MaterialHelper {
         return {
             default: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['miscelaneous']})`),
             // buildings
-            building: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['building']})`),
+            building: (material) => this.createVisibilityBuildingMaterial(material),
             // surfaces
             water: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['water']})`),
             road: this.createCustomMaterial(`rgb(${OBJECT_TO_COLOR['road']})`),
@@ -82,8 +82,24 @@ export default class MaterialHelper {
 
         return customMaterial
     }
+    getColorByMaterial(material) {
+        switch (material) {
+            case 'bricks':
+                return new THREE.Color('#962d26');
+            case 'concrete':
+                return new THREE.Color('#7c7c7c');
+            case 'marble':
+                return new THREE.Color('#8c5f96');
+            case 'plaster':
+                return new THREE.Color('#ccca6c');
 
-    createRealWorldBuildingMaterial(height=0) {
+        }
+    }
+    createVisibilityBuildingMaterial(material) {
+        const color = this.getColorByMaterial(material);
+        return this.createCustomMaterial(color);
+    }
+    createRealWorldBuildingMaterial(height = 0) {
         const customUniforms = {
             uHeight: { value: height },
             uMaxHeight: { value: 100 },
@@ -142,16 +158,21 @@ export default class MaterialHelper {
                 fragmentMain
             )
         }
-        
+
         return material;
     }
-    
-    getBuildingMaterial(child, materialMap, mode) {
-        const buildingHeight = this.buildingMaterialToInteger(child.userData["building:material"])
 
-        return (mode == VIEW_MODES['realWorld']) ?
-        materialMap['building'](buildingHeight) :
-        materialMap['building'];
+    getBuildingMaterial(child, materialMap, mode) {
+        const buildingHeight = this.buildingMaterialToInteger(child.userData["height"])
+        const buildingMaterial = child.userData["building:material"]
+        if (mode == VIEW_MODES.realWorld) {
+            return materialMap['building'](buildingHeight)
+        }
+        if (mode == VIEW_MODES.visibility) {
+            return materialMap['building'](buildingMaterial)
+        }
+
+        return materialMap['building'];
     }
     buildingMaterialToInteger(material) {
         switch (material) {
@@ -169,7 +190,7 @@ export default class MaterialHelper {
                 return 0;
         }
     }
-    
+
     setCustomMeshDepthMaterial() {
         const material = new THREE.MeshDepthMaterial()
         const customUniforms = {

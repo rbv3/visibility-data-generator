@@ -11,15 +11,17 @@ import RayCaster from './RayCaster.js'
 import CharacterControls from './CharacterControls.js'
 import Loaders from './Utils/Loaders.js'
 import StatsMonitor from './Utils/StatsMonitor.js'
-import { COLOR_TO_OBJECT, DEPTH_SKY, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR, VIEW_MODES } from './Utils/constants.js'
+import { BUILDING_COLOR_TO_OBJECT, BUILDING_OBJECT_TO_COLOR, COLOR_TO_OBJECT, DEPTH_SKY, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR, VIEW_MODES } from './Utils/constants.js'
 import { createCsvColor, increaseMapFrequency, isGreyColor, roundColor } from './Utils/helpers.js'
 import ScreenshotHelper from './Utils/ScreenshotHelper.js'
 import VisibilityEncoder from '../Services/VisibilityEncoder.js'
 import ParticleHelper from './Utils/ParticleHelper.js'
 import PovWorld from './povWorld.js'
 import BirdsEye from './BirdsEye.js'
-import Histogram from './D3Selection/Histogram/Histogram.js'
-import GlobalWorld from './globalWorld.js'
+import Histogram from './D3Charts/Histogram/Histogram.js'
+import QueryTabs from './UserControls/QueryTabs.js'
+import MultiThumbSlider from './UserControls/MultiThumbSLider.js'
+import PieChart from './D3Charts/PieChart/pieChart.js'
 
 // import require from 'require';
 
@@ -28,7 +30,7 @@ let instance = null
 export default class Experience {
     constructor(canvas) {
         // Singleton
-        if(instance) {
+        if (instance) {
             return instance
         }
         instance = this
@@ -68,11 +70,6 @@ export default class Experience {
             new PovWorld(4),
         ]
 
-        //Global
-        this.globalWorld = [new GlobalWorld(0)
-            , new GlobalWorld(1)
-            , new GlobalWorld(2)]
-
         // World
         this.world = new World()
         this.buildingMeshes = this.world.buildingMeshes
@@ -86,9 +83,21 @@ export default class Experience {
         this.shouldUpdateOnTick = true
 
 
-        //Histogram
+        // Charts
         this.histogram = new Histogram();
         console.log("Histogram created");
+        this.pieCharts = [
+            new PieChart(0),
+            new PieChart(1),
+            new PieChart(2),
+            new PieChart(3),
+            new PieChart(4),
+        ]
+        console.log("PieCharts created");
+
+        // User Controls
+        this.multiThumbSlider = new MultiThumbSlider();
+        this.queryTabs = new QueryTabs();
 
         // Events
         // this.sizes.on('resize', () => {
@@ -105,19 +114,19 @@ export default class Experience {
 
         //Download json file of the building meshes if download_buildings_data is set to true.
         let downloadBuildingMeshes = false;
-        if(downloadBuildingMeshes == true){
+        if (downloadBuildingMeshes == true) {
             this.downloadBuildingsData(20000) //Set a timeout enough for full model to be loaded on the interface.
         }
-            
+
     }
 
-    downloadBuildingsData(timeout){
+    downloadBuildingsData(timeout) {
         //Download json file of the building meshes
         console.log("Retrieved building meshes:")
         console.log(this.buildingMeshes.length)
         console.log(this.buildingMeshes)
         console.log(Array.isArray(this.buildingMeshes))
-        
+
         setTimeout(() => {
             console.log("Waited logging")
             console.log(this.buildingMeshes[0]); // Logs: [1, 2, 3]
@@ -125,9 +134,9 @@ export default class Experience {
             // let buildingData = this.buildingMeshes.map(mesh => mesh.userData)
             // let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.matrixWorld.elements.slice(12,15)}))
             // let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.geometry.boundingSphere.center}))
-            let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.parent.position}))
+            let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, { "location": mesh.parent.position }))
             console.log(buildingData)
-            const jsonBuildingData= JSON.stringify(buildingData, null, 4);
+            const jsonBuildingData = JSON.stringify(buildingData, null, 4);
             const blob = new Blob([jsonBuildingData], { type: 'application/json' });
             const url = URL.createObjectURL(blob); // Create a URL for the Blob
             const a = document.createElement('a'); // Create a <a> element
@@ -157,6 +166,11 @@ export default class Experience {
                 this.enableVisibilityMode()
             }
         }, 'enableVisibilityMode')
+        this.gui.dataGenerationFolder.add({
+            enableBuildingDataMode: () => {
+                this.enableBuildingDataMode()
+            }
+        }, 'enableBuildingDataMode')
         this.gui.dataGenerationFolder.add({
             enableRealWorldMode: () => {
                 this.enableRealWorldMode()
@@ -197,6 +211,9 @@ export default class Experience {
 
         if (this.currentMode == VIEW_MODES['visibility']) {
             return this.countColorVisiblityMode(readPixelBuffer, shouldLogResults)
+        }
+        if (this.currentMode == VIEW_MODES['buildingData']) {
+            return this.countColorBuildingDataMode(readPixelBuffer, shouldLogResults)
         }
         if (this.currentMode == VIEW_MODES['depth']) {
             this.countColorDepthMode(readPixelBuffer)
@@ -249,6 +266,52 @@ export default class Experience {
         }
 
         csvLine.push(createCsvColor(colorMap))
+        return csvLine
+    }
+    countColorBuildingDataMode(readPixelBuffer, shouldLogResults) {
+        let csvLine = []
+        const colorMap = {}
+        for (let i = 0; i < readPixelBuffer.length; i += 4) {
+            let color = [
+                readPixelBuffer[i],
+                readPixelBuffer[i + 1],
+                readPixelBuffer[i + 2]
+            ]
+            color = roundColor(color)
+
+            if (!(color in COLOR_TO_OBJECT)) {
+                increaseMapFrequency('unknown', colorMap)
+
+                continue
+            }
+            increaseMapFrequency(color, colorMap)
+        }
+        // console.log('Camera position and quaternion:')
+        // console.log(this.camera.instance.position)
+
+        csvLine.push(`${this.camera.instance.position.x}`)
+        csvLine.push(`${this.camera.instance.position.y}`)
+        csvLine.push(`${this.camera.instance.position.z}`)
+
+        // console.log(this.camera.instance.quaternion)
+
+        csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+
+        const totalPixels = readPixelBuffer.length / 4
+        if (shouldLogResults) {
+            console.log('Visibility of canvas:')
+            for (const color in colorMap) {
+                if (color in BUILDING_COLOR_TO_OBJECT) {
+                    console.log(`${BUILDING_COLOR_TO_OBJECT[color]}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+                } else {
+                    console.log(`${color}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+                }
+            }
+        }
+
+        csvLine.push(createCsvColor(colorMap, this.currentMode))
         return csvLine
     }
     countColorDepthMode(readPixelBuffer) {
@@ -309,12 +372,28 @@ export default class Experience {
         this.world.lights.setDirectionalLight(false)
         this.renderer.updateClearColor(`rgb(${OBJECT_TO_COLOR['sky']})`)
         this.renderer.saoPass.enabled = false
+        
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
+    }
+    enableBuildingDataMode() {
+        const start = performance.now()
 
+        this.currentMode = VIEW_MODES['buildingData']
+        this.world.city.setMaterialByMode(VIEW_MODES['buildingData'])
+        this.world.lights.setDirectionalLight(false)
+        this.renderer.updateClearColor(`rgb(${BUILDING_OBJECT_TO_COLOR['miscelaneous']})`)
+        this.renderer.saoPass.enabled = false
+        
+        const end = performance.now()
+        console.log(`Execution time: ${end - start} ms`)
     }
     enableRealWorldMode() {
         const start = performance.now()
+
+
+        THREE.ColorManagement.enabled = false;
+        THREE.ColorManagement.legacyMode = true;
 
         this.currentMode = VIEW_MODES['realWorld']
         this.world.city.setMaterialByMode(VIEW_MODES['realWorld'])

@@ -240,7 +240,7 @@ export default class ScreenshotHelper {
         this.experience.shouldUpdateOnTick = true
     }
     createCsvLineForScene(fileName) {
-        if(this.experience.currentMode == VIEW_MODES['visibility']){
+        if(this.experience.currentMode == VIEW_MODES['visibility'] || this.experience.currentMode == VIEW_MODES['buildingData']){
             const countColorCsv = this.experience.countColorOfPixels()
             countColorCsv.push(fileName)
             let csvLine = countColorCsv

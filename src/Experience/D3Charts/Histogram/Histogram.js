@@ -4,8 +4,6 @@ import { pxStringToInt } from "../../Utils/helpers";
 
 let global_locations = [];
 let selected_locations = [];
-// Load the data from data.json
-// d3.json("data.json").then(function(data) {
 
 export default class Histogram {
     constructor() {

@@ -25,7 +25,6 @@ export default class RayCaster {
         this.mouse = new THREE.Vector2()
 
         this.canvas = document.getElementsByClassName('webgl')[0].getBoundingClientRect();
-        console.log(this.canvas);
 
         this.materialHelper = new MaterialHelper()
 
@@ -56,29 +55,33 @@ export default class RayCaster {
             if (event.target.className != 'webgl') {
                 return
             }
-            if(this.hoveredBuilding && this.hoveredBuilding.name !== this.clickedBuilding?.name) {
+            if (this.hoveredBuilding && this.hoveredBuilding.name !== this.clickedBuilding?.name) {
                 console.log('updating clicked building')
                 this.previousClicked = this.clickedBuilding
                 this.clickedBuilding = this.hoveredBuilding
-                
+
                 console.log(this.clickedBuilding);
-                
+
                 const points = createArrayOfPointsFromGroup(this.clickedBuilding)
-                    
+
                 const boundingBoxHelper = this.createBoundingBox(points)
 
                 this.pointsByNormal = this.groupPointsByNormal(boundingBoxHelper.geometry, boundingBoxHelper)
 
                 // this.updateTransformControl()
-
+                const buildingMaterial = this.materialHelper.getBuildingMaterial(
+                    this.clickedBuilding,
+                    this.materialHelper.materialMap[this.experience.currentMode],
+                    this.experience.currentMode
+                )
                 updateChildrenMaterial(this.clickedBuilding, this.materialHelper.materialMap[this.experience.currentMode].click)
-                updateChildrenMaterial(this.previousClicked, this.materialHelper.materialMap[this.experience.currentMode].building)
+                updateChildrenMaterial(this.previousClicked, buildingMaterial)
             }
         })
     }
     callGetFacadesForClickedBuilding() {
         const basePoint = this.pointsByNormal.get('[0,-1,0]')
-        
+
         this.visibilityEncoderService.predictFacadeFromBasePoints(basePoint, this.clickedBuildingHeight)
             .then(res => {
                 console.log(res.data)
@@ -113,8 +116,8 @@ export default class RayCaster {
     groupPointsByNormal(geometry, boxHelper) {
         const { normal, position } = geometry.attributes
         const pointsByNormal = new Map()
-        
-        for(let i=0; i < position.array.length; i+=3){
+
+        for (let i = 0; i < position.array.length; i += 3) {
             const normalCoord = [
                 normal.array[i + 0],
                 normal.array[i + 1],
@@ -127,11 +130,11 @@ export default class RayCaster {
             ]
 
             const vertex = new THREE.Vector3()
-            vertex.fromBufferAttribute( position, i/3 )
-            boxHelper.localToWorld( vertex )
+            vertex.fromBufferAttribute(position, i / 3)
+            boxHelper.localToWorld(vertex)
             vertex.toArray(positionCoord)
 
-            if(!pointsByNormal.has(JSON.stringify(normalCoord))) {
+            if (!pointsByNormal.has(JSON.stringify(normalCoord))) {
                 pointsByNormal.set(JSON.stringify(normalCoord), [])
             }
             pointsByNormal.set(JSON.stringify(normalCoord), [...pointsByNormal.get(JSON.stringify(normalCoord)), positionCoord])
@@ -144,7 +147,6 @@ export default class RayCaster {
             g.computeBoundingBox()
             var centroid = new THREE.Vector3()
             centroid.addVectors(g.boundingBox.min, g.boundingBox.max).divideScalar(2)
-            console.log(centroid)
             g.center()
 
             child.position.copy(centroid)
@@ -172,7 +174,7 @@ export default class RayCaster {
                     m3.position.z
                 )
             ).multiplyScalar(1 / 3)
-        
+
         this.clickedBuilding.remove(m1)
         this.clickedBuilding.remove(m2)
         this.clickedBuilding.remove(m3)
@@ -181,40 +183,39 @@ export default class RayCaster {
         this.clickedBuilding.attach(m3)
         this.clickedBuilding.updateMatrixWorld()
 
-        
-        this.transformControl.attach( this.clickedBuilding )
-        console.log(this.transformControl)
+
+        this.transformControl.attach(this.clickedBuilding)
     }
     setTransformControl() {
-        this.transformControl =  new TransformControls( this.camera.instance, this.experience.renderer.instance.domElement )
-        this.transformControl.setMode( 'scale' )
-        this.experience.scene.add( this.transformControl )
+        this.transformControl = new TransformControls(this.camera.instance, this.experience.renderer.instance.domElement)
+        this.transformControl.setMode('scale')
+        this.experience.scene.add(this.transformControl)
 
-        window.addEventListener( 'keydown',  ( event ) => {
-            switch ( event.keyCode ) {
+        window.addEventListener('keydown', (event) => {
+            switch (event.keyCode) {
 
-            case 87: // W
-                this.transformControl.setMode( 'translate' )
-                break
+                case 87: // W
+                    this.transformControl.setMode('translate')
+                    break
 
 
-            case 82: // R
-                this.transformControl.setMode( 'scale' )
-                break
+                case 82: // R
+                    this.transformControl.setMode('scale')
+                    break
 
-            case 27: // Esc
-                this.transformControl.reset()
-                break
+                case 27: // Esc
+                    this.transformControl.reset()
+                    break
 
             }
 
-        } )
+        })
     }
 
     createBoundingBox(points) {
-        const obb = new YUKA.OBB().fromPoints( points )
-        this.helper = createOBBHelper( obb )
-        
+        const obb = new YUKA.OBB().fromPoints(points)
+        this.helper = createOBBHelper(obb)
+
         console.log(this.helper)
         console.log(obb)
 
@@ -224,17 +225,17 @@ export default class RayCaster {
         this.previousBoundingBox = this.currentBoundingBox
         this.currentBoundingBox = this.helper
 
-        this.experience.scene.add( this.helper )
+        this.experience.scene.add(this.helper)
 
         this.previousBoundingBox?.geometry.dispose()
         this.previousBoundingBox?.material.dispose()
-        this.experience.scene.remove( this.previousBoundingBox )
+        this.experience.scene.remove(this.previousBoundingBox)
 
         return this.helper
     }
     createSlidingBoundingBox(points) {
-        const obb = new YUKA.OBB().fromPoints( points )
-        this.helper = createOBBHelper( obb )
+        const obb = new YUKA.OBB().fromPoints(points)
+        this.helper = createOBBHelper(obb)
         const { geometry } = this.helper
         console.log(geometry)
 
@@ -243,11 +244,11 @@ export default class RayCaster {
         this.geometry = geometry
 
         let lowestY = Infinity, highestY = -Infinity
-        for(let i = 0; i < points.length; i++) {
+        for (let i = 0; i < points.length; i++) {
             lowestY = Math.min(lowestY, points[i].y)
             highestY = Math.max(highestY, points[i].y)
         }
-        console.log({lowestY, highestY})
+        console.log({ lowestY, highestY })
 
         this.maxHeight = highestY
         this.helper.position.y = lowestY
@@ -257,10 +258,10 @@ export default class RayCaster {
 
         this.buildingCameraPositions = []
         this.updateSegment(
-            Math.ceil(geometry.parameters.width/10),
-            Math.ceil(geometry.parameters.depth/10),
+            Math.ceil(geometry.parameters.width / 10),
+            Math.ceil(geometry.parameters.depth / 10),
         )
-        
+
         console.log(this.helper)
         console.log(obb)
 
@@ -271,11 +272,11 @@ export default class RayCaster {
 
         this.previousBoundingBox?.geometry.dispose()
         this.previousBoundingBox?.material.dispose()
-        this.experience.scene.remove( this.previousBoundingBox )
+        this.experience.scene.remove(this.previousBoundingBox)
     }
 
     updateSegment(widthSegments, depthSegments) {
-        if(this.currentSeg > this.numSegments) {
+        if (this.currentSeg > this.numSegments) {
             return
         }
 
@@ -290,24 +291,24 @@ export default class RayCaster {
             1,
             depthSegments
         )
-        const positions = this.helper.geometry.getAttribute( 'position' )
-        const normals = this.helper.geometry.getAttribute( 'normal' )
+        const positions = this.helper.geometry.getAttribute('position')
+        const normals = this.helper.geometry.getAttribute('normal')
         const topSidePositions = []
-        
-        for(let i = 0; i < positions.array.length; i+=3) {
+
+        for (let i = 0; i < positions.array.length; i += 3) {
             let index = i / 3
 
             const normal = new THREE.Vector3()
-            normal.fromBufferAttribute( normals, index )
+            normal.fromBufferAttribute(normals, index)
 
-            if(
+            if (
                 normal.x == 0 &&
                 normal.y == 1 &&
                 normal.z == 0
             ) {
                 const vertex = new THREE.Vector3()
-                vertex.fromBufferAttribute( positions, index )
-                this.helper.localToWorld( vertex )
+                vertex.fromBufferAttribute(positions, index)
+                this.helper.localToWorld(vertex)
 
                 topSidePositions.push(vertex.toArray())
             }
@@ -318,7 +319,7 @@ export default class RayCaster {
         this.updateSegment(widthSegments, depthSegments)
     }
     screenShotBuilding() {
-        if(!this.buildingCameraPositions?.length) {
+        if (!this.buildingCameraPositions?.length) {
             console.warn('No building selected')
             return
         }
@@ -337,24 +338,28 @@ export default class RayCaster {
     }
     setGUI() {
         this.gui.dataGenerationFolder.add({
-            screenShotSelectedBuilding : () => {
+            screenShotSelectedBuilding: () => {
                 this.screenShotBuilding()
-            }}, 'screenShotSelectedBuilding')
-        
+            }
+        }, 'screenShotSelectedBuilding')
+
         this.gui.dataGenerationFolder.add({
-            plotRadiusSCPosition : () => {
+            plotRadiusSCPosition: () => {
                 this.plotRadiusScreenshotPositions()
-            }}, 'plotRadiusSCPosition')
-            
-        this.gui.endpointsFolder.add({
-            callGetFacadesForClickedBuilding : () => {
-                this.callGetFacadesForClickedBuilding()
-            }}, 'callGetFacadesForClickedBuilding')
+            }
+        }, 'plotRadiusSCPosition')
 
         this.gui.endpointsFolder.add({
-            callTestEnconderOnData : () => {
+            callGetFacadesForClickedBuilding: () => {
+                this.callGetFacadesForClickedBuilding()
+            }
+        }, 'callGetFacadesForClickedBuilding')
+
+        this.gui.endpointsFolder.add({
+            callTestEnconderOnData: () => {
                 this.callTestEnconderOnData()
-            }}, 'callTestEnconderOnData')
+            }
+        }, 'callTestEnconderOnData')
 
     }
     update() {

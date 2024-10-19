@@ -12,7 +12,7 @@ export default class MultiThumbSlider {
             ],
             'openess': [
                 { name: 'Openness', color: '#505050', value: 34 },
-                { name: 'Greeness', color: '#7b8f1e', value: 33 },
+                { name: 'Greenness', color: '#7b8f1e', value: 33 },
                 { name: 'Walkability', color: '#8f6b1e', value: 33 },
             ],
             'building': [

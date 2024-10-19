@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import Experience from '../Experience'
 
-import { OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR } from './constants'
+import { BUILDING_OBJECT_TO_COLOR, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR } from './constants'
 import { VIEW_MODES } from './constants'
 
 let instance = null
@@ -17,14 +17,15 @@ export default class MaterialHelper {
         this.materialMap = {
             [VIEW_MODES['depth']]: this.setDepthMaterials(),
             [VIEW_MODES['visibility']]: this.setVisibilityMaterials(),
-            [VIEW_MODES['realWorld']]: this.setRealWorldMaterials()
+            [VIEW_MODES['realWorld']]: this.setRealWorldMaterials(),
+            [VIEW_MODES['buildingData']]: this.setBuildingDataMaterials()
         }
     }
     setVisibilityMaterials() {
         return {
             default: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['miscelaneous']})`, toneMapped: false }),
             // buildings
-            building: (material) => this.createVisibilityBuildingMaterial(material),
+            building: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['building']})`, toneMapped: false }),
             // surfaces
             water: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['water']})`, toneMapped: false }),
             road: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['road']})`, toneMapped: false }),
@@ -34,6 +35,23 @@ export default class MaterialHelper {
             tree: this.createCustomMaterial({ color: `rgb(${OBJECT_TO_COLOR['tree']})`, toneMapped: false }),
             //mouse interactions
             click: this.createCustomMaterial({ color: '#eb15b2', transparent: true, opacity: 0.0, toneMapped: false }),
+        }
+    }
+
+    setBuildingDataMaterials() {
+        return {
+            default: this.createCustomMaterial({ color: `rgb(${BUILDING_OBJECT_TO_COLOR['miscelaneous']})`, toneMapped: false }),
+            // buildings
+            building: (material) => this.createBuildingDataMaterials(material),
+            // surfaces
+            water: this.createCustomMaterial({ color: `rgb(${BUILDING_OBJECT_TO_COLOR['miscelaneous']})`, toneMapped: false }),
+            road: this.createCustomMaterial({ color: `rgb(${BUILDING_OBJECT_TO_COLOR['miscelaneous']})`, toneMapped: false }),
+            sidewalk: this.createCustomMaterial({ color: `rgb(${BUILDING_OBJECT_TO_COLOR['miscelaneous']})`, toneMapped: false }),
+            surface: this.createCustomMaterial({ color: `rgb(${BUILDING_OBJECT_TO_COLOR['miscelaneous']})`, toneMapped: false }),
+            // entities
+            tree: this.createCustomMaterial({ color: `rgb(${BUILDING_OBJECT_TO_COLOR['miscelaneous']})`, toneMapped: false }),
+            //mouse interactions
+            click: this.createCustomMaterial({ color: `rgb(${BUILDING_OBJECT_TO_COLOR['miscelaneous']})`, toneMapped: false }),
         }
     }
     setDepthMaterials() {
@@ -85,19 +103,19 @@ export default class MaterialHelper {
     getColorByMaterial(material) {
         switch (material) {
             case 'brick':
-                return new THREE.Color('#e46e65');
+                return new THREE.Color(255, 0, 0);
             case 'concrete':
-                return new THREE.Color('#7c7c7c');
+                return new THREE.Color(0, 255, 0);
             case 'marble':
-                return new THREE.Color('#a17ca9');
+                return new THREE.Color(0, 0, 255);
             case 'plaster':
-                return new THREE.Color('#d3d185');
+                return new THREE.Color(255, 255, 255);
             case 'metal':
-                return new THREE.Color('#ffffff');
+                return new THREE.Color(255, 255, 0);
 
         }
     }
-    createVisibilityBuildingMaterial(material) {
+    createBuildingDataMaterials(material) {
         const color = this.getColorByMaterial(material);
         return this.createCustomMaterial({ color, toneMapped: false });
     }
@@ -170,7 +188,7 @@ export default class MaterialHelper {
         if (mode == VIEW_MODES.realWorld) {
             return materialMap['building'](buildingHeight)
         }
-        if (mode == VIEW_MODES.visibility) {
+        if (mode == VIEW_MODES.buildingData) {
             return materialMap['building'](buildingMaterial)
         }
 

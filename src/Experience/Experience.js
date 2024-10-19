@@ -11,7 +11,7 @@ import RayCaster from './RayCaster.js'
 import CharacterControls from './CharacterControls.js'
 import Loaders from './Utils/Loaders.js'
 import StatsMonitor from './Utils/StatsMonitor.js'
-import { COLOR_TO_OBJECT, DEPTH_SKY, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR, VIEW_MODES } from './Utils/constants.js'
+import { BUILDING_COLOR_TO_OBJECT, BUILDING_OBJECT_TO_COLOR, COLOR_TO_OBJECT, DEPTH_SKY, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR, VIEW_MODES } from './Utils/constants.js'
 import { createCsvColor, increaseMapFrequency, isGreyColor, roundColor } from './Utils/helpers.js'
 import ScreenshotHelper from './Utils/ScreenshotHelper.js'
 import VisibilityEncoder from '../Services/VisibilityEncoder.js'
@@ -167,6 +167,11 @@ export default class Experience {
             }
         }, 'enableVisibilityMode')
         this.gui.dataGenerationFolder.add({
+            enableBuildingDataMode: () => {
+                this.enableBuildingDataMode()
+            }
+        }, 'enableBuildingDataMode')
+        this.gui.dataGenerationFolder.add({
             enableRealWorldMode: () => {
                 this.enableRealWorldMode()
             }
@@ -206,6 +211,9 @@ export default class Experience {
 
         if (this.currentMode == VIEW_MODES['visibility']) {
             return this.countColorVisiblityMode(readPixelBuffer, shouldLogResults)
+        }
+        if (this.currentMode == VIEW_MODES['buildingData']) {
+            return this.countColorBuildingDataMode(readPixelBuffer, shouldLogResults)
         }
         if (this.currentMode == VIEW_MODES['depth']) {
             this.countColorDepthMode(readPixelBuffer)
@@ -258,6 +266,52 @@ export default class Experience {
         }
 
         csvLine.push(createCsvColor(colorMap))
+        return csvLine
+    }
+    countColorBuildingDataMode(readPixelBuffer, shouldLogResults) {
+        let csvLine = []
+        const colorMap = {}
+        for (let i = 0; i < readPixelBuffer.length; i += 4) {
+            let color = [
+                readPixelBuffer[i],
+                readPixelBuffer[i + 1],
+                readPixelBuffer[i + 2]
+            ]
+            color = roundColor(color)
+
+            if (!(color in COLOR_TO_OBJECT)) {
+                increaseMapFrequency('unknown', colorMap)
+
+                continue
+            }
+            increaseMapFrequency(color, colorMap)
+        }
+        // console.log('Camera position and quaternion:')
+        // console.log(this.camera.instance.position)
+
+        csvLine.push(`${this.camera.instance.position.x}`)
+        csvLine.push(`${this.camera.instance.position.y}`)
+        csvLine.push(`${this.camera.instance.position.z}`)
+
+        // console.log(this.camera.instance.quaternion)
+
+        csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
+        csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+
+        const totalPixels = readPixelBuffer.length / 4
+        if (shouldLogResults) {
+            console.log('Visibility of canvas:')
+            for (const color in colorMap) {
+                if (color in BUILDING_COLOR_TO_OBJECT) {
+                    console.log(`${BUILDING_COLOR_TO_OBJECT[color]}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+                } else {
+                    console.log(`${color}: ${colorMap[color] * 100 / totalPixels}% | ${colorMap[color]} pixels`)
+                }
+            }
+        }
+
+        csvLine.push(createCsvColor(colorMap, this.currentMode))
         return csvLine
     }
     countColorDepthMode(readPixelBuffer) {
@@ -313,9 +367,6 @@ export default class Experience {
     enableVisibilityMode() {
         const start = performance.now()
 
-        THREE.ColorManagement.enabled = true;
-        THREE.ColorManagement.legacyMode = false;
-
         this.currentMode = VIEW_MODES['visibility']
         this.world.city.setMaterialByMode(VIEW_MODES['visibility'])
         this.world.lights.setDirectionalLight(false)
@@ -324,7 +375,18 @@ export default class Experience {
         
         const end = performance.now()
         console.log(`Execution time: ${end - start} ms`)
+    }
+    enableBuildingDataMode() {
+        const start = performance.now()
 
+        this.currentMode = VIEW_MODES['buildingData']
+        this.world.city.setMaterialByMode(VIEW_MODES['buildingData'])
+        this.world.lights.setDirectionalLight(false)
+        this.renderer.updateClearColor(`rgb(${BUILDING_OBJECT_TO_COLOR['miscelaneous']})`)
+        this.renderer.saoPass.enabled = false
+        
+        const end = performance.now()
+        console.log(`Execution time: ${end - start} ms`)
     }
     enableRealWorldMode() {
         const start = performance.now()

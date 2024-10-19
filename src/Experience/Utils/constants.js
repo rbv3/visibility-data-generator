@@ -42,6 +42,24 @@ export const COLOR_TO_OBJECT = {
     '0,0,0': 'sky',
     '255,255,255': 'miscelaneous'
 }
+
+// Building Data Detection 
+export const BUILDING_OBJECT_TO_COLOR = {
+    'brick': '255,0,0',
+    'concrete': '0,255,0',
+    'marble': '0,0,255',
+    'plaster': '255,255,255',
+    'metal': '255,255,0',
+    'miscelaneous':'0,0,0',
+}
+export const BUILDING_COLOR_TO_OBJECT = {
+    '255,0,0': 'brick',
+    '0,255,0': 'concrete',
+    '0,0,255': 'marble' ,
+    '255,255,255': 'plaster',
+    '255,255,0': 'metal',
+    '0,0,0': 'miscelaneous'
+}
 // // Real world look like rendering
 // export const REAL_WORLD_OBJECT_TO_COLOR = {
 //     'building': '#9dadaa',
@@ -174,5 +192,6 @@ export const CAMERA_QUATERNIONS = [
 export const VIEW_MODES = {
     depth: 'depth',
     visibility: 'visibility',
-    realWorld: 'realWorld'
+    realWorld: 'realWorld',
+    buildingData: 'buildingData'
 }

@@ -22,10 +22,11 @@ export default class MultiThumbSlider {
                 { name: 'Imageability', color: '#881e8f', value: 16 },
             ],
             'building': [
-                { name: 'Apple', color: '#8f1e5b', value: 25 },
-                { name: 'Melon', color: '#1e8f89', value: 25 },
-                { name: 'Guava', color: '#bcb833', value: 25 },
-                { name: 'Pear', color: '#d7e2a7', value: 25 },
+                { name: 'Brick', color: '#8f1e5b', value: 20 },
+                { name: 'Concrete', color: '#1e8f89', value: 20 },
+                { name: 'Marble', color: '#bcb833', value: 20 },
+                { name: 'Plaster', color: '#d7e2a7', value: 20 },
+                { name: 'Metal', color: '#29d53b', value: 20 },
             ]
         }
         this.tags = this.queryModesToTags['scenario'];

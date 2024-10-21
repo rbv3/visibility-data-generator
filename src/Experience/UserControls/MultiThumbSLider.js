@@ -5,15 +5,21 @@ export default class MultiThumbSlider {
     constructor() {
         this.queryModesToTags = {
             'scenario': [
-                { name: 'Water', color: '#9EBFDE', value: 25 },
-                { name: 'Tree', color: '#9DB97F', value: 25 },
-                { name: 'Building', color: '#d3d3d3', value: 25 },
-                { name: 'Sky', color: '#bce0df', value: 25 },
+                { name: 'Water', color: '#9EBFDE', value: 15 },
+                { name: 'Tree', color: '#9DB97F', value: 15 },
+                { name: 'Building', color: '#d3d3d3', value: 14 },
+                { name: 'Road', color: '#989898', value: 14 },
+                { name: 'Sidewalk', color: '#e0bcbc', value: 14 },
+                { name: 'Surface', color: '#e0ddbc', value: 14 },
+                { name: 'Sky', color: '#bce0df', value: 14 },
             ],
             'openess': [
-                { name: 'Openness', color: '#505050', value: 34 },
-                { name: 'Greenness', color: '#7b8f1e', value: 33 },
-                { name: 'Walkability', color: '#8f6b1e', value: 33 },
+                { name: 'Openness', color: '#505050', value: 17 },
+                { name: 'Greenness', color: '#7b8f1e', value: 17 },
+                { name: 'Walkability', color: '#8f6b1e', value: 17 },
+                { name: 'Serenity', color: '#1e8f8d', value: 17 },
+                { name: 'Enclosure', color: '#1e268f', value: 16 },
+                { name: 'Imageability', color: '#881e8f', value: 16 },
             ],
             'building': [
                 { name: 'Apple', color: '#8f1e5b', value: 25 },

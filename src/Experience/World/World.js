@@ -38,7 +38,8 @@ export default class World {
                 value: 5
             },
         }
-
+        this.openessParameters = {}
+        this.initializeOpenessParameters()
         this.setGUI()
     }
     setQueryParameters(dictionary) {
@@ -49,6 +50,26 @@ export default class World {
             this.queryParameters[name] = percentage;
         })
         console.log(this.queryParameters);
+    }
+    initializeOpenessParameters() {
+        const slidersRows = document.getElementsByClassName('sliderRow')
+
+        for(let j = 0; j < slidersRows.length; j++) {
+            for (let i = 0; i < slidersRows[j].children.length; i++) {
+                if(slidersRows[j].children[i].nodeName == "INPUT" && slidersRows[j].children[i].type == "range") {
+                    this.openessParameters[slidersRows[j].children[i].id] = parseInt(slidersRows[j].children[i].value) / 100
+                }
+            }
+        }
+        console.log(this.openessParameters);
+    }
+    getOpenessParameters(value, id) {
+        this.openessParameters[id] = parseInt(value) / 100
+        console.log(this.openessParameters);
+        this.queryParameters = structuredClone(this.openessParameters)
+    }
+    setOpenessParameters() {
+        this.queryParameters = structuredClone(this.openessParameters)
     }
     callQueryLocation() {        
         this.visibilityEncoderService.queryLocation(

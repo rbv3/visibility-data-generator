@@ -55,7 +55,68 @@
                             <div class="slider"></div>
                         </div>
                         <div class="queryOpenessSliders" hidden>
-                            <div>test dive</div>
+                            <div class="queryOpenessSlidersCol">
+                                <label for="greeness">greeness</label>
+                                <form class="sliderRow">
+                                    <input name="greenessRange"
+                                        onchange="experience.world.getOpenessParameters(this.value, this.id)"
+                                        id="greeness" type="range" min="0" max="100" value="50"
+                                        oninput="this.form.greenessAmount.value=this.value">
+                                    <input type="number" name="greenessAmount" min="0" max="100" value="50"
+                                        oninput="this.form.greenessRange.value=this.value" />
+                                </form>
+
+                                <label for="openness">openness</label>
+                                <form class="sliderRow">
+                                    <input name="openessRange"
+                                        onchange="experience.world.getOpenessParameters(this.value, this.id)"
+                                        id="openess" type="range" min="0" max="100" value="50"
+                                        oninput="this.form.openessAmount.value=this.value">
+                                    <input type="number" name="openessAmount" min="0" max="100" value="50"
+                                        oninput="this.form.openessRange.value=this.value" />
+                                </form>
+
+                                <label for="imageability">imageability</label>
+                                <form class="sliderRow">
+                                    <input name="imageabilityRange"
+                                        onchange="experience.world.getOpenessParameters(this.value, this.id)"
+                                        id="imageability" type="range" min="0" max="100" value="50"
+                                        oninput="this.form.imageabilityAmount.value=this.value">
+                                    <input type="number" name="imageabilityAmount" min="0" max="100" value="50"
+                                        oninput="this.form.imageabilityRange.value=this.value" />
+                                </form>
+                            </div>
+                            <div class="queryOpenessSlidersCol">
+                                <label for="enclosure">enclosure</label>
+                                <form class="sliderRow">
+                                    <input name="enclosureRange"
+                                        onchange="experience.world.getOpenessParameters(this.value, this.id)"
+                                        id="enclosure" type="range" min="0" max="100" value="50"
+                                        oninput="this.form.enclosureAmount.value=this.value">
+                                    <input type="number" name="enclosureAmount" min="0" max="100" value="50"
+                                        oninput="this.form.enclosureRange.value=this.value" />
+                                </form>
+
+                                <label for="walkability">walkability</label>
+                                <form class="sliderRow">
+                                    <input name="walkabilityRange"
+                                        onchange="experience.world.getOpenessParameters(this.value, this.id)"
+                                        id="walkability" type="range" min="0" max="100" value="50"
+                                        oninput="this.form.walkabilityAmount.value=this.value">
+                                    <input type="number" name="walkabilityAmount" min="0" max="100" value="50"
+                                        oninput="this.form.walkabilityRange.value=this.value" />
+                                </form>
+
+                                <label for="serenity">serenity</label>
+                                <form class="sliderRow">
+                                    <input name="serenityRange"
+                                        onchange="experience.world.getOpenessParameters(this.value, this.id)"
+                                        id="serenity" type="range" min="0" max="100" value="50"
+                                        oninput="this.form.serenityAmount.value=this.value">
+                                    <input type="number" name="serenityAmount" min="0" max="100" value="50"
+                                        oninput="this.form.serenityRange.value=this.value" />
+                                </form>
+                            </div>
                         </div>
                         <div class="queryNumLocations">
                             <p>Number of Locations: </p>
@@ -143,10 +204,10 @@
 
     <!-- Multithumb Slider Script -->
     <script>
-        
+
     </script>
     <script>
-        
+
     </script>
 </body>
 

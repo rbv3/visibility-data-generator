@@ -21,6 +21,7 @@ export default class QueryTabs {
 
         switch (queryMode) {
             case 'openess':
+                this.experience.world.setOpenessParameters();
                 this.showOpenessMode()
                 break
             case 'scenario':
@@ -28,17 +29,18 @@ export default class QueryTabs {
                 const tags = this.experience.multiThumbSlider.queryModesToTags[queryMode];
                 this.experience.multiThumbSlider.tags = tags;
                 this.experience.multiThumbSlider.tagsToHtml(tags);
+                this.experience.world.setQueryParameters(tags);
                 break
         }
     }
 
     showOpenessMode() {
         this.defaultSLiders.style.display = "none"
-        this.openessSLiders.hidden = false
+        this.openessSLiders.style.display = "flex"
     }
 
     hideOpenessMode() {
         this.defaultSLiders.style.display = "flex"
-        this.openessSLiders.hidden = true
+        this.openessSLiders.style.display = "none"
    }
 }

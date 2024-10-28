@@ -22,6 +22,7 @@ import Histogram from './D3Charts/Histogram/Histogram.js'
 import QueryTabs from './UserControls/QueryTabs.js'
 import MultiThumbSlider from './UserControls/MultiThumbSLider.js'
 import PieChart from './D3Charts/PieChart/pieChart.js'
+import HiddenMap from './D3Charts/HiddenMap/HiddenMap.js'
 
 // import require from 'require';
 
@@ -84,6 +85,8 @@ export default class Experience {
 
 
         // Charts
+        this.hiddenMap = new HiddenMap();
+
         this.histogram = new Histogram();
         console.log("Histogram created");
         this.pieCharts = [
@@ -117,9 +120,17 @@ export default class Experience {
         if (downloadBuildingMeshes == true) {
             this.downloadBuildingsData(20000) //Set a timeout enough for full model to be loaded on the interface.
         }
+        
+        // this.hiddenMap.createHiddenMap(); 
+        // this.hiddenMap.displayGlobalLocations();
 
+        // setTimeout(() =>{
+        //     this.hiddenMap.displayGlobalLocations();
+        // }, 20000)
+        
     }
 
+    //Soluiton for asyncronous threejs calls.
     downloadBuildingsData(timeout) {
         //Download json file of the building meshes
         console.log("Retrieved building meshes:")

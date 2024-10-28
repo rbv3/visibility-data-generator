@@ -60,6 +60,8 @@ export default class City {
                             world.initScene(this.scene)
                         })
 
+                        this.experience.hiddenMap.createHiddenMap();
+
                         // Create points of interest and to avoid
                         // this.pointsOfInterest = float32Flatten(this.positionsOfInterest)
                         // this.pointToAvoid = float32Flatten(this.positionsToAvoid)

@@ -430,6 +430,12 @@ aside {
   display: flex;
 }
 
+#HiddenMap {
+  flex: 1;
+  /* background-color: #abd1c6; */
+  background-color: #dfeeee;
+}
+
 .graphsContent {
   flex: 1;
   background-color: #D9D9D9;

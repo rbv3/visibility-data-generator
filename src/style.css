@@ -9,6 +9,7 @@
 html,
 body {
   overflow: hidden;
+  background: #BDDADA;
 }
 
 .containerRow {
@@ -325,6 +326,7 @@ aside {
   display: flex;
   flex-direction: row;
   height: 30vh;
+  /* border-radius: 8px 0px 0px 8px; */
 }
 
 .userButtons {
@@ -335,6 +337,7 @@ aside {
   align-items: center;
   /* background-color: #D9D9D9; */
   background-color: #dfeeee;
+  border-radius: 8px 0px 0px 8px;
 }
 
 .userButton {
@@ -365,6 +368,7 @@ aside {
   background-color: #dfeeee;  
   display: flex;
   flex-direction: column;
+  border-radius: 0px 8px 8px 0px;
 }
 
 .tabs {
@@ -439,6 +443,7 @@ aside {
   flex: 1;
   /* background-color: #abd1c6; */
   background-color: #dfeeee;
+  border-radius: 8px 8px 8px 8px;
 }
 
 .graphsContent {
@@ -460,6 +465,7 @@ aside {
   flex-direction: column;
   /* background-color: #B2B2B2; */
   background-color: #dfeeee;
+  border-radius: 8px 8px 8px 8px;
 }
 
 .galleryItem {

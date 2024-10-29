@@ -333,14 +333,16 @@ aside {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  background-color: #D9D9D9;
+  /* background-color: #D9D9D9; */
+  background-color: #dfeeee;
 }
 
 .userButton {
   width: 50%;
   min-width: 150px;
   max-width: 200px;
-  color: white;
+  /* color: white; */
+  color: #272343;
 
   box-sizing: border-box;
 
@@ -349,7 +351,8 @@ aside {
 
   height: 40px;
 
-  background: #2C2C2C;
+  /* background: #2C2C2C; */
+  background: #ffd803;  
   border: 1px solid #2C2C2C;
   border-radius: 8px;
 
@@ -358,7 +361,8 @@ aside {
 
 .userQueries {
   flex: 4;
-  background-color: #B2B2B2;
+  /* background-color: #B2B2B2; */
+  background-color: #dfeeee;  
   display: flex;
   flex-direction: column;
 }
@@ -381,6 +385,7 @@ aside {
 
 .tabButton--active {
   color: #303030;
+  /* color: #ffd803; */
   border-bottom: 1px solid #303030;
 }
 
@@ -471,7 +476,8 @@ aside {
   overflow: auto;
   display: flex;
   flex-direction: column;
-  background-color: #B2B2B2;
+  /* background-color: #B2B2B2; */
+  background-color: #dfeeee;
 }
 
 .galleryItem {

@@ -5,13 +5,13 @@ export default class MultiThumbSlider {
     constructor() {
         this.queryModesToTags = {
             'scenario': [
-                { name: 'Water', color: '#9EBFDE', value: 15 },
-                { name: 'Tree', color: '#9DB97F', value: 15 },
-                { name: 'Building', color: '#d3d3d3', value: 14 },
-                { name: 'Road', color: '#989898', value: 14 },
-                { name: 'Sidewalk', color: '#e0bcbc', value: 14 },
-                { name: 'Surface', color: '#e0ddbc', value: 14 },
-                { name: 'Sky', color: '#bce0df', value: 14 },
+                { name: 'Water', color: '#67758D', value: 15 },
+                { name: 'Tree', color: '#4E5B3D', value: 15 },
+                { name: 'Building', color: '#868686', value: 14 },
+                { name: 'Road', color: '#A7A7A7', value: 14 },
+                { name: 'Sidewalk', color: '#999991', value: 14 },
+                { name: 'Surface', color: '#859074', value: 14 },
+                { name: 'Sky', color: '#BDDADA', value: 14 },
             ],
             'openess': [
                 { name: 'Openness', color: '#505050', value: 17 },

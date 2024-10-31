@@ -65,7 +65,6 @@ export default class World {
     }
     getOpenessParameters(value, id) {
         this.openessParameters[id] = parseInt(value) / 100
-        console.log(this.openessParameters);
         this.queryParameters = structuredClone(this.openessParameters)
     }
     setOpenessParameters() {

@@ -23,9 +23,22 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
+    <div class="mapControlsContainer">
+        <i class="fa fa-eye" style="font-size:24px;"></i>
+
+        <div class="mapControlsButtons">
+            <button class="userButton mapButton" onclick="experience.birdsEye.setTopViewCamera()">
+                <i class="fa fa-arrow-down" style="font-size:18px;"></i>
+            </button>
+            <button class="userButton mapButton" onclick="experience.birdsEye.setBirdsEyeCamera()">
+                <i class="fa fa-arrow-right" style="font-size:18px;"></i>
+            </button>
+        </div>
+    </div>
     <div class="containerRow">
         <div class="canvasColumn">
             <canvas class="webgl"></canvas>
@@ -35,11 +48,11 @@
                 <div class="userQueries">
                     <div class="tabs">
                         <button class="tabButton tabButton--active"
-                            onclick="experience.queryTabs.openQuery(event, 'scenario')">Scenario</button>
+                            onclick="experience.queryTabs.openQuery(event, 'scenario')">Semantics</button>
                         <button class="tabButton tabButton--inactive"
-                            onclick="experience.queryTabs.openQuery(event, 'openess')">Openess</button>
+                            onclick="experience.queryTabs.openQuery(event, 'openess')">Perception</button>
                         <button class="tabButton tabButton--inactive"
-                            onclick="experience.queryTabs.openQuery(event, 'building')">Building</button>
+                            onclick="experience.queryTabs.openQuery(event, 'building')">Building Materials</button>
                     </div>
                     <div class="queryContainer">
                         <div class="querySliders">

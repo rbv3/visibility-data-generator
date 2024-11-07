@@ -2,18 +2,21 @@ import EventEmitter from './EventEmitter.js'
 export default class Sizes extends EventEmitter {
     constructor() {
         super()
-        const canvas = document.querySelector('canvas.webgl')
-
-        this.width = canvas.clientHeight
-        this.height = canvas.clientHeight
+        const canvas = document.querySelector('.canvasColumn')
+        const canvasPadding = parseFloat(getComputedStyle(canvas).padding);
+        this.width = canvas.clientHeight - canvasPadding * 4
+        this.height = canvas.clientHeight - canvasPadding * 4
         this.pixelRatio = 1
         
-        // window.addEventListener('resize', () => {
-        // this.width = window.innerWidth
-        // this.height = window.innerHeight
-        //     this.pixelRatio = Math.min(window.devicePixelRatio, 2)
+        window.addEventListener('resize', () => {
+            const tempCanvas = document.querySelector('.canvasColumn')
 
-        //     this.trigger('resize')
-        // })
+            this.width = tempCanvas.clientHeight - canvasPadding * 4
+            this.height = tempCanvas.clientHeight - canvasPadding * 4
+
+            this.pixelRatio = Math.min(window.devicePixelRatio, 2)
+
+            this.trigger('resize')
+        })
     }
 }

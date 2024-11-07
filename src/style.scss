@@ -302,11 +302,14 @@ aside {
 .canvasColumn {
   width: 100vh;
   height: 100vh;
+  padding: 5px;
 }
 
 .webgl {
   height: 100%;
   width: 100%;
+  box-shadow: 0px 0px 10px 0px #00000040;
+  border-radius: 8px;
 }
 
 .uiColumn {
@@ -316,7 +319,7 @@ aside {
 }
 
 .defaultContainer {
-  margin: 5px 10px;
+  margin: 5px 10px 5px 0px;
   padding: 5px 10px;
   display: flex;
   flex-direction: row;
@@ -470,9 +473,7 @@ aside {
 }
 
 .graphsContainer {
-  padding: 5px 10px;
   height: 35vh;
-  display: flex;
 }
 
 #HiddenMap {
@@ -487,9 +488,7 @@ aside {
 }
 
 .galleryContainer {
-  padding: 5px 10px;
   height: 35vh;
-  display: flex;
   box-sizing: border-box;
 }
 

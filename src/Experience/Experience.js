@@ -103,9 +103,9 @@ export default class Experience {
         this.queryTabs = new QueryTabs();
 
         // Events
-        // this.sizes.on('resize', () => {
-        //     this.resize()
-        // })
+        this.sizes.on('resize', () => {
+            this.resize()
+        })
 
         this.time.on('tick', () => {
             if (this.shouldUpdateOnTick) {

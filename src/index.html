@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masterama</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.scss">
     <style>
         body {
             margin: 0;
@@ -31,16 +31,7 @@
             <canvas class="webgl"></canvas>
         </div>
         <div class="uiColumn">
-            <div class="controlsContainer">
-                <div class="userButtons">
-                    <button class="userButton" type="button" onclick="experience.birdsEye.setBirdsEyeCamera()">Birds Eye
-                        View</button>
-                    <button class="userButton" type="button" onclick="experience.birdsEye.setTopViewCamera()">Above
-                        View</button>
-                    <button class="userButton" type="button" onclick="experience.birdsEye.addPlane()">Add Plane</button>
-                    <button class="userButton" type="button" onclick="experience.birdsEye.disposePlane()">Remove
-                        Plane</button>
-                </div>
+            <div class="defaultContainer">
                 <div class="userQueries">
                     <div class="tabs">
                         <button class="tabButton tabButton--active"
@@ -118,23 +109,32 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="queryNumLocations">
-                            <p>Number of Locations: </p>
-                            <input type="number" value="5" id="numLocations" name="numLocations" min="1" max="1000" />
-                        </div>
+                        <div class="queryParams">
+                            <div class="queryNumLocations">
+                                <p># Locations: </p>
+                                <input type="number" value="5" id="numLocations" name="numLocations" min="1"
+                                    max="1000" />
+                            </div>
+                            <div class="queryButtons">
+                                <label for="myCheckbox01" class="checkbox">
+                                    <input class="checkbox__input" type="checkbox" id="plane-checkbox" onchange="experience.birdsEye.togglePlane()">
+                                    <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
+                                        <rect stroke-width="1.5" width="21" height="21" x=".5" y=".5" fill="#FFF"
+                                            stroke="#DAD9D9" rx="3" />
+                                        <path class="tick" stroke="#272343" fill="none" stroke-linecap="round"
+                                            stroke-width="4" d="M4 10l5 5 9-9" />
+                                    </svg>
+                                    <span class="checkbox__label">Plane</span>
+                                </label>
 
-                        <div class="queryButtons">
-                            <button class="userButton" type="button"
-                                onclick="experience.world.callQueryLocationOnPlane()">Query
-                                on Plane</button>
-                            <button class="userButton" type="button"
-                                onclick="experience.world.callQueryLocation()">Query
-                                on World</button>
+                                <button class="userButton" type="button"
+                                    onclick="experience.world.callQueryViewPoints()">Query Viewpoints</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="graphsContainer">
+            <div class="defaultContainer">
                 <!-- <div class="graphsContent">
                     This is the graph content.
                 </div> -->
@@ -142,7 +142,7 @@
                 <div id="HiddenMap">
                 </div>
             </div>
-            <div class="galleryContainer">
+            <div class="defaultContainer">
                 <div class="galleryContent">
                     <div class="galleryItem">
                         <div class="galleryPovWorld">

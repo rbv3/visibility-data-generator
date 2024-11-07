@@ -106,7 +106,14 @@ export default class BirdsEye {
         this.plane = null;
         this.transformControls = null;
     }
-
+    togglePlane() {
+        var element = document.getElementById('plane-checkbox');
+        if(element.checked == true) {
+            this.addPlane()
+        } else {
+            this.disposePlane()
+        }
+    }
     addPlane() {
         this.setTransformControls()
 

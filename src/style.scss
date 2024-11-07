@@ -9,12 +9,6 @@
 html,
 body {
   overflow: hidden;
-  background: #BDDADA;
-}
-
-.containerRow {
-  display: flex;
-  flex-direction: row;
 }
 
 .webgl-global0 {
@@ -321,11 +315,25 @@ aside {
   flex-direction: column;
 }
 
-.controlsContainer {
+.defaultContainer {
+  margin: 5px 10px;
   padding: 5px 10px;
   display: flex;
   flex-direction: row;
   height: 30vh;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px #00000040;
+  background-color: #fff;
+}
+
+.controlsContainer {
+  margin: 5px 10px;
+  display: flex;
+  flex-direction: row;
+  height: 30vh;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px #00000040;
+  background-color: #fff;
   /* border-radius: 8px 0px 0px 8px; */
 }
 
@@ -335,8 +343,6 @@ aside {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  /* background-color: #D9D9D9; */
-  background-color: #dfeeee;
   border-radius: 8px 0px 0px 8px;
 }
 
@@ -354,9 +360,8 @@ aside {
 
   height: 40px;
 
-  /* background: #2C2C2C; */
-  background: #ffd803;  
-  border: 1px solid #2C2C2C;
+  background: #FFFFFF;
+  border: 1px solid #DAD9D9;
   border-radius: 8px;
 
   cursor: pointer;
@@ -365,7 +370,6 @@ aside {
 .userQueries {
   flex: 4;
   /* background-color: #B2B2B2; */
-  background-color: #dfeeee;  
   display: flex;
   flex-direction: column;
   border-radius: 0px 8px 8px 0px;
@@ -429,12 +433,26 @@ aside {
   flex-direction: row;
 }
 
+.queryParams {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
 .queryNumLocations {
   flex: 1;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+
+.queryNumLocations p {
+  font-size: 13px;
+}
+.queryNumLocations input {
+  border: 1px solid #DAD9D9;
 }
 
 #numLocations {
@@ -447,7 +465,7 @@ aside {
   flex: 2;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: flex-end;
   align-items: center;
 }
 
@@ -460,7 +478,6 @@ aside {
 #HiddenMap {
   flex: 1;
   /* background-color: #abd1c6; */
-  background-color: #dfeeee;
   border-radius: 8px 8px 8px 8px;
 }
 
@@ -482,7 +499,6 @@ aside {
   display: flex;
   flex-direction: column;
   /* background-color: #B2B2B2; */
-  background-color: #dfeeee;
   border-radius: 8px 8px 8px 8px;
 }
 
@@ -625,4 +641,77 @@ aside {
 .slider-thumb span {
   font-size: 1.5em;
   font-weight: bold;
+}
+
+/* custom checkbox */
+
+.check-group {
+  background: #fff;
+  max-width: 13rem;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgb(0 0 10 / 0.2);
+  
+  counter-reset: total;
+  counter-reset: checked;
+  
+  > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  .checkbox { counter-increment: total; }
+  
+  input[type="checkbox"]:checked { counter-increment: checked; }
+  
+  &__result {
+    font-weight: bold;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(71, 71, 71, 0.2);
+    
+    &:after { 
+      content: counter(checked) " / " counter(total); 
+      padding-left: 1ch;
+    }
+  }
+}
+
+
+.checkbox {
+
+  margin-right: 10px;
+  $block: &;
+
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &__input {
+    position: absolute;
+    width: 1.375em;
+    height: 1.375em;
+    opacity: 0;
+    cursor: pointer;
+
+    &:checked + #{$block}__icon .tick {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  &__icon {
+    width: 1.375em;
+    height: 1.375em;
+    flex-shrink: 0;
+    overflow: visible;
+
+    .tick {
+      stroke-dasharray: 20px;
+      stroke-dashoffset: 20px;
+      transition: stroke-dashoffset .2s ease-out;
+    }
+  }
+
+  &__label {
+    margin-left: 0.5em;
+    font-size: 13px;
+  }
 }

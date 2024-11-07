@@ -70,6 +70,14 @@ export default class World {
     setOpenessParameters() {
         this.queryParameters = structuredClone(this.openessParameters)
     }
+    callQueryViewPoints() {
+        var element = document.getElementById('plane-checkbox');
+        if(element.checked == true) {
+            this.callQueryLocationOnPlane()
+        } else {
+            this.callQueryLocation()
+        }
+    }
     callQueryLocation() {        
         this.visibilityEncoderService.queryLocation(
             this.queryLocationParameters.numLocations.value,

@@ -11,6 +11,7 @@
     "@types/three": "^0.164.0",
     "eslint": "^8.52.0",
     "jeasings": "^0.0.15",
+    "sass": "^1.80.6",
     "vite": "^4.3.9",
     "vite-plugin-glsl": "^1.1.2"
   },

@@ -10,7 +10,6 @@ import GUI from './Utils/GUI.js'
 import RayCaster from './RayCaster.js'
 import CharacterControls from './CharacterControls.js'
 import Loaders from './Utils/Loaders.js'
-import StatsMonitor from './Utils/StatsMonitor.js'
 import { BUILDING_COLOR_TO_OBJECT, BUILDING_OBJECT_TO_COLOR, COLOR_TO_OBJECT, DEPTH_SKY, OBJECT_TO_COLOR, REAL_WORLD_OBJECT_TO_COLOR, VIEW_MODES } from './Utils/constants.js'
 import { createCsvColor, increaseMapFrequency, isGreyColor, roundColor } from './Utils/helpers.js'
 import ScreenshotHelper from './Utils/ScreenshotHelper.js'
@@ -43,7 +42,6 @@ export default class Experience {
 
         // Debug
         this.gui = new GUI()
-        this.statsMonitor = new StatsMonitor()
 
         // Service
         this.visibilityEncoderService = new VisibilityEncoder()
@@ -443,16 +441,11 @@ export default class Experience {
         this.renderer.resize()
     }
     update() {
-        this.statsMonitor.instance.begin()
-
         this.camera.update()
         this.renderer.update()
         this.raycaster.update()
         this.world.update()
         this.characterControls.update()
         JEASINGS.update()
-
-
-        this.statsMonitor.instance.end()
     }
 }

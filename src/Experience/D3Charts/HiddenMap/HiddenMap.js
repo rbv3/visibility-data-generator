@@ -48,10 +48,13 @@ export default class HiddenMap {
 
             const svg = d3.select("#HiddenMap")
                 .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
+                // .attr("width", width + margin.left + margin.right)
+                // .attr("height", height + margin.top + margin.bottom)
+                .attr("width", "90%")
+                .attr("height","90%")
                 .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
+                .attr("transform", `translate(20,20)`);
+                // .attr("transform", `translate(${margin.left},${margin.top})`);
             
             const heatData = data.map(d => d[coordName]);
 

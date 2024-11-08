@@ -5,7 +5,7 @@ export default class MultiThumbSlider {
     constructor() {
         this.queryModesToTags = {
             'scenario': [
-                { name: 'Water', color: '#67758D', value: 15 },
+                { name: 'Water', color: '#67758D', value: 15},
                 { name: 'Tree', color: '#4E5B3D', value: 15 },
                 { name: 'Building', color: '#868686', value: 14 },
                 { name: 'Road', color: '#A7A7A7', value: 14 },
@@ -140,7 +140,9 @@ export default class MultiThumbSlider {
                 <span class="tag-text tag-value">${tag.value}%</span>
               </div>
               <div class="slider-thumb"
-                onpointerdown="experience.multiThumbSlider.onSliderSelect(event, this);"><span>⬌</span></div>
+                onpointerdown="experience.multiThumbSlider.onSliderSelect(event, this);">
+                <span>⬌</span>
+                </div>
             </div>
         `;
         });

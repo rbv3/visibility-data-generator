@@ -392,6 +392,7 @@ aside {
 
 .userQueries {
   flex: 4;
+  // height: 15;
   /* background-color: #B2B2B2; */
   display: flex;
   flex-direction: column;
@@ -407,7 +408,8 @@ aside {
 }
 
 .tabButton {
-  font-size: 18px;
+  font-family: 'PT Sans Narrow';
+  font-size: 14px;
   padding: 4px 12px;
   background-color: transparent;
   border: 0;
@@ -616,13 +618,16 @@ aside {
   padding: 0.5em;
   position: relative;
   text-align: center;
+  height:80%;
 }
 
 .tag-text {
   color: white;
   display: block;
-  font-family: sans-serif;
-  font-weight: bold;
+  font-size: "2";
+  // font-family: sans-serif;
+  font-family: 'PT Sans Narrow';
+  // font-weight: bold;
   overflow: hidden;
   user-select: none;
 }
@@ -642,11 +647,12 @@ aside {
 .slider-thumb {
   align-items: center;
   background-color: white;
-  border-radius: 2em;
+  opacity: 0.00;
+  border-radius: 4em;
   bottom: 0;
   cursor: ew-resize;
   display: flex;
-  height: 2em;
+  height: 1em;
   justify-content: center;
   margin: auto;
   width: 2em;
@@ -658,7 +664,8 @@ aside {
 }
 
 .slider-thumb span {
-  font-size: 1.5em;
+  font-size: 1em;
+  // font-size: 0.15em;
   font-weight: bold;
 }
 

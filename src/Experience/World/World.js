@@ -122,17 +122,20 @@ export default class World {
             })
     }
 
-    resetAndCreatePovs() {
+    resetAndCreatePovs(res) {
+        if(res == null) return;
+        console.log(res);
         PovWorld.disposeAllPovWorlds();
         this.experience.povWorld = []
-        const povAmount = Math.min(res.data.length, MAX_POV_AMOUNT);
+        const povAmount = Math.min(res.data?.length, MAX_POV_AMOUNT);
         for(let i=0; i <  povAmount; i++) {
             this.experience.povWorld.push(new PovWorld(i))
         }
     }
 
     updatePovInterface(res) {
-        this.resetAndCreatePovs();
+        if(res == null) return;
+        this.resetAndCreatePovs(res);
         this.experience.povWorld .forEach((world) => {
             world.maxLocations = res.data.length
             world.updateViewPort(res.data)
@@ -144,7 +147,8 @@ export default class World {
     }
 
     updatePovInterfaceAfterBrushOnHistogram(res) {
-        this.resetAndCreatePovs();
+        if(res == null) return;
+        this.resetAndCreatePovs(res);
         this.experience.povWorld .forEach((world) => {
             world.updateViewPort(res)
             for(const gui of world.gui.viewportFolder.controllers) {

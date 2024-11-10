@@ -40,12 +40,28 @@ export default class PovWorld {
     createPovWorld(index) {
         const webGlPovDiv = document.createElement('div');
         webGlPovDiv.className = 'galleryPovWorld'
+        webGlPovDiv.id = `galleryPovWorld-${index}`
+        webGlPovDiv.style.display = 'flex'
+        webGlPovDiv.style.flexDirection = 'column'
         const canvas = document.createElement('canvas');
         canvas.className = `webgl-pov webgl-pov${index}`
-        
+
         webGlPovDiv.appendChild(canvas)
         document.querySelector('.galleryContent').appendChild(webGlPovDiv);
+        this.createTooltip(index)
+    }
+    createTooltip(index) {
+        var tooltip = d3.select(`#galleryPovWorld-${index}`)
+            .append("div")
+            .style("visibility", "hidden")
+            .text("I'm a POV!")
+            
+        tooltip.node().classList.add("tooltip")
 
+
+        d3.select(`#galleryPovWorld-${index}`)
+            .on("mouseover", function () { return tooltip.style("visibility", "visible"); })
+            .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
     }
     initScene(scene) {
         // clone of initial experience scene after loading all models

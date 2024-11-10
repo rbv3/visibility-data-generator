@@ -136,10 +136,25 @@ export default class PovWorld {
     }
     updateTooltip() {
         console.log(this.locations[this.index]['f_xyz'])
-        this.experience.pieChart.createPieChart(
-            this.index,
-            this.locations[this.index]['f_xyz']
-        )
+        // uncomment to use text tooltip
+        this.createTextTooltip(this.index, this.locations[this.index]['f_xyz'])
+
+        // uncomment to use piechart
+        // this.experience.pieChart.createPieChart(
+        //     this.index,
+        //     this.locations[this.index]['f_xyz']
+        // )
+    }
+    createTextTooltip(id, data) {
+        console.log(data);
+        const chartElement = document.querySelector(`#chart${id}`)
+        chartElement.innerHTML = ''
+        for(const key in data) {
+            console.log(key, data[key]);
+            const p = document.createElement('p')
+            p.textContent = `${key}: ${(data[key] * 100).toFixed(2)}%`
+            chartElement.appendChild(p)
+        }
     }
     updateViewPort(result) {
         this.locations = result

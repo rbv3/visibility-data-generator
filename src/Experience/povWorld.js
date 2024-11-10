@@ -24,14 +24,28 @@ export default class PovWorld {
         this.currentLocationIndex = {
             value: this.index
         }
-
+        this.createPovWorld(this.index);
         this.canvas = document.querySelector(`.webgl-pov${this.index}`);
+        this.initScene(this.experience.povScene);
         this.canvas.addEventListener('click', () => {
             this.switchCameras();
         })
         this.animationDuration = 750
 
         this.setGUI()
+    }
+    static disposeAllPovWorlds() {
+        document.querySelector('.galleryContent').innerHTML = ''
+    }
+    createPovWorld(index) {
+        const webGlPovDiv = document.createElement('div');
+        webGlPovDiv.className = 'galleryPovWorld'
+        const canvas = document.createElement('canvas');
+        canvas.className = `webgl-pov webgl-pov${index}`
+        
+        webGlPovDiv.appendChild(canvas)
+        document.querySelector('.galleryContent').appendChild(webGlPovDiv);
+
     }
     initScene(scene) {
         // clone of initial experience scene after loading all models
@@ -107,11 +121,6 @@ export default class PovWorld {
         // update position
         const location = this.locations[index]
 
-        const residual = location.residual
-        const steps = location.steps
-
-        // this.updateHTML(residual, steps)
-
         this.camera.position.set(
             location.x,
             location.y,
@@ -124,10 +133,6 @@ export default class PovWorld {
         )
         this.camera.updateProjectionMatrix()
         this.updateSceneOnce()
-    }
-    updateHTML(residual, steps) {
-        document.getElementById("webgl-pov-steps").textContent = `Steps: ${steps}`;
-        document.getElementById("webgl-pov-residual").textContent = `Residual: ${residual}`;
     }
     updateSceneOnce() {
         this.renderer.render(this.scene, this.camera)

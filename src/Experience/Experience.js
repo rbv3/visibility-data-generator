@@ -15,7 +15,6 @@ import { createCsvColor, increaseMapFrequency, isGreyColor, roundColor } from '.
 import ScreenshotHelper from './Utils/ScreenshotHelper.js'
 import VisibilityEncoder from '../Services/VisibilityEncoder.js'
 import ParticleHelper from './Utils/ParticleHelper.js'
-import PovWorld from './povWorld.js'
 import BirdsEye from './BirdsEye.js'
 import Histogram from './D3Charts/Histogram/Histogram.js'
 import QueryTabs from './UserControls/QueryTabs.js'
@@ -50,6 +49,7 @@ export default class Experience {
         this.sizes = new Sizes()
         this.time = new Time()
         this.scene = new THREE.Scene()
+        this.povScene = new THREE.Scene()
         this.camera = new Camera()
         this.characterControls = new CharacterControls()
         this.renderer = new Renderer()
@@ -61,13 +61,7 @@ export default class Experience {
         // POV
         this.lastCameraPosition = null;
         this.lastCameraRotation = null;
-        this.povWorld = [
-            new PovWorld(0),
-            new PovWorld(1),
-            new PovWorld(2),
-            new PovWorld(3),
-            new PovWorld(4),
-        ]
+        this.povWorld = []
 
         // World
         this.world = new World()
@@ -87,14 +81,6 @@ export default class Experience {
 
         this.histogram = new Histogram();
         console.log("Histogram created");
-        this.pieCharts = [
-            new PieChart(0),
-            new PieChart(1),
-            new PieChart(2),
-            new PieChart(3),
-            new PieChart(4),
-        ]
-        console.log("PieCharts created");
 
         // User Controls
         this.multiThumbSlider = new MultiThumbSlider();

@@ -63,7 +63,6 @@ export default class ParticleHelper extends EventEmitter {
         this.lookAtParticle = new THREE.Points(geometry, material)
         this.lookAtParticle.position.set(position)
 
-        console.log(this.lookAtParticle)
         this.scene.add(this.lookAtParticle)
     }
     updateLookAtParticle() {
@@ -75,8 +74,6 @@ export default class ParticleHelper extends EventEmitter {
         // this.points.geometry = this.lookAtResults[this.currentLookAt].geometry
         this.resetResultPoints()
         this.plotParticlesForVisibilityEnconderResult(this.lastResult)
-
-        console.log(this.currentLookAt)
     }
     plotParticlesForVisibilityEnconderResult(result) {
         // material
@@ -174,11 +171,9 @@ export default class ParticleHelper extends EventEmitter {
         if (!points) {
             return
         }
-        console.log(points);
         this.scene.remove(points)
         // points.material.dispose()
         points.children.forEach(obj => {
-            console.log(obj);
             obj.material.dispose?.()
             obj.geometry.dispose?.()
         })
@@ -190,11 +185,9 @@ export default class ParticleHelper extends EventEmitter {
         if (!points) {
             return
         }
-        console.log(points);
         this.scene.remove(points)
         // points.material.dispose()
         points.children.forEach(obj => {
-            console.log(obj);
             obj.material.dispose?.()
             obj.geometry.dispose?.()
         })
@@ -370,15 +363,12 @@ export default class ParticleHelper extends EventEmitter {
         this.scene.add(this.radiusPoints)
     }
     filterPointsByRadius(radius, center) {
-        console.log(radius, center)
         const filteredPoints = []
-        console.log(sc1)
         sc1.forEach(point => {
             if (getDistance3D(center, point) <= radius) {
                 filteredPoints.push(point)
             }
         })
-        console.log(filteredPoints)
         return filteredPoints
     }
     updateParticleColorAtIndex(index) {

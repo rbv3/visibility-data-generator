@@ -56,10 +56,7 @@ export default class City {
                         console.log({ removedMeshes })
 
                         // clone current scene to POV scene
-                        this.povWorld.forEach(world => {
-                            world.initScene(this.scene)
-                        })
-
+                        this.experience.povScene = this.scene.clone();
                         this.experience.hiddenMap.createHiddenMap();
 
                         // Create points of interest and to avoid

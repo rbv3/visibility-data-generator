@@ -7,6 +7,8 @@ export const AMORTIZE_SPEED_X = 2.0
 export const AMORTIZE_SPEED_Y = 2.0
 export const AMORTIZE_SPEED_Z = 2.0
 
+export const MAX_POV_AMOUNT = 15
+
 export const KeyCode = {
     ARROW_UP :'ArrowUp',
     ARROW_DOWN: 'ArrowDown',

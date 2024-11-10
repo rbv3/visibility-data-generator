@@ -5,6 +5,8 @@ import City from './City'
 import ParticleHelper from '../Utils/ParticleHelper'
 import { normalizeGoal } from '../Utils/helpers'
 import Histogram from '../D3Charts/Histogram/Histogram'
+import PovWorld from '../povWorld'
+import { MAX_POV_AMOUNT } from '../Utils/constants'
 
 export default class World {
     constructor() {
@@ -13,8 +15,6 @@ export default class World {
         this.visibilityEncoderService = this.experience.visibilityEncoderService
         this.gui = this.experience.gui
         this.birdsEye = this.experience.birdsEye
-
-        this.povWorld = this.experience.povWorld
 
         this.particleHelper = new ParticleHelper()
 
@@ -116,21 +116,24 @@ export default class World {
                 console.log(res);
                 this.updatePovInterface(res);
                 this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(res.data)
-                this.histogram.resetHistogram()
-                this.histogram.createHistogram(res.data)
-                console.log(this.experience.pieCharts);
-                this.experience.pieCharts.forEach((pieChart, index) => {
-                    pieChart.resetPieChart(index)
-                    pieChart.createPieChart(index, res.data[index]['f_xyz'])
-                })
             })
             .catch(err => {
                 console.error(err);
             })
     }
 
+    resetAndCreatePovs() {
+        PovWorld.disposeAllPovWorlds();
+        this.experience.povWorld = []
+        const povAmount = Math.min(res.data.length, MAX_POV_AMOUNT);
+        for(let i=0; i <  povAmount; i++) {
+            this.experience.povWorld.push(new PovWorld(i))
+        }
+    }
+
     updatePovInterface(res) {
-        this.povWorld.forEach((world) => {
+        this.resetAndCreatePovs();
+        this.experience.povWorld .forEach((world) => {
             world.maxLocations = res.data.length
             world.updateViewPort(res.data)
             for(const gui of world.gui.viewportFolder.controllers) {
@@ -141,7 +144,8 @@ export default class World {
     }
 
     updatePovInterfaceAfterBrushOnHistogram(res) {
-        this.povWorld.forEach((world) => {
+        this.resetAndCreatePovs();
+        this.experience.povWorld .forEach((world) => {
             world.updateViewPort(res)
             for(const gui of world.gui.viewportFolder.controllers) {
                 gui.max(res.length - 1)

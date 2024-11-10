@@ -78,6 +78,7 @@ export default class Experience {
 
         // Charts
         this.hiddenMap = new HiddenMap();
+        this.pieChart = new PieChart();
 
         this.histogram = new Histogram();
         console.log("Histogram created");

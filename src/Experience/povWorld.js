@@ -12,6 +12,7 @@ export default class PovWorld {
         this.index = index;
 
         this.experience = new Experience()
+        this.pieChart
 
         this.camera = null
         this.scene = null
@@ -54,9 +55,9 @@ export default class PovWorld {
         var tooltip = d3.select(`#galleryPovWorld-${index}`)
             .append("div")
             .style("visibility", "hidden")
-            .text("I'm a POV!")
-            
+
         tooltip.node().classList.add("tooltip")
+        tooltip.node().id = `chart${index}`
 
 
         d3.select(`#galleryPovWorld-${index}`)
@@ -72,8 +73,12 @@ export default class PovWorld {
         this.renderer = new WebGLRenderer({
             canvas: document.querySelector(`canvas.webgl-pov${this.index}`)
         })
+        const sizes = {
+            height: document.querySelector('.galleryPovWorld').clientHeight,
+            width: document.querySelector('.galleryPovWorld').clientWidth
+        }
         this.renderer.setClearColor(startClearColor)
-        this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight)
+        this.renderer.setSize(sizes.width, sizes.height)
         this.renderer.setPixelRatio(this.sizes.pixelRatio)
 
         this.updateSceneOnce()
@@ -129,8 +134,17 @@ export default class PovWorld {
 
         this.scene.add(this.camera)
     }
+    updateTooltip() {
+        console.log(this.locations[this.index]['f_xyz'])
+        this.experience.pieChart.createPieChart(
+            this.index,
+            this.locations[this.index]['f_xyz']
+        )
+    }
     updateViewPort(result) {
         this.locations = result
+        console.log(this.locations);
+        this.updateTooltip()
         this.updateCamera(this.index)
     }
     updateCamera(index) {

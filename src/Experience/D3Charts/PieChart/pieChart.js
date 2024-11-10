@@ -14,9 +14,11 @@ export default class PieChart {
     this.data = this.formatData(data)
 
     const chartElement = document.querySelector(`#chart${id}`)
+    const tooltipElement = document.querySelector('.tooltip')
+    var width = tooltipElement.clientWidth;
+    var height = tooltipElement.clientHeight;
 
-    var width = chartElement.clientWidth;
-    var height = chartElement.clientHeight;
+    console.log(width, height);
 
     // a circle chart needs a radius
     var radius = Math.min(width, height) / 2;
@@ -55,19 +57,6 @@ export default class PieChart {
 
     tooltip.append('div')
       .attr('class', 'percent')
-
-    // Confused? see below:
-
-    // <div id="chart">
-    //   <div class="tooltip">
-    //     <div class="label">
-    //     </div>
-    //     <div class="count">
-    //     </div>
-    //     <div class="percent">
-    //     </div>
-    //   </div>
-    // </div>
 
     this.data.forEach((d) => {
       d.count = +d.count; // calculate count as we iterate through the data

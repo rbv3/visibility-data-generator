@@ -308,7 +308,6 @@ export default class ParticleHelper extends EventEmitter {
         this.scene.add(pointGroup)
         this.arrowHelpersGroup = arrowGroup
 
-        console.log(points);
         return points;
     }
     setGUI() {

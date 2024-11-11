@@ -13,25 +13,31 @@ let selected_query_locations = [];
 //       width = 800 - margin.left - margin.right,
 //       height = 600 - margin.top - margin.bottom;
 const margin = { top: 10, right: 10, bottom: 20, left: 80 },
-      width = 500 - margin.left - margin.right,
-      height = 300 - margin.top - margin.bottom;
+    width = 500 - margin.left - margin.right,
+    height = 300 - margin.top - margin.bottom;
 
 
 const xScale = d3.scaleLinear().range([0, width]);
 const yScale = d3.scaleLinear().range([height, 0]);
 let coordName = "UMAP"; // Change this to the appropriate field in your data
 
+let colorGlobal = "seagreen";
+let colorSelectedGlobal = "aquamarine";
+let colorQuery = "darkorange";
+let colorSelectedQuery = "firebrick";
 
 
 export default class HiddenMap {
     constructor() {
         this.experience = new Experience();
-        this.particleHelper = new ParticleHelper()
+        this.particleHelper = new ParticleHelper();
+        this.svg = undefined;
     };
 
-    createHiddenMap(){ // Should receive global data and query data.
-        
-         d3.json("test_set_as_query.json").then(data => {
+    createHiddenMap() { // Should receive global data and query data.
+
+        //  d3.json("test_set_as_query.json").then(data => {
+        d3.json("test_set_as_query_full_semantics.json").then(data => {
 
             global_locations = data;
             selected_locations = global_locations;
@@ -40,10 +46,6 @@ export default class HiddenMap {
 
             console.log("Populating hidden map with ", global_locations.length, " locations.")
 
-            let colorGlobal = "seagreen"; 
-            let colorSelectedGlobal = "aquamarine" ;
-            let colorQuery = "darkorange"; 
-            let colorSelectedQuery = "firebrick";  
 
 
             const svg = d3.select("#HiddenMap")
@@ -51,11 +53,11 @@ export default class HiddenMap {
                 // .attr("width", width + margin.left + margin.right)
                 // .attr("height", height + margin.top + margin.bottom)
                 .attr("width", "90%")
-                .attr("height","90%")
+                .attr("height", "90%")
                 .append("g")
                 .attr("transform", `translate(20,20)`);
-                // .attr("transform", `translate(${margin.left},${margin.top})`);
-            
+            // .attr("transform", `translate(${margin.left},${margin.top})`);
+            console.log("svg", svg)
             const heatData = data.map(d => d[coordName]);
 
 
@@ -84,7 +86,7 @@ export default class HiddenMap {
             const brush = d3.brush()
                 .extent([[0, 0], [width, height]])
                 .on("start brush", brushed)
-                .on("end",  (e) => {
+                .on("end", (e) => {
                     console.log(e);
                     this.brushEnded(e)
                 });
@@ -123,7 +125,7 @@ export default class HiddenMap {
                     })
                     .style("fill", colorSelectedGlobal)
                     .style("opacity", 0.7);
-                    // .each(d => selected_locations.push(d));
+                // .each(d => selected_locations.push(d));
 
                 // console.log("Selected Heatmap Points:", selected_locations);
 
@@ -138,44 +140,69 @@ export default class HiddenMap {
                     })
                     .style("fill", colorSelectedQuery)
                     .style("opacity", 0.9);
-                    // .each(d => selected_query_locations.push(d));
+                // .each(d => selected_query_locations.push(d));
 
-                    // console.log("Selected Scatter Plot Points:", selected_query_locations);
-                }
-                // Function for custom scatter plot marker shape
-                function customShape(x, y) {
-                // 'x' shape for scatter points
-                const size = 6;
-                // return `M${x - size},${y - size} L${x + size},${y + size} M${x + size},${y - size} L${x - size},${y + size}`;
-                return `M${x},${y - size} L${x - size},${y + size} L${x + size},${y + size} Z`;
-                    // Uncomment the following lines to switch to triangles or squares
-                // For triangle: `M${x},${y - size} L${x - size},${y + size} L${x + size},${y + size} Z`;
-                // For square: `M${x - size},${y - size} L${x + size},${y - size} L${x + size},${y + size} L${x - size},${y + size} Z`;
-                 }
+                // console.log("Selected Scatter Plot Points:", selected_query_locations);
+            }
+            // Function for custom scatter plot marker shape
 
-                 // Load query.json for scatter plot
-                d3.json("small_query.json").then(queryData => {
-                    const queryPoints = queryData.map(d => d[coordName]);
-                    global_query_locations = queryData;
-                    // Use a custom shape for scatter plot points (e.g., square)
-                    svg.selectAll(".scatter-point")
-                        .data(queryPoints)
-                        .enter()
-                        .append("path")
-                        .attr("class", "scatter-point")
-                        .attr("d", d => customShape(xScale(d[0]), yScale(d[1])))
-                        .style("fill", colorQuery)
-                        .style("opacity", 0.9);
-                });
+
+            // Load query.json for scatter plot
+            d3.json("small_query.json").then(queryData => {
+                this.queryPoints = queryData.map(d => d[coordName]);
+                global_query_locations = queryData;
+                // Use a custom shape for scatter plot points (e.g., square)
+                svg.selectAll(".scatter-point")
+                    .data(this.queryPoints)
+                    .enter()
+                    .append("path")
+                    .attr("class", "scatter-point")
+                    .attr("d", d => this.customShape(xScale(d[0]), yScale(d[1])))
+                    .style("fill", colorQuery)
+                    .style("opacity", 0.9);
             });
+        });
 
 
-            // await 
-            // this.displayGlobalLocations();
+        // await 
+        // this.displayGlobalLocations();
 
-        };
-    
-    displayGlobalLocations(){
+    };
+
+    customShape(x, y) {
+        // 'x' shape for scatter points
+        const size = 6;
+        // return `M${x - size},${y - size} L${x + size},${y + size} M${x + size},${y - size} L${x - size},${y + size}`;
+        return `M${x},${y - size} L${x - size},${y + size} L${x + size},${y + size} Z`; //triangle
+        // return `M${x - size},${y - size} L${x + size},${y - size} L${x + size},${y + size} L${x - size},${y + size} Z`;
+        // Uncomment the following lines to switch to triangles or squares
+        // For triangle: `M${x},${y - size} L${x - size},${y + size} L${x + size},${y + size} Z`;
+        // For square: `M${x - size},${y - size} L${x + size},${y - size} L${x + size},${y + size} L${x - size},${y + size} Z`;
+    }
+
+    renderQueryOnHiddenMap(queryData) {
+        
+        const svg = d3.select("#HiddenMap").selectAll("svg");
+        // const queryPoints = this.particleHelper.lastResult.map(d => d[coordName]);
+        const queryPoints = queryData.map(d => d[coordName]);
+        console.log("queryPoints", coordName, " features:\n", queryPoints)
+        console.log("svg in render", svg)
+
+        global_query_locations = queryData;
+        svg.selectAll(".scatter-point").remove();
+        
+        // Use a custom shape for scatter plot points (e.g., square)
+        svg.selectAll(".scatter-point")
+            .data(queryPoints)
+            .enter()
+            .append("path")
+            .attr("class", "scatter-point")
+            .attr("d", d => this.customShape(xScale(d[0]), yScale(d[1])))
+            .style("fill", colorQuery)
+            .style("opacity", 0.9);
+    }
+
+    displayGlobalLocations() {
         console.log("displaying ", selected_locations.length, " locations")
         console.log("Selected locations:", selected_locations); // For debugging purposes
         this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(selected_locations)
@@ -188,14 +215,14 @@ export default class HiddenMap {
         // global_locations   = [];
 
         selected_locations = global_locations;
-    
+
         // Clear any existing brush selections on the histogram
         d3.select("#HiddenMap .brush").call(d3.brushX().clear);
-    
+
         // Redraw the histogram with the original data
         d3.select("#HiddenMap").selectAll("*").remove();
         // createHistogram(global_locations);
-        
+
         // Optionally, reset the parallel coordinates as well
         // updateParallelCoordinates();
     }
@@ -227,18 +254,23 @@ export default class HiddenMap {
         console.log("Selected Heatmap Points:", selected_locations);
         console.log("Selected Query Points:", selected_query_locations);
 
-        if (false){//(selected_query_locations.length > 5){
+        if (false) {//(selected_query_locations.length > 5){
             this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(selected_query_locations)
-            this.experience.world.updatePovInterfaceAfterBrushOnHistogram(selected_query_locations) 
+            this.experience.world.updatePovInterfaceAfterBrushOnHistogram(selected_query_locations)
         }
-        else{
+        else {
             selected_locations = selected_locations
-                    .map(value => ({ value, sort: Math.random() }))
-                    .sort((a, b) => a.sort - b.sort)
-                    .map(({ value }) => value);
+                .map(value => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
 
             this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(selected_locations)
-            this.experience.world.updatePovInterfaceAfterBrushOnHistogram(selected_locations)
+            
+            // let povStyleLocations = {data: selected_locations}
+            let povStyleLocations = {data: selected_query_locations}
+            
+            this.experience.world.updatePovInterfaceAfterBrushOnHistogram(povStyleLocations)
+            // this.experience.world.updatePovInterfaceAfterBrushOnHistogram(selected_query_locations);
             console.log(selected_locations); // For debugging purposes
         }
     }

@@ -7,6 +7,7 @@ import { normalizeGoal } from '../Utils/helpers'
 import Histogram from '../D3Charts/Histogram/Histogram'
 import PovWorld from '../povWorld'
 import { MAX_POV_AMOUNT } from '../Utils/constants'
+import HiddenMap from '../D3Charts/HiddenMap/HiddenMap'
 
 export default class World {
     constructor() {
@@ -17,6 +18,7 @@ export default class World {
         this.birdsEye = this.experience.birdsEye
 
         this.particleHelper = new ParticleHelper()
+        this.hiddenMap      = new HiddenMap()
 
         this.histogram = new Histogram()
 
@@ -116,6 +118,8 @@ export default class World {
                 console.log(res);
                 this.updatePovInterface(res);
                 this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(res.data)
+                //Update Latent Features 2D map:
+                this.hiddenMap.renderQueryOnHiddenMap(res.data)
             })
             .catch(err => {
                 console.error(err);
@@ -128,6 +132,7 @@ export default class World {
         PovWorld.disposeAllPovWorlds();
         this.experience.povWorld = []
         const povAmount = Math.min(res.data?.length, MAX_POV_AMOUNT);
+        // const povAmount = Math.min(res.length, MAX_POV_AMOUNT);
         for(let i=0; i <  povAmount; i++) {
             this.experience.povWorld.push(new PovWorld(i))
         }
@@ -136,7 +141,7 @@ export default class World {
     updatePovInterface(res) {
         if(res == null) return;
         this.resetAndCreatePovs(res);
-        this.experience.povWorld .forEach((world) => {
+        this.experience.povWorld.forEach((world) => {
             world.maxLocations = res.data.length
             world.updateViewPort(res.data)
             for(const gui of world.gui.viewportFolder.controllers) {
@@ -148,6 +153,7 @@ export default class World {
 
     updatePovInterfaceAfterBrushOnHistogram(res) {
         if(res == null) return;
+        console.log({res})
         this.resetAndCreatePovs(res);
         this.experience.povWorld .forEach((world) => {
             world.updateViewPort(res)

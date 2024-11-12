@@ -127,6 +127,11 @@ export default class BirdsEye {
             side: THREE.DoubleSide,
         })
         this.plane = new THREE.Mesh(geometry, material)
+        this.plane.position.set(
+            1474,
+            45,
+            1110
+        )
         this.transformControls.attach(this.plane)
 
         this.scene.add(this.plane)

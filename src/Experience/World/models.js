@@ -7,22 +7,22 @@ export const collada_models = [
         name: 'model-0-1',
         path: '/data/NYC/collada_model/model-0-1.dae'
     },
-    // {
-    //     name: 'model-0-2',
-    //     path: '/data/NYC/collada_model/model-0-2.dae'
-    // },
-    // {
-    //     name: 'model-0-3',
-    //     path: '/data/NYC/collada_model/model-0-3.dae'
-    // },
-    // {
-    //     name: 'model-0-4',
-    //     path: '/data/NYC/collada_model/model-0-4.dae'
-    // },
-    // {
-    //     name: 'model-0-5',
-    //     path: '/data/NYC/collada_model/model-0-5.dae'
-    // },
+    {
+        name: 'model-0-2',
+        path: '/data/NYC/collada_model/model-0-2.dae'
+    },
+    {
+        name: 'model-0-3',
+        path: '/data/NYC/collada_model/model-0-3.dae'
+    },
+    {
+        name: 'model-0-4',
+        path: '/data/NYC/collada_model/model-0-4.dae'
+    },
+    {
+        name: 'model-0-5',
+        path: '/data/NYC/collada_model/model-0-5.dae'
+    },
     // {
     //     name: 'model-1-0',
     //     path: '/data/NYC/collada_model/model-1-0.dae'

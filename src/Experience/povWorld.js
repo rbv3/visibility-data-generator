@@ -12,7 +12,6 @@ export default class PovWorld {
         this.index = index;
 
         this.experience = new Experience()
-        this.pieChart
 
         this.camera = null
         this.scene = null
@@ -37,6 +36,12 @@ export default class PovWorld {
     }
     static disposeAllPovWorlds() {
         document.querySelector('.galleryContent').innerHTML = ''
+    }
+    disposeWorld() {
+        this.renderer.forceContextLoss()
+        this.renderer.dispose()
+        this.scene.remove(this.camera)
+        this.camera = null
     }
     createPovWorld(index) {
         const webGlPovDiv = document.createElement('div');
@@ -66,7 +71,7 @@ export default class PovWorld {
     }
     initScene(scene) {
         // clone of initial experience scene after loading all models
-        this.scene = scene.clone()
+        this.scene = scene
 
         this.initCamera()
 

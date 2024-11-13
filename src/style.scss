@@ -365,6 +365,7 @@ aside {
   color: #272343;
 
   font-family: 'PT Sans Narrow';
+  font-size: 14px;
 
   box-sizing: border-box;
 
@@ -432,6 +433,9 @@ aside {
 
 .queryOpenessSliders {
   flex: 3;
+  font-size: 14px;
+  gap: 20px;
+  font-family: 'PT Sans Narrow';
   display: none;
   flex-direction: row;
   overflow: auto;
@@ -464,7 +468,7 @@ aside {
 }
 
 .queryNumLocations p {
-  font-size: 13px;
+  font-size: 14px;
 }
 .queryNumLocations input {
   border: 1px solid #DAD9D9;
@@ -500,7 +504,7 @@ aside {
 }
 
 .galleryContainer {
-  height: 40vh;
+  height: 50vh;
   box-sizing: border-box;
 }
 
@@ -569,7 +573,7 @@ aside {
   background-color: transparent;
   display: flex;
   width: 90%;
-  height: 85%;
+  height: 55%; // height of the sliders
 }
 
 .tag-container {

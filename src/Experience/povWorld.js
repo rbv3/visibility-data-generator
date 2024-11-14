@@ -164,13 +164,13 @@ export default class PovWorld {
     updateViewPort(result) {
         this.locations = result
         console.log(this.locations);
-        this.updateTooltip()
         this.updateCamera(this.index)
+        this.updateTooltip()
     }
     updateCamera(index) {
         // update position
         const location = this.locations[index]
-
+        console.log({location})
         this.camera.position.set(
             location.x,
             location.y,

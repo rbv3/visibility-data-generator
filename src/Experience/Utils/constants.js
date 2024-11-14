@@ -76,14 +76,18 @@ export const BUILDING_COLOR_TO_OBJECT = {
 
 // Color schema taken from maplibre and OSM: https://maplibre.org/maplibre-gl-js/docs/examples/3d-buildings/
 export const REAL_WORLD_OBJECT_TO_COLOR = {
-    'building': '#d3d3d3',
-    'buildingB': '#d3d3d3',
-    'water': '#9EBFDE',//#9EBFDE
+    // 'building': '#d3d3d3',
+    // 'buildingB': '#d3d3d3',
+    // 'water': '#9EBFDE',//#9EBFDE
+    'building': '255,255,255', //'#fcfcfc',
+    'buildingB': '255,255,255',//'#fcfcfc',
+    'water': '#c4e2fe',//
     'road': '#FFFFFF',
     'sidewalk': '#EBEADF',
     'surface': '#CDDDB6',//'#CDDDB6' '#D2DFBE'
     'tree':'#9DB97F', //'#9DB97F'
-    'sky':'#bce0df',
+    // 'sky':'#bce0df',
+    'sky': '#10152e'
 }
 
 // Depth Color

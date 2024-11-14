@@ -10,7 +10,8 @@ export default class Lights {
         this.directionalLightA.position.set(3.5, 2, - 1.25)
         this.directionalLightB = new THREE.DirectionalLight('#ffffff', 0.8)
         this.directionalLightB.position.set(-1.25, 2, 3.5)
-        this.ambientLight = new THREE.AmbientLight('#ffffff', 0.6)
+        // this.ambientLight = new THREE.AmbientLight('#ffffff', 0.6)
+        this.ambientLight = new THREE.AmbientLight('#ffffff', 2.0)
         this.ambientLight.castShadow = false
 
         this.setGUI()

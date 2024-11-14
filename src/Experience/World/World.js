@@ -130,6 +130,7 @@ export default class World {
         if(res == null) return;
         console.log(res);
         PovWorld.disposeAllPovWorlds();
+        this.experience.povWorld.forEach(world => world.disposeWorld())
         this.experience.povWorld = []
         const povAmount = Math.min(res.data?.length, MAX_POV_AMOUNT);
         // const povAmount = Math.min(res.length, MAX_POV_AMOUNT);
@@ -156,7 +157,7 @@ export default class World {
         console.log({res})
         this.resetAndCreatePovs(res);
         this.experience.povWorld .forEach((world) => {
-            world.updateViewPort(res)
+            world.updateViewPort(res.data)
             for(const gui of world.gui.viewportFolder.controllers) {
                 gui.max(res.length - 1)
                 gui.updateDisplay()

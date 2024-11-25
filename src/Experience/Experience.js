@@ -101,8 +101,8 @@ export default class Experience {
         this.setGUI()
 
         //Download json file of the building meshes if download_buildings_data is set to true.
-        // let downloadBuildingMeshes = false;
-        let downloadBuildingMeshes = true;
+        let downloadBuildingMeshes = false;
+        // let downloadBuildingMeshes = true;
         if (downloadBuildingMeshes == true) {  
             /////testing local to global world coordinates    
             // setTimeout(() =>{

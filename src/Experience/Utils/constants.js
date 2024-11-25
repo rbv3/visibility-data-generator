@@ -79,15 +79,19 @@ export const REAL_WORLD_OBJECT_TO_COLOR = {
     // 'building': '#d3d3d3',
     // 'buildingB': '#d3d3d3',
     // 'water': '#9EBFDE',//#9EBFDE
-    'building': '255,255,255', //'#fcfcfc',
-    'buildingB': '255,255,255',//'#fcfcfc',
-    'water': '#c4e2fe',//
+    'building': '#DCDCDC', //'#fcfcfc',
+    'buildingB': '#DCDCDC',//'#fcfcfc',
+    'water': '#c4e2fe',// light blue
+    // 'water': '#466976',// 70, 105, 118// marine green - from google earth NY central park lake
+    // 'water': '#5469C6',// 84, 105, 198// ocean blue - looks too artificial compared - from google earth NY Jersey Bight ocean
     'road': '#FFFFFF',
     'sidewalk': '#EBEADF',
     'surface': '#CDDDB6',//'#CDDDB6' '#D2DFBE'
     'tree':'#9DB97F', //'#9DB97F'
     // 'sky':'#bce0df',
-    'sky': '#10152e'
+    // 'sky': '#10152e'//dark blue
+    'sky': '#83A2EE',//sky blue - form google earth top sky
+    'sky' : "#C7CFF4" // 199,207,244 - blue pink sky - google earth
 }
 
 // Depth Color

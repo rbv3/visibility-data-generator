@@ -20,6 +20,7 @@ const margin = { top: 10, right: 10, bottom: 20, left: 80 },
 const xScale = d3.scaleLinear().range([0, width]);
 const yScale = d3.scaleLinear().range([height, 0]);
 let coordName = "UMAP"; // Change this to the appropriate field in your data
+// let coordName = "PCA";
 
 let colorGlobal = "seagreen";
 let colorSelectedGlobal = "aquamarine";
@@ -36,9 +37,9 @@ export default class HiddenMap {
 
     createHiddenMap() { // Should receive global data and query data.
 
-        //  d3.json("test_set_as_query.json").then(data => {
+         d3.json("test_set_as_query.json").then(data => {
         // d3.json("test_set_as_query_full_semantics.json").then(data => {
-        d3.json("test_set_as_query_perception.json").then(data => {
+        // d3.json("test_set_as_query_perception.json").then(data => {
 
             global_locations = data;
             selected_locations = global_locations;

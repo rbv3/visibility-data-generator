@@ -101,9 +101,23 @@ export default class Experience {
         this.setGUI()
 
         //Download json file of the building meshes if download_buildings_data is set to true.
-        let downloadBuildingMeshes = false;
-        if (downloadBuildingMeshes == true) {
-            this.downloadBuildingsData(20000) //Set a timeout enough for full model to be loaded on the interface.
+        // let downloadBuildingMeshes = false;
+        let downloadBuildingMeshes = true;
+        if (downloadBuildingMeshes == true) {  
+            /////testing local to global world coordinates    
+            // setTimeout(() =>{
+            //     console.log("buildingMeshes:", this.buildingMeshes);
+            //     let buildingLocalPositions = this.buildingMeshes.map(mesh => 
+            //         mesh.geometry.boundingSphere ? mesh.localToWorld(mesh.geometry.boundingSphere.center) : new THREE.Vector3(0,0,0)
+            //         )
+            //     console.log({buildingLocalPositions})
+            // }, 5000)
+            /////Just logging data
+            // setTimeout(() =>{
+            //     console.log("buildingMeshes:", this.buildingMeshes);
+            // }, 40000)
+            ///Actually downloading the building data:
+            this.downloadBuildingsData(40000) //Set a timeout enough for full model to be loaded on the interface.
         }
         
         // this.hiddenMap.createHiddenMap(); 
@@ -130,7 +144,12 @@ export default class Experience {
             // let buildingData = this.buildingMeshes.map(mesh => mesh.userData)
             // let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.matrixWorld.elements.slice(12,15)}))
             // let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, {"location":mesh.geometry.boundingSphere.center}))
-            let buildingData = this.buildingMeshes.map(mesh => Object.assign({}, mesh.userData, { "location": mesh.parent.position }))
+            let buildingData = this.buildingMeshes.map(mesh => 
+                Object.assign({}, 
+                    mesh.userData, 
+                    {"Local Location": mesh.geometry.boundingSphere ? mesh.geometry.boundingSphere.center : new THREE.Vector3(0,0,0) },
+                    {"World Location": mesh.geometry.boundingSphere ? mesh.localToWorld(mesh.geometry.boundingSphere.center) : new THREE.Vector3(0,0,0)}
+                ))
             console.log(buildingData)
             const jsonBuildingData = JSON.stringify(buildingData, null, 4);
             const blob = new Blob([jsonBuildingData], { type: 'application/json' });

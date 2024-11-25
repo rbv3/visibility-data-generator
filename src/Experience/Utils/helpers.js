@@ -252,15 +252,19 @@ export const createOBBHelper = (obb) => {
 
 export const createArrayOfPointsFromGroup = (group) => {
     const points = []
+    console.log({group})
     group.children.forEach(child => {
         const geometry = child.geometry.toNonIndexed()
         const position = geometry.getAttribute('position')
         for (let i = 0; i < position.array.length; i += 3) {
             let index = i / 3
+            console.log({position})
 
             const vertex = new THREE.Vector3()
             vertex.fromBufferAttribute(position, index)
             child.localToWorld(vertex)
+            // console.log({child})
+            console.log({vertex}, {index})
 
             points.push(new YUKA.Vector3(...vertex))
 

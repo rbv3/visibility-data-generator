@@ -1,13 +1,9 @@
 predefinedFormulaLibrary = [{
     "greeness": {
-        "name": "greeness",
         "expression": "tree",
-        "semanticIdExpression": "5"
     },
     "openness": {
-        "name": "openness",
         "expression": "sky",
-        "semanticIdExpression": "6"
     },
     "imageability": {
         "name": "imageability",

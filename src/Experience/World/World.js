@@ -18,7 +18,8 @@ export default class World {
         this.birdsEye = this.experience.birdsEye
 
         this.particleHelper = new ParticleHelper()
-        this.hiddenMap      = new HiddenMap()
+        // this.hiddenMap      = new HiddenMap()
+        this.hiddenMap      = this.experience.hiddenMap;
 
         this.histogram = new Histogram()
 

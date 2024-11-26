@@ -12,9 +12,13 @@ let selected_query_locations = [];
 // const margin = { top: 20, right: 20, bottom: 40, left: 40 },
 //       width = 800 - margin.left - margin.right,
 //       height = 600 - margin.top - margin.bottom;
-const margin = { top: 10, right: 10, bottom: 20, left: 80 },
-    width = 500 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom;
+const margin = { top: 10, right: 10, bottom: 20, left: 80 }
+const   width = 500 - margin.left - margin.right;
+const    height = 300 - margin.top - margin.bottom;
+
+// const container = d3.select(".graphsContainer").node();
+// const width = container.clientWidth;
+// const height = container.clientHeight;
 
 
 const xScale = d3.scaleLinear().range([0, width]);
@@ -22,10 +26,16 @@ const yScale = d3.scaleLinear().range([height, 0]);
 let coordName = "UMAP"; // Change this to the appropriate field in your data
 // let coordName = "PCA";
 
+
 let colorGlobal = "seagreen";
 let colorSelectedGlobal = "aquamarine";
 let colorQuery = "darkorange";
 let colorSelectedQuery = "firebrick";
+        
+const possibleCoordName = {
+    "UMAP": "UMAP",
+    "PCA": "PCA"
+};
 
 
 export default class HiddenMap {
@@ -33,9 +43,58 @@ export default class HiddenMap {
         this.experience = new Experience();
         this.particleHelper = new ParticleHelper();
         this.svg = undefined;
+
+
+        console.log("Possible projections are:", possibleCoordName)
+        console.log("The dropdown is now:", this.dropdown)
+
+        this.dropdown = d3.select("#projection-selector");
+        this.dropdown.selectAll("option")
+                .data(Object.entries(possibleCoordName))
+                .enter()
+                .append("option")
+                .attr("value", d => d[1]) // The actual coordName value
+                .text(d => d[0]);         // Display label
+                        // Handle dropdown change
+
+        console.log("The dropdown is now:", this.dropdown)
+        // // this.createHiddenMap() 
+        // this.dropdown.on("change", this.changeDropDown); 
+        const self = this;
+        this.dropdown.on("change", function () {
+            console.log("Clicked dropdown:", possibleCoordName)
+            coordName = this.value;  // Update coordName based on dropdown selection
+            self.createHiddenMap();              // Reload data with the new coordName
+            // console.log({this})
+            console.log({self})
+        }); 
+
+        this.svg = d3.select("#HiddenMap")
+                .append("svg")
+                // .attr("width", width + margin.left + margin.right)
+                // .attr("height", height + margin.top + margin.bottom)
+                .attr("width", "95%")
+                .attr("height", "95%")
+                .append("g");
+        
+
     };
 
+
+
     createHiddenMap() { // Should receive global data and query data.
+        const svg = this.svg
+        // const svg =  d3.select("#HiddenMap")
+        //        .append("svg")
+        //         // .attr("width", width + margin.left + margin.right)
+        //         // .attr("height", height + margin.top + margin.bottom)
+        //         .attr("width", "95%")
+        //         .attr("height", "95%")
+        //         .append("g");
+
+        console.log("svg", svg)
+        svg.selectAll(".heat-point").remove();
+        svg.selectAll(".scatter-point").remove();
 
          d3.json("test_set_as_query.json").then(data => {
         // d3.json("test_set_as_query_full_semantics.json").then(data => {
@@ -50,21 +109,10 @@ export default class HiddenMap {
 
 
 
-            const svg = d3.select("#HiddenMap")
-                .append("svg")
-                // .attr("width", width + margin.left + margin.right)
-                // .attr("height", height + margin.top + margin.bottom)
-                .attr("width", "95%")
-                .attr("height", "95%")
-                .append("g");
-                // .attr("transform", `translate(10,30)`);
-            // .attr("transform", `translate(${margin.left},${margin.top})`);
-            console.log("svg", svg)
+            
             const heatData = data.map(d => d[coordName]);
 
 
-            const xAxis = svg.append("g").attr("transform", `translate(0, ${height})`);
-            const yAxis = svg.append("g");
 
             let xDomain = d3.extent(heatData, d => d[0]);
             xDomain[0] = xDomain[0] - 5; xDomain[1] = xDomain[1] + 5
@@ -77,8 +125,11 @@ export default class HiddenMap {
             // xScale.domain(d3.extent(heatData, d => d[0]));
             // yScale.domain(d3.extent(heatData, d => d[1]));
 
-            xAxis.call(d3.axisBottom(xScale));
-            yAxis.call(d3.axisLeft(yScale));
+            //Remove or add axis
+            // const xAxis = svg.append("g").attr("transform", `translate(0, ${height})`);
+            // const yAxis = svg.append("g");
+            // xAxis.call(d3.axisBottom(xScale));
+            // yAxis.call(d3.axisLeft(yScale));
 
             // Create heatmap points
             svg.selectAll(".heat-point")
@@ -202,7 +253,8 @@ export default class HiddenMap {
 
         console.log({queryData})
 
-        const svg = d3.select("#HiddenMap").selectAll("svg");
+        // const svg = d3.select("#HiddenMap").selectAll("svg");
+        const svg = this.svg;
         svg.selectAll(".scatter-point").remove();
         this.queryPoints = queryData.map(d => d[coordName]);
         global_query_locations = queryData;

@@ -57,6 +57,11 @@ export default class City {
 
                         // clone current scene to POV scene
                         this.experience.povScene = this.scene.clone();
+                        // this.experience.hiddenMap.dropdown.on("change", function () {
+                        //     console.log("Clicked dropdown:");//, possibleCoordName)
+                        //     coordName = this.experience.hiddenMap.dropdown.value;  // Update coordName based on dropdown selection
+                        //     this.experience.hiddenMap.createHiddenMap();              // Reload data with the new coordName
+                        // });
                         this.experience.hiddenMap.createHiddenMap();
 
                         // Create points of interest and to avoid

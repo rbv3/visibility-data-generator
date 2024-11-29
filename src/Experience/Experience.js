@@ -77,7 +77,8 @@ export default class Experience {
 
 
         // Charts
-        this.hiddenMap = new HiddenMap();
+        // this.hiddenMap = new HiddenMap();
+        this.hiddenMap = this.world.hiddenMap;
         this.pieChart = new PieChart();
 
         this.histogram = new Histogram();

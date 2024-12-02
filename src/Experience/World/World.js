@@ -90,7 +90,7 @@ export default class World {
             .then(res => {
                 console.log(res);
                 this.updatePovInterface(res);
-                this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(res.data)
+                this.experience.queryLocationParticles = this.particleHelper.plotParticles(res.data)
             })
             .catch(err => {
                 console.error(err);
@@ -118,7 +118,7 @@ export default class World {
             .then(res => {
                 console.log(res);
                 this.updatePovInterface(res);
-                this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(res.data)
+                this.experience.queryLocationParticles = this.particleHelper.plotParticles(res.data)
                 //Update Latent Features 2D map:
                 this.hiddenMap.renderQueryOnHiddenMap(res.data)
             })

@@ -303,7 +303,7 @@ export default class HiddenMap {
     displayGlobalLocations() {
         console.log("displaying ", selected_locations.length, " locations")
         console.log("Selected locations:", selected_locations); // For debugging purposes
-        this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(selected_locations)
+        this.experience.queryLocationParticles = this.particleHelper.plotParticles(selected_locations)
         this.experience.world.updatePovInterfaceAfterBrushOnHistogram(selected_locations)
     };
 
@@ -353,7 +353,7 @@ export default class HiddenMap {
         console.log("Selected Query Points:", selected_query_locations);
 
         if (false) {//(selected_query_locations.length > 5){
-            this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(selected_query_locations)
+            this.experience.queryLocationParticles = this.particleHelper.plotParticles(selected_query_locations)
             this.experience.world.updatePovInterfaceAfterBrushOnHistogram(selected_query_locations)
         }
         else {
@@ -362,7 +362,7 @@ export default class HiddenMap {
                 .sort((a, b) => a.sort - b.sort)
                 .map(({ value }) => value);
 
-            this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(selected_locations)
+            this.experience.queryLocationParticles = this.particleHelper.plotParticles(selected_locations)
             
             // let povStyleLocations = {data: selected_locations}
             let povStyleLocations = {data: selected_query_locations}

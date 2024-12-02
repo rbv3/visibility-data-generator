@@ -229,10 +229,9 @@ export default class ParticleHelper extends EventEmitter {
         }
         return color
     }
-    plotParticlesWithDirection(particles) {
+    plotParticles(particles) {
         // create particles
         this.resetQueryLocationPoints(this.pointsWithDirection)
-        this.resetArrowGroup(this.arrowHelpersGroup)
         
         const geometry = new THREE.BufferGeometry()
         const positions = particles.reduce((arr, particle) => {
@@ -288,18 +287,11 @@ export default class ParticleHelper extends EventEmitter {
             const length = 15;
             const hex = 0xff0707;
 
-            const arrowHelper = new THREE.ArrowHelper(dir, origin, length, hex);
-            arrowHelper.rotation.set(...rotation)
-            arrowHelper.line.material.linewidth = 10;
-
-            arrowGroup.add(arrowHelper);
             pointGroup.add(point);
             index++;
         }
         this.pointsWithDirection = pointGroup;
-        this.scene.add(arrowGroup)
         this.scene.add(pointGroup)
-        this.arrowHelpersGroup = arrowGroup
 
         return points;
     }

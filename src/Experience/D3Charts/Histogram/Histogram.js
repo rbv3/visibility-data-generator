@@ -88,7 +88,7 @@ export default class Histogram {
             const [x0, x1] = event.selection.map(x.invert);
             selected_locations = global_locations.filter(d => d.residual >= x0 && d.residual <= x1);
         }
-        this.experience.queryLocationParticles = this.particleHelper.plotParticlesWithDirection(selected_locations)
+        this.experience.queryLocationParticles = this.particleHelper.plotParticles(selected_locations)
         this.experience.world.updatePovInterfaceAfterBrushOnHistogram(selected_locations)
         console.log(selected_locations); // For debugging purposes
     }

@@ -36,7 +36,12 @@ export default class ParticleHelper extends EventEmitter {
         this.arrowHelpersGroup;
         this.material = new THREE.PointsMaterial({
             size: 10,
-            color: 'red',
+            color: 'green',
+            sizeAttenuation: false,
+        })
+        this.queryMaterial = new THREE.PointsMaterial({
+            size: 10,
+            color: 'orange',
             sizeAttenuation: false,
         })
         this.selectedMaterial = new THREE.PointsMaterial({
@@ -270,9 +275,12 @@ export default class ParticleHelper extends EventEmitter {
             )
 
             let point;
-            if(index == 0) {
-                point = new THREE.Points(pointGeometry, this.selectedMaterial)
-            } else {
+            
+            if(particle.origin == 'query') {
+                point = new THREE.Points(pointGeometry, this.queryMaterial)
+            } else if(particle.origin == 'global') {
+                point = new THREE.Points(pointGeometry, this.material)
+            }else {
                 point = new THREE.Points(pointGeometry, this.material)
             }
 
@@ -282,10 +290,6 @@ export default class ParticleHelper extends EventEmitter {
 
             //normalize the direction vector (convert to vector of length 1)
             dir.normalize();
-
-            const origin = new THREE.Vector3(...position);
-            const length = 15;
-            const hex = 0xff0707;
 
             pointGroup.add(point);
             index++;

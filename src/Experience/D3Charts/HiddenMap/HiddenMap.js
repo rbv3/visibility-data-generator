@@ -361,8 +361,26 @@ export default class HiddenMap {
                 .map(value => ({ value, sort: Math.random() }))
                 .sort((a, b) => a.sort - b.sort)
                 .map(({ value }) => value);
+            console.log(selected_locations)
+            console.log(selected_query_locations)
 
-            this.experience.queryLocationParticles = this.particleHelper.plotParticles(selected_locations)
+            const globalParticlesToPlot = selected_locations.map(location => {
+                return {
+                    ...location,
+                    origin: 'global'
+                }
+            })
+            const queryParticlesToPlot = selected_query_locations.map(location => {
+                return {
+                    ...location,
+                    origin: 'query'
+                }
+            })
+
+            const particlesToPlot = [...globalParticlesToPlot, ...queryParticlesToPlot]
+
+            this.experience.queryLocationParticles = this.particleHelper.plotParticles(particlesToPlot)
+
             
             // let povStyleLocations = {data: selected_locations}
             let povStyleLocations = {data: selected_query_locations}

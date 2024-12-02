@@ -60,6 +60,7 @@
                             <div class="slider"></div>
                         </div>
                         <div class="queryOpenessSliders" hidden>
+                            <!-- <i class="fa fa-trash" style="font-size:18px;"></i> -->
                             <div class="queryOpenessSlidersCol">
                                 <label for="greeness">greeness</label>
                                 <form class="sliderRow">
@@ -155,6 +156,28 @@
                 <div id="HiddenMapControls">
                     <label for="projection-selector">Projection:</label>
                     <select id="projection-selector"></select>
+
+                    <label for="HiddenMapControls" class="checkbox" style="margin-top: 20px;">
+                        <span class="checkbox__label" style="font-family:PT Sans Narrow">Hide Query</span>
+                        <input class="checkbox__input" type="checkbox" id="hide-query" onchange="experience.hiddenMap.toggleHideQuery()">
+                        <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
+                            <rect stroke-width="1.5" width="21" height="21" x=".5" y=".5" fill="#FFF"
+                                stroke="#DAD9D9" rx="3" />
+                            <path class="tick" stroke="#272343" fill="none" stroke-linecap="round"
+                                stroke-width="1" d="M4 10l5 5 9-9" />
+                        </svg>
+                    </label>
+
+                    <label for="HiddenMapControls-global" class="checkbox" style="margin-top: 20px;">
+                        <span class="checkbox__label" style="font-family:PT Sans Narrow">Hide Global</span>
+                        <input class="checkbox__input" type="checkbox" id="hide-global" onchange="experience.hiddenMap.toggleHideGlobal()">
+                        <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
+                            <rect stroke-width="1.5" width="21" height="21" x=".5" y=".5" fill="#FFF"
+                                stroke="#DAD9D9" rx="3" />
+                            <path class="tick" stroke="#272343" fill="none" stroke-linecap="round"
+                                stroke-width="1" d="M4 10l5 5 9-9" />
+                        </svg>
+                    </label>
                 </div>
                 <div id="HiddenMap">
                 </div>

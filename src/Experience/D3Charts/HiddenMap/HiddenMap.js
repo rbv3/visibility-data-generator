@@ -13,8 +13,8 @@ let selected_query_locations = [];
 //       width = 800 - margin.left - margin.right,
 //       height = 600 - margin.top - margin.bottom;
 const margin = { top: 10, right: 10, bottom: 20, left: 80 }
-const   width = 500 - margin.left - margin.right;
-const    height = 300 - margin.top - margin.bottom;
+const width = 500 - margin.left - margin.right;
+const height = 300 - margin.top - margin.bottom;
 
 // const container = d3.select(".graphsContainer").node();
 // const width = container.clientWidth;
@@ -31,7 +31,7 @@ let colorGlobal = "seagreen";
 let colorSelectedGlobal = "aquamarine";
 let colorQuery = "darkorange";
 let colorSelectedQuery = "firebrick";
-        
+
 const possibleCoordName = {
     "UMAP": "UMAP",
     "PCA": "PCA"
@@ -50,12 +50,12 @@ export default class HiddenMap {
 
         this.dropdown = d3.select("#projection-selector");
         this.dropdown.selectAll("option")
-                .data(Object.entries(possibleCoordName))
-                .enter()
-                .append("option")
-                .attr("value", d => d[1]) // The actual coordName value
-                .text(d => d[0]);         // Display label
-                        // Handle dropdown change
+            .data(Object.entries(possibleCoordName))
+            .enter()
+            .append("option")
+            .attr("value", d => d[1]) // The actual coordName value
+            .text(d => d[0]);         // Display label
+        // Handle dropdown change
 
         console.log("The dropdown is now:", this.dropdown)
         // // this.createHiddenMap() 
@@ -66,17 +66,20 @@ export default class HiddenMap {
             coordName = this.value;  // Update coordName based on dropdown selection
             self.createHiddenMap();              // Reload data with the new coordName
             // console.log({this})
-            console.log({self})
-        }); 
+            console.log({ self })
+        });
 
         this.svg = d3.select("#HiddenMap")
-                .append("svg")
-                // .attr("width", width + margin.left + margin.right)
-                // .attr("height", height + margin.top + margin.bottom)
-                .attr("width", "95%")
-                .attr("height", "95%")
-                .append("g");
-        
+            .append("svg")
+            // .attr("width", width + margin.left + margin.right)
+            // .attr("height", height + margin.top + margin.bottom)
+            .attr("width", "95%")
+            .attr("height", "95%")
+            .append("g");
+
+        this.hideQuery = false
+        this.hideGlobal = false
+
 
     };
 
@@ -96,9 +99,9 @@ export default class HiddenMap {
         svg.selectAll(".heat-point").remove();
         svg.selectAll(".scatter-point").remove();
 
-         d3.json("test_set_as_query.json").then(data => {
-        // d3.json("test_set_as_query_full_semantics.json").then(data => {
-        // d3.json("test_set_as_query_perception.json").then(data => {
+        d3.json("test_set_as_query.json").then(data => {
+            // d3.json("test_set_as_query_full_semantics.json").then(data => {
+            // d3.json("test_set_as_query_perception.json").then(data => {
 
             global_locations = data;
             selected_locations = global_locations;
@@ -109,7 +112,7 @@ export default class HiddenMap {
 
 
 
-            
+
             const heatData = data.map(d => d[coordName]);
 
 
@@ -144,7 +147,7 @@ export default class HiddenMap {
                 .style("opacity", 0.5);
 
             // Add selection brush
-            const brush = d3.brush()
+            brush = d3.brush()
                 .extent([[0, 0], [width, height]])
                 .on("start brush", this.brushed)
                 .on("end", (e) => {
@@ -251,7 +254,7 @@ export default class HiddenMap {
     renderQueryOnHiddenMap(queryData) {
 
 
-        console.log({queryData})
+        console.log({ queryData })
 
         // const svg = d3.select("#HiddenMap").selectAll("svg");
         const svg = this.svg;
@@ -268,7 +271,7 @@ export default class HiddenMap {
             .style("fill", colorQuery)
             .style("opacity", 0.9);
         global_query_locations = queryData;
-        
+
         // // Add selection brush
         // const brush = d3.brush()
         // .extent([[0, 0], [width, height]])
@@ -277,7 +280,7 @@ export default class HiddenMap {
         //     console.log(e);
         //     this.brushEnded(e)
         // });
-        
+
         // svg.call(brush);
 
         // const svg = d3.select("#HiddenMap").selectAll("svg");
@@ -288,7 +291,7 @@ export default class HiddenMap {
 
         // global_query_locations = queryData;
         // svg.selectAll(".scatter-point").remove();
-        
+
         // // Use a custom shape for scatter plot points (e.g., square)
         // svg.selectAll(".scatter-point")
         //     .data(queryPoints)
@@ -377,20 +380,35 @@ export default class HiddenMap {
                 }
             })
 
-            const particlesToPlot = [...globalParticlesToPlot, ...queryParticlesToPlot]
+            let particlesToPlot = []
+
+            if (!this.hideGlobal) {
+                particlesToPlot = particlesToPlot.concat(globalParticlesToPlot)
+            }
+            if (!this.hideQuery) {
+                particlesToPlot = particlesToPlot.concat(queryParticlesToPlot)
+            }
 
             this.experience.queryLocationParticles = this.particleHelper.plotParticles(particlesToPlot)
 
-            
+
             // let povStyleLocations = {data: selected_locations}
-            let povStyleLocations = {data: selected_query_locations}
+            let povStyleLocations = { data: selected_query_locations }
             // let povStyleLocations = selected_query_locations
-            console.log({povStyleLocations})
-            
+            console.log({ povStyleLocations })
+
             this.experience.world.updatePovInterfaceAfterBrushOnHistogram(povStyleLocations)
             // this.experience.world.updatePovInterfaceAfterBrushOnHistogram(selected_query_locations);
-            console.log({selected_locations}); // For debugging purposes
+            console.log({ selected_locations }); // For debugging purposes
         }
     }
+    toggleHideQuery() {
+        this.hideQuery = !this.hideQuery
+        console.log(this.hideQuery);
+    }
 
+    toggleHideGlobal() {
+        this.hideGlobal = !this.hideGlobal
+        console.log(this.hideGlobal);
+    }
 }

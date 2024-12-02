@@ -147,7 +147,7 @@ export default class HiddenMap {
                 .style("opacity", 0.5);
 
             // Add selection brush
-            brush = d3.brush()
+            const brush = d3.brush()
                 .extent([[0, 0], [width, height]])
                 .on("start brush", this.brushed)
                 .on("end", (e) => {

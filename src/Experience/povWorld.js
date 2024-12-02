@@ -52,6 +52,9 @@ export default class PovWorld {
         const canvas = document.createElement('canvas');
         canvas.className = `webgl-pov webgl-pov${index}`
 
+        //https://stackoverflow.com/questions/6840326/how-can-i-create-and-style-a-div-using-javascript
+        canvas.style.borderRadius = "5px"; 
+
         webGlPovDiv.appendChild(canvas)
         document.querySelector('.galleryContent').appendChild(webGlPovDiv);
         this.createTooltip(index)
@@ -158,6 +161,7 @@ export default class PovWorld {
             console.log(key, data[key]);
             const p = document.createElement('p')
             p.textContent = `${key}: ${(data[key] * 100).toFixed(2)}%`
+            p.style.borderRadius = "15px"; 
             chartElement.appendChild(p)
         }
     }

@@ -60,6 +60,7 @@ export default class World {
         for(let j = 0; j < slidersRows.length; j++) {
             for (let i = 0; i < slidersRows[j].children.length; i++) {
                 if(slidersRows[j].children[i].nodeName == "INPUT" && slidersRows[j].children[i].type == "range") {
+                    console.log(slidersRows[j].children[i].id);
                     this.openessParameters[slidersRows[j].children[i].id] = parseInt(slidersRows[j].children[i].value) / 100
                 }
             }
@@ -72,6 +73,14 @@ export default class World {
     }
     setOpenessParameters() {
         this.queryParameters = structuredClone(this.openessParameters)
+    }
+    removeFromParameter(key) {
+        if(this.queryParameters.hasOwnProperty(key)) {
+            delete this.queryParameters[key]
+            document.querySelector(`label[for="${key}"]`).remove()
+            document.querySelector(`#${key}-form`).remove()
+        }
+        console.log(this.queryParameters);
     }
     callQueryViewPoints() {
         var element = document.getElementById('plane-checkbox');

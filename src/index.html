@@ -60,10 +60,10 @@
                             <div class="slider"></div>
                         </div>
                         <div class="queryOpenessSliders" hidden>
-                            <!-- <i class="fa fa-trash" style="font-size:18px;"></i> -->
                             <div class="queryOpenessSlidersCol">
                                 <label for="greeness">greeness</label>
-                                <form class="sliderRow">
+                                <form id="greeness-form" class="sliderRow">
+                                    <i class="fa fa-trash" style="font-size:18px;" onclick="experience.world.removeFromParameter('greeness')"></i>
                                     <input name="greenessRange"
                                         onchange="experience.world.getOpenessParameters(this.value, this.id)"
                                         id="greeness" type="range" min="0" max="100" value="50"
@@ -73,17 +73,19 @@
                                 </form>
 
                                 <label for="openness">openness</label>
-                                <form class="sliderRow">
+                                <form id="openness-form" class="sliderRow">
+                                    <i class="fa fa-trash" style="font-size:18px;" onclick="experience.world.removeFromParameter('openness')"></i>
                                     <input name="openessRange"
                                         onchange="experience.world.getOpenessParameters(this.value, this.id)"
-                                        id="openess" type="range" min="0" max="100" value="50"
+                                        id="openness" type="range" min="0" max="100" value="50"
                                         oninput="this.form.openessAmount.value=this.value">
                                     <input type="number" name="openessAmount" min="0" max="100" value="50"
                                         oninput="this.form.openessRange.value=this.value" />
                                 </form>
 
                                 <label for="imageability">imageability</label>
-                                <form class="sliderRow">
+                                <form id="imageability-form" class="sliderRow">
+                                    <i class="fa fa-trash" style="font-size:18px;" onclick="experience.world.removeFromParameter('imageability')"></i>
                                     <input name="imageabilityRange"
                                         onchange="experience.world.getOpenessParameters(this.value, this.id)"
                                         id="imageability" type="range" min="0" max="100" value="50"
@@ -94,7 +96,8 @@
                             </div>
                             <div class="queryOpenessSlidersCol">
                                 <label for="enclosure">enclosure</label>
-                                <form class="sliderRow">
+                                <form id="enclosure-form" class="sliderRow">
+                                    <i class="fa fa-trash" style="font-size:18px;" onclick="experience.world.removeFromParameter('enclosure')"></i>
                                     <input name="enclosureRange"
                                         onchange="experience.world.getOpenessParameters(this.value, this.id)"
                                         id="enclosure" type="range" min="0" max="100" value="50"
@@ -104,7 +107,8 @@
                                 </form>
 
                                 <label for="walkability">walkability</label>
-                                <form class="sliderRow">
+                                <form id="walkability-form" class="sliderRow">
+                                    <i class="fa fa-trash" style="font-size:18px;" onclick="experience.world.removeFromParameter('walkability')"></i>
                                     <input name="walkabilityRange"
                                         onchange="experience.world.getOpenessParameters(this.value, this.id)"
                                         id="walkability" type="range" min="0" max="100" value="50"
@@ -114,7 +118,8 @@
                                 </form>
 
                                 <label for="serenity">serenity</label>
-                                <form class="sliderRow">
+                                <form id="serenity-form" class="sliderRow">
+                                    <i class="fa fa-trash" style="font-size:18px;" onclick="experience.world.removeFromParameter('serenity')"></i>
                                     <input name="serenityRange"
                                         onchange="experience.world.getOpenessParameters(this.value, this.id)"
                                         id="serenity" type="range" min="0" max="100" value="50"
@@ -132,7 +137,8 @@
                             </div>
                             <div class="queryButtons">
                                 <label for="myCheckbox01" class="checkbox">
-                                    <input class="checkbox__input" type="checkbox" id="plane-checkbox" onchange="experience.birdsEye.togglePlane()">
+                                    <input class="checkbox__input" type="checkbox" id="plane-checkbox"
+                                        onchange="experience.birdsEye.togglePlane()">
                                     <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
                                         <rect stroke-width="1.5" width="21" height="21" x=".5" y=".5" fill="#FFF"
                                             stroke="#DAD9D9" rx="3" />
@@ -159,23 +165,25 @@
 
                     <label for="HiddenMapControls" class="checkbox" style="margin-top: 20px;">
                         <span class="checkbox__label" style="font-family:PT Sans Narrow">Hide Query</span>
-                        <input class="checkbox__input" type="checkbox" id="hide-query" onchange="experience.hiddenMap.toggleHideQuery()">
+                        <input class="checkbox__input" type="checkbox" id="hide-query"
+                            onchange="experience.hiddenMap.toggleHideQuery()">
                         <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
-                            <rect stroke-width="1.5" width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                stroke="#DAD9D9" rx="3" />
-                            <path class="tick" stroke="#272343" fill="none" stroke-linecap="round"
-                                stroke-width="1" d="M4 10l5 5 9-9" />
+                            <rect stroke-width="1.5" width="21" height="21" x=".5" y=".5" fill="#FFF" stroke="#DAD9D9"
+                                rx="3" />
+                            <path class="tick" stroke="#272343" fill="none" stroke-linecap="round" stroke-width="1"
+                                d="M4 10l5 5 9-9" />
                         </svg>
                     </label>
 
                     <label for="HiddenMapControls-global" class="checkbox" style="margin-top: 20px;">
                         <span class="checkbox__label" style="font-family:PT Sans Narrow">Hide Global</span>
-                        <input class="checkbox__input" type="checkbox" id="hide-global" onchange="experience.hiddenMap.toggleHideGlobal()">
+                        <input class="checkbox__input" type="checkbox" id="hide-global"
+                            onchange="experience.hiddenMap.toggleHideGlobal()">
                         <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
-                            <rect stroke-width="1.5" width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                stroke="#DAD9D9" rx="3" />
-                            <path class="tick" stroke="#272343" fill="none" stroke-linecap="round"
-                                stroke-width="1" d="M4 10l5 5 9-9" />
+                            <rect stroke-width="1.5" width="21" height="21" x=".5" y=".5" fill="#FFF" stroke="#DAD9D9"
+                                rx="3" />
+                            <path class="tick" stroke="#272343" fill="none" stroke-linecap="round" stroke-width="1"
+                                d="M4 10l5 5 9-9" />
                         </svg>
                     </label>
                 </div>

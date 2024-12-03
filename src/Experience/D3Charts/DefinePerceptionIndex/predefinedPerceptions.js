@@ -1,4 +1,4 @@
-predefinedFormulaLibrary = [{
+export const predefinedFormulaLibrary = {
     "greeness": {
         "expression": "tree",
     },
@@ -25,4 +25,4 @@ predefinedFormulaLibrary = [{
         "expression": "water + sky",
         "semanticIdExpression": "1 + 6"
     }
-}]
+}

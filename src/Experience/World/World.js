@@ -8,6 +8,7 @@ import Histogram from '../D3Charts/Histogram/Histogram'
 import PovWorld from '../povWorld'
 import { MAX_POV_AMOUNT } from '../Utils/constants'
 import HiddenMap from '../D3Charts/HiddenMap/HiddenMap'
+import { predefinedFormulaLibrary } from '../D3Charts/DefinePerceptionIndex/predefinedPerceptions'
 
 export default class World {
     constructor() {
@@ -18,7 +19,7 @@ export default class World {
         this.birdsEye = this.experience.birdsEye
 
         this.particleHelper = new ParticleHelper()
-        this.hiddenMap      = new HiddenMap()
+        this.hiddenMap = new HiddenMap()
         // this.hiddenMap      = this.experience.hiddenMap;
 
         this.histogram = new Histogram()
@@ -42,11 +43,13 @@ export default class World {
             },
         }
         this.openessParameters = {}
+        this.isPerception = false
         this.initializeOpenessParameters()
         this.setGUI()
     }
     setQueryParameters(dictionary) {
         this.queryParameters = {};
+        this.isPerception = false
         dictionary.forEach(val => {
             const name = val['name'].toLowerCase()
             const percentage = val['value'] / 100;
@@ -57,9 +60,9 @@ export default class World {
     initializeOpenessParameters() {
         const slidersRows = document.getElementsByClassName('sliderRow')
 
-        for(let j = 0; j < slidersRows.length; j++) {
+        for (let j = 0; j < slidersRows.length; j++) {
             for (let i = 0; i < slidersRows[j].children.length; i++) {
-                if(slidersRows[j].children[i].nodeName == "INPUT" && slidersRows[j].children[i].type == "range") {
+                if (slidersRows[j].children[i].nodeName == "INPUT" && slidersRows[j].children[i].type == "range") {
                     console.log(slidersRows[j].children[i].id);
                     this.openessParameters[slidersRows[j].children[i].id] = parseInt(slidersRows[j].children[i].value) / 100
                 }
@@ -68,14 +71,15 @@ export default class World {
         console.log(this.openessParameters);
     }
     getOpenessParameters(value, id) {
-        this.openessParameters[id] = parseInt(value) / 100
-        this.queryParameters = structuredClone(this.openessParameters)
+        this.isPerception = true
+        this.queryParameters[id] = parseInt(value) / 100
     }
     setOpenessParameters() {
+        this.isPerception = true
         this.queryParameters = structuredClone(this.openessParameters)
     }
     removeFromParameter(key) {
-        if(this.queryParameters.hasOwnProperty(key)) {
+        if (this.queryParameters.hasOwnProperty(key)) {
             delete this.queryParameters[key]
             document.querySelector(`label[for="${key}"]`).remove()
             document.querySelector(`#${key}-form`).remove()
@@ -84,13 +88,13 @@ export default class World {
     }
     callQueryViewPoints() {
         var element = document.getElementById('plane-checkbox');
-        if(element.checked == true) {
+        if (element.checked == true) {
             this.callQueryLocationOnPlane()
         } else {
             this.callQueryLocation()
         }
     }
-    callQueryLocation() {        
+    callQueryLocation() {
         this.visibilityEncoderService.queryLocation(
             this.queryLocationParameters.numLocations.value,
             1,
@@ -106,19 +110,30 @@ export default class World {
             })
     }
 
-    callQueryLocationOnPlane() {     
+    callQueryLocationOnPlane() {
         const plane = this.birdsEye.plane
         const planeScale = plane.scale
         const planeCenter = plane.position
         const planeWidth = plane.geometry.parameters.width * planeScale.x
         const planeHeight = plane.geometry.parameters.height * planeScale.z
-        
+
         const planeDirections = this.birdsEye.getPlaneDirections()
-        
+        let goals = this.queryParameters
+        if (this.isPerception) {
+            const opennessPayload = {}
+
+            for (const key in this.queryParameters) {
+                const expression = predefinedFormulaLibrary[key]["expression"]
+                const value = this.queryParameters[key]
+                opennessPayload[key] = {}
+                opennessPayload[key][expression] = value
+            }
+            goals = opennessPayload
+        }
         this.visibilityEncoderService.queryLocationOnPlane({
             numLocations: parseInt(document.querySelector('#numLocations').value),
             seed: 20,
-            goals: this.queryParameters,
+            goals: goals,
             pointOnPlane: [...planeCenter],
             direction1: planeDirections[0],
             direction2: planeDirections[1],
@@ -137,25 +152,25 @@ export default class World {
     }
 
     resetAndCreatePovs(res) {
-        if(res == null) return;
+        if (res == null) return;
         console.log(res);
         PovWorld.disposeAllPovWorlds();
         this.experience.povWorld.forEach(world => world.disposeWorld())
         this.experience.povWorld = []
         const povAmount = Math.min(res.data?.length, MAX_POV_AMOUNT);
         // const povAmount = Math.min(res.length, MAX_POV_AMOUNT);
-        for(let i=0; i <  povAmount; i++) {
+        for (let i = 0; i < povAmount; i++) {
             this.experience.povWorld.push(new PovWorld(i))
         }
     }
 
     updatePovInterface(res) {
-        if(res == null) return;
+        if (res == null) return;
         this.resetAndCreatePovs(res);
         this.experience.povWorld.forEach((world) => {
             world.maxLocations = res.data.length
             world.updateViewPort(res.data)
-            for(const gui of world.gui.viewportFolder.controllers) {
+            for (const gui of world.gui.viewportFolder.controllers) {
                 gui.max(res.data.length - 1)
                 gui.updateDisplay()
             }
@@ -163,12 +178,12 @@ export default class World {
     }
 
     updatePovInterfaceAfterBrushOnHistogram(res) {
-        if(res == null) return;
-        console.log({res})
+        if (res == null) return;
+        console.log({ res })
         this.resetAndCreatePovs(res);
-        this.experience.povWorld .forEach((world) => {
+        this.experience.povWorld.forEach((world) => {
             world.updateViewPort(res.data)
-            for(const gui of world.gui.viewportFolder.controllers) {
+            for (const gui of world.gui.viewportFolder.controllers) {
                 gui.max(res.length - 1)
                 gui.updateDisplay()
             }

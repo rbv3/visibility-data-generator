@@ -436,6 +436,7 @@ export default class Experience {
         this.visibilityEncoderService.testEncoderOnCurrentPosition(requestData)
             .then(result => {
                 console.log(result.data[0].camera_coordinates)
+                console.log(result.data[0].predictions)
                 this.visibilityEncoderService.printPredictionArray(
                     result.data[0].predictions
                 )

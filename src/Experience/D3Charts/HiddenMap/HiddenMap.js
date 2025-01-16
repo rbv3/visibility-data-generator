@@ -367,7 +367,7 @@ export default class HiddenMap {
             console.log(selected_locations)
             console.log(selected_query_locations)
 
-            const globalParticlesToPlot = selected_locations.map(location => {
+            let globalParticlesToPlot = selected_locations.map(location => {
                 return {
                     ...location,
                     origin: 'global'
@@ -381,6 +381,17 @@ export default class HiddenMap {
             })
 
             let particlesToPlot = []
+
+            // Sample 100 indexes from globalParticlesToPlot
+            //Snippet from stackoverflow: https://stackoverflow.com/a/52232922
+
+            globalParticlesToPlot = globalParticlesToPlot
+                                        .map(a => [a,Math.random()])
+                                        .sort((a,b) => {return a[1] < b[1] ? -1 : 1;})
+                                        .slice(0,500)
+                                        .map(a => a[0]);
+
+            ///If queried points are to few, add more locations in the pov displays.
 
             if (!this.hideGlobal) {
                 particlesToPlot = particlesToPlot.concat(globalParticlesToPlot)

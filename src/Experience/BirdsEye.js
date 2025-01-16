@@ -117,7 +117,7 @@ export default class BirdsEye {
     addPlane() {
         this.setTransformControls()
 
-        const geometry = new THREE.PlaneGeometry(1000, 1000, 1, 1)
+        const geometry = new THREE.PlaneGeometry(2000, 1000, 1, 1)
         geometry.rotateX(Math.PI * 0.5)
 
         const material = new THREE.MeshBasicMaterial({
@@ -132,6 +132,21 @@ export default class BirdsEye {
             45,
             1110
         )
+        this.plane.rotation.set(-0.019, -0.160, -0.017)
+        this.plane.scale.set(1.4, 1, 1.6)
+        // this.plane.position.set(
+        //     1480,
+        //     80,
+        //     670
+        // )
+        //position
+        // x: 1460.
+        // y: 45.
+        // z: 1090.
+        //rotation:
+        //-0.019, -0.160, -0.017
+        //scale: 
+        //x:1.4, y:1, z:1.6
         this.transformControls.attach(this.plane)
 
         this.scene.add(this.plane)

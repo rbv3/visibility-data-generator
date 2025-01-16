@@ -135,7 +135,12 @@ export default class ParticleHelper extends EventEmitter {
                 this.lookAtResults[j].positions[lookAtIndex + 0] = result[i].camera_coordinates[0]
                 this.lookAtResults[j].positions[lookAtIndex + 1] = result[i].camera_coordinates[1]
                 this.lookAtResults[j].positions[lookAtIndex + 2] = result[i].camera_coordinates[2]
+                
                 const color = this.setColorBasedOnVisibility(result[i].predictions)
+                // const color = new Float32Array([251*result[i].predictions.building
+                //     , 128 * result[i].predictions.building
+                //     , 114 * result[i].predictions.building]) 
+                
                 this.lookAtResults[j].colors[lookAtIndex + 0] = color[0]
                 this.lookAtResults[j].colors[lookAtIndex + 1] = color[1]
                 this.lookAtResults[j].colors[lookAtIndex + 2] = color[2]

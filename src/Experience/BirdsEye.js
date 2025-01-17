@@ -127,13 +127,23 @@ export default class BirdsEye {
             side: THREE.DoubleSide,
         })
         this.plane = new THREE.Mesh(geometry, material)
+        //Overaching plane parameters v1
+        // this.plane.position.set(
+        //     1474,
+        //     45,
+        //     1110
+        // )
+        // this.plane.rotation.set(-0.019, -0.160, -0.017)
+        // this.plane.scale.set(1.4, 1, 1.6)
+        //Overaching plane parameters v2
         this.plane.position.set(
-            1474,
-            45,
-            1110
+            1510.1877989871039,
+            40.78571191458468,
+            1085.889975096684,
         )
-        this.plane.rotation.set(-0.019, -0.160, -0.017)
-        this.plane.scale.set(1.4, 1, 1.6)
+        this.plane.rotation.set(-0.008375958724445198
+            , -0.16511212811059173, -0.009660297603200701)
+        this.plane.scale.set(1.3921600270881098, 1, 1.6242933499781063)
         // this.plane.position.set(
         //     1480,
         //     80,

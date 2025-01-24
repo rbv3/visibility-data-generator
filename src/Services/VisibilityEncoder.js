@@ -55,6 +55,31 @@ export default class VisibilityEncoder {
         )
     }
 
+    predictFacadeFromBasePointsV2AsTiles(facadePoints, buildingHeight) {
+        const params = {
+            // nmt: 'None'
+        }
+        if(buildingHeight) {
+            params.bh = Math.round(buildingHeight)
+            params.ppf = Math.round(Math.round(buildingHeight) * 30 / 6)
+        }
+        return axios(
+            {
+                method: 'post',
+                baseURL: 'http://127.0.0.1:5000/',
+                params,
+                url: '/predict_facade_from_base_points_as_tiles',
+                headers: {
+                    scheme: 'http',
+                    'Cache-Control': 'no-cache',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+                data: facadePoints
+            }
+        )
+    }
+
     testEncoderOnData(locationData) {
         const params = {
             // nmt: 'None'

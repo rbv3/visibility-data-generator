@@ -60,7 +60,8 @@ export default class RayCaster {
                 this.previousClicked = this.clickedBuilding
                 this.clickedBuilding = this.hoveredBuilding
 
-                console.log(this.clickedBuilding);
+                // console.log(this.clickedBuilding);
+                console.log("Building clicked")
 
                 const points = createArrayOfPointsFromGroup(this.clickedBuilding)
 
@@ -83,6 +84,7 @@ export default class RayCaster {
         const basePoint = this.pointsByNormal.get('[0,-1,0]')
 
         console.log({basePoint})
+        console.log("Clicked building height:", this.clickedBuildingHeight)
 
         this.visibilityEncoderService.predictFacadeFromBasePoints(basePoint, this.clickedBuildingHeight)
             .then(res => {
@@ -95,6 +97,25 @@ export default class RayCaster {
                 console.log('Error: ', err.message)
             })
     }
+
+    callGetFacadesForClickedBuildingV2AsTiles() {
+        const basePoint = this.pointsByNormal.get('[0,-1,0]')
+
+        console.log({basePoint})
+        console.log("Clicked building height:", this.clickedBuildingHeight)
+
+        this.visibilityEncoderService.predictFacadeFromBasePointsV2AsTiles(basePoint, this.clickedBuildingHeight)
+            .then(res => {
+                console.log(res.data)
+                console.log("Displaying the building tiles...")
+                // this.particleHelper.resetResultPoints()
+                // this.particleHelper.plotParticlesForVisibilityEnconderResult(res.data)
+            })
+            .catch(err => {
+                console.log('Error: ', err.message)
+            })
+    }
+
     callTestEnconderOnData() {
         const filteredPoints = this.particleHelper.filterPointsByRadius(
             30 + this.clickedBuildingHeight * 2,
@@ -220,6 +241,7 @@ export default class RayCaster {
 
         console.log(this.helper)
         console.log(obb)
+        console.log("Created Bonding boxes")
 
         this.clickedBuildingHeight = obb.halfSizes.y * 2
         this.clickedBuildingCenter = obb.center
@@ -356,6 +378,13 @@ export default class RayCaster {
                 this.callGetFacadesForClickedBuilding()
             }
         }, 'callGetFacadesForClickedBuilding')
+
+        this.gui.endpointsFolder.add({
+            callGetFacadesForClickedBuildingV2AsTiles: () => {
+                this.callGetFacadesForClickedBuildingV2AsTiles()
+            }
+        }, 'callGetFacadesForClickedBuildingV2AsTiles')
+
 
         this.gui.endpointsFolder.add({
             callTestEnconderOnData: () => {

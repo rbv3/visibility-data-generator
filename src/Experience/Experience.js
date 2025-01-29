@@ -265,9 +265,19 @@ export default class Experience {
 
         // console.log(this.camera.instance.quaternion)
 
-        csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+        // csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
+        // csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
+        // csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+
+        const cameraDirection = new THREE.Vector3();
+        this.camera.instance.getWorldDirection(cameraDirection); // Get forward direction of camera
+        // Compute angles in spherical coordinates
+        const spherical = new THREE.Spherical().setFromVector3(cameraDirection);
+        const theta = THREE.MathUtils.radToDeg(spherical.theta); // Horizontal viewing angle
+        const phi = THREE.MathUtils.radToDeg(spherical.phi); // Vertical viewing angle
+        csvLine.push(`${phi}`)
+        csvLine.push(`${theta}`)
+
 
         const totalPixels = readPixelBuffer.length / 4
         if (shouldLogResults) {
@@ -311,9 +321,18 @@ export default class Experience {
 
         // console.log(this.camera.instance.quaternion)
 
-        csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+        // csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
+        // csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
+        // csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+
+        const cameraDirection = new THREE.Vector3();
+        this.camera.instance.getWorldDirection(cameraDirection); // Get forward direction of camera
+        // Compute angles in spherical coordinates
+        const spherical = new THREE.Spherical().setFromVector3(cameraDirection);
+        const theta = THREE.MathUtils.radToDeg(spherical.theta); // Horizontal viewing angle
+        const phi = THREE.MathUtils.radToDeg(spherical.phi); // Vertical viewing angle
+        csvLine.push(`${phi}`)
+        csvLine.push(`${theta}`)
 
         const totalPixels = readPixelBuffer.length / 4
         if (shouldLogResults) {
@@ -362,9 +381,18 @@ export default class Experience {
         csvLine.push(`${this.camera.instance.position.y}`)
         csvLine.push(`${this.camera.instance.position.z}`)
 
-        csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
-        csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+        // csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
+        // csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
+        // csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+        const cameraDirection = new THREE.Vector3();
+        this.camera.instance.getWorldDirection(cameraDirection); // Get forward direction of camera
+        // Compute angles in spherical coordinates
+        const spherical = new THREE.Spherical().setFromVector3(cameraDirection);
+        const theta = THREE.MathUtils.radToDeg(spherical.theta); // Horizontal viewing angle
+        const phi = THREE.MathUtils.radToDeg(spherical.phi); // Vertical viewing angle
+        csvLine.push(`${phi}`)
+        csvLine.push(`${theta}`)
+        
 
         return csvLine
     }

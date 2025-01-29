@@ -95,19 +95,33 @@ export default class ScreenshotHelper {
     }
     generateImageOfMode(scPositions, mode, shouldCreateImage, shouldDownloadCsv = true) {
         const start = performance.now()
+        // const csv = {
+        //     fields: [
+        //         'x',
+        //         'y',
+        //         'z',
+        //         'xh',
+        //         'yh',
+        //         'zh',
+        //         'f_xyz',
+        //         'image_name'
+        //     ],
+        //     data: []
+        // }
+
         const csv = {
             fields: [
                 'x',
                 'y',
                 'z',
-                'xh',
-                'yh',
-                'zh',
+                'phi',
+                'theta',
                 'f_xyz',
                 'image_name'
             ],
             data: []
         }
+
         // disable update to improve performance
         this.experience.shouldUpdateOnTick = false
         
@@ -181,14 +195,22 @@ export default class ScreenshotHelper {
         // disable update to improve performance
         this.experience.shouldUpdateOnTick = false
         const isVisibility = mode == VIEW_MODES.visibility
+        // const csvCommonFields = [
+        //     'x',
+        //     'y',
+        //     'z',
+        //     'xh',
+        //     'yh',
+        //     'zh',
+        // ]
         const csvCommonFields = [
-            'x',
-            'y',
-            'z',
-            'xh',
-            'yh',
-            'zh',
-        ]
+                'x',
+                'y',
+                'z',
+                'phi',
+                'theta',
+            ]
+        
 
         if(isVisibility) {
             csvCommonFields.push('f_xyz')

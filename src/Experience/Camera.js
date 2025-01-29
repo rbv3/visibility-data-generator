@@ -48,11 +48,48 @@ export default class Camera {
             console.log(this.instance.position)
         }}, 'getCameraPosition')
         this.gui.cameraFolder.add({getCameraRotation : () => {
-            console.log(
+            console.log('Euler Viewing angles around the origin, not smooth with respect to sccene',
                 THREE.MathUtils.radToDeg(this.instance.rotation._x),
                 THREE.MathUtils.radToDeg(this.instance.rotation._y),
                 THREE.MathUtils.radToDeg(this.instance.rotation._z),
             )
+            // console.log("lookAt", this.instance.lookAt)
+            console.log("position", this.instance.position)
+  
+            ///1. Position relative the scene center
+            /*
+            const cameraPosition = this.instance.position.clone();
+            //Got scene center using - np.mean(buildings_vis_df[["x","y","z"]].values, axis=0)
+            const targetPosition = new THREE.Vector3(1406.54009895,  161.69680881, 1061.20413751); // Scene center
+
+            // Vector from center to camera
+            const vector = cameraPosition.sub(targetPosition);
+
+            // Convert to spherical coordinates
+            const spherical = new THREE.Spherical().setFromVector3(vector);
+
+            // Extract angles in degrees
+            const theta = THREE.MathUtils.radToDeg(spherical.theta); // Horizontal rotation (Y-axis)
+            const phi = THREE.MathUtils.radToDeg(spherical.phi); // Vertical rotation (X-axis)
+
+            console.log(`Rotation around scene center: theta = ${theta}, phi = ${phi}`);
+            */
+           ///2. Rotation relative the scene center
+            const cameraDirection = new THREE.Vector3();
+            this.instance.getWorldDirection(cameraDirection); // Get forward direction of camera
+
+            // Compute angles in spherical coordinates
+            const spherical = new THREE.Spherical().setFromVector3(cameraDirection);
+
+            const theta = THREE.MathUtils.radToDeg(spherical.theta); // Horizontal viewing angle
+            const phi = THREE.MathUtils.radToDeg(spherical.phi); // Vertical viewing angle
+
+            console.log("Spherical:", spherical)
+
+            console.log(`Spherical angles, Smooth relative to / around scene center: theta = ${theta}, phi = ${phi}`);
+
+            console.log("\n")
+
         }}, 'getCameraRotation')
         this.gui.cameraFolder.add({getCamera : () => {
             console.log(this.instance)

@@ -98,11 +98,74 @@ export default class RayCaster {
             })
     }
 
+    sortPointsClockwise(points) {
+        // Compute the centroid of the four points
+        const centroid = new THREE.Vector3();
+        points.forEach(p => centroid.add(p));
+        centroid.divideScalar(points.length);
+    
+        // Choose a reference normal (assume polygon is mostly in one plane)
+        const normal = new THREE.Vector3();
+        const v1 = new THREE.Vector3().subVectors(points[1], points[0]);
+        const v2 = new THREE.Vector3().subVectors(points[2], points[0]);
+        normal.crossVectors(v1, v2).normalize(); // Normal of the polygon plane
+    
+        // Choose a reference axis (X-axis) in the plane
+        const referenceAxis = new THREE.Vector3().subVectors(points[0], centroid).normalize();
+    
+        // Sort by angle relative to the reference axis
+        points.sort((a, b) => {
+            const va = new THREE.Vector3().subVectors(a, centroid).normalize();
+            const vb = new THREE.Vector3().subVectors(b, centroid).normalize();
+    
+            // Compute cross and dot products
+            const cross = new THREE.Vector3().crossVectors(referenceAxis, va);
+            const dot = referenceAxis.dot(va);
+    
+            // Compute angle using atan2 for correct ordering
+            const angleA = Math.atan2(cross.dot(normal), dot);
+    
+            const crossB = new THREE.Vector3().crossVectors(referenceAxis, vb);
+            const dotB = referenceAxis.dot(vb);
+            const angleB = Math.atan2(crossB.dot(normal), dotB);
+    
+            return angleA - angleB; // Sort counterclockwise
+        });
+    
+        return points;
+    }
+
     callGetFacadesForClickedBuildingV2AsTiles() {
         const basePoint = this.pointsByNormal.get('[0,-1,0]')
 
         console.log({basePoint})
         console.log("Clicked building height:", this.clickedBuildingHeight)
+        let points = basePoint.map(b => new THREE.Vector3(b[0],b[1],b[2]))
+        points = this.sortPointsClockwise(points)
+        
+        for (let i=0; i<4; i++){
+            // console.log(points[i], points[(i+1) % 4])
+            let p1 = points[i]
+            let p2 =  points[(i+1) % 4]
+
+            // Compute direction from p1 to p2
+            const direction = new THREE.Vector3().subVectors(p2, p1).normalize();
+
+            // Compute a perpendicular vector in the XZ plane (assuming Y-up)
+            const up = new THREE.Vector3(0, 1, 0);  // World up
+            const perpendicular = new THREE.Vector3().crossVectors(direction, up).normalize();
+
+            // Convert perpendicular direction to spherical coordinates
+            const spherical = new THREE.Spherical().setFromVector3(perpendicular);
+
+            const theta = THREE.MathUtils.radToDeg(spherical.theta); // Yaw angle (horizontal)
+            const phi = THREE.MathUtils.radToDeg(spherical.phi); // Pitch angle (vertical)
+
+            console.log(`Side [${p1.x},${p1.y},${p1.z}] - [${p2.x},${p2.y},${p2.z}]  has: Theta (Yaw): ${theta} degrees, Phi (Pitch): ${phi} degrees`);
+            ////////
+        }
+        /// Computing viewing angles for each side:
+        
 
         this.visibilityEncoderService.predictFacadeFromBasePointsV2AsTiles(basePoint, this.clickedBuildingHeight)
             .then(res => {

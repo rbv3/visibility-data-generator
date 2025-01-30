@@ -101,18 +101,27 @@ export default class MaterialHelper {
         return customMaterial
     }
     getColorByMaterial(material) {
-        switch (material) {
-            case 'brick':
+        let outlierFindingDataset = true
+        if(outlierFindingDataset){
+            if (material == 'metal')
+                return new THREE.Color(0, 255, 0);                
+            else
                 return new THREE.Color(255, 0, 0);
-            case 'concrete':
-                return new THREE.Color(0, 255, 0);
-            case 'marble':
-                return new THREE.Color(0, 0, 255);
-            case 'plaster':
-                return new THREE.Color(255, 255, 255);
-            case 'metal':
-                return new THREE.Color(255, 255, 0);
+        }
+        else{
+            switch (material) {
+                case 'brick':
+                    return new THREE.Color(255, 0, 0);
+                case 'concrete':
+                    return new THREE.Color(0, 255, 0);
+                case 'marble':
+                    return new THREE.Color(0, 0, 255);
+                case 'plaster':
+                    return new THREE.Color(255, 255, 255);
+                case 'metal':
+                    return new THREE.Color(255, 255, 0);
 
+            }
         }
     }
     createBuildingDataMaterials(material) {

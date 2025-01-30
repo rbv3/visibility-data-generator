@@ -306,7 +306,10 @@ export default class HiddenMap {
     displayGlobalLocations() {
         console.log("displaying ", selected_locations.length, " locations")
         console.log("Selected locations:", selected_locations); // For debugging purposes
-        this.experience.queryLocationParticles = this.particleHelper.plotParticles(selected_locations)
+        let displayGlobalParticles = false
+        if (displayGlobalParticles){
+            this.experience.queryLocationParticles = this.particleHelper.plotParticles(selected_locations)
+        }
         this.experience.world.updatePovInterfaceAfterBrushOnHistogram(selected_locations)
     };
 

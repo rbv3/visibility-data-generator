@@ -156,8 +156,9 @@ export default class ScreenshotHelper {
                 // }
 
                 //replicating the blocks above for multiple hieghts.
-                const additionalHeights = [70, 120, 170, 220, 270]
+                // const additionalHeights = [70, 120, 170, 220, 270]
                 // const additionalHeights = [5, 10, 15, 25, 30, 70, 120, 170, 220, 270]//Include street level views more frequent.
+                const additionalHeights = [5, 10, 15] // Short data testing heights
                 for (let h in additionalHeights){
                     const cameraPosOff = [...scPositions[i]]
                     const additionalHeight = additionalHeights[h]

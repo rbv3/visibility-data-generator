@@ -3,7 +3,7 @@ import * as PAPA from 'papaparse'
 
 import { download_csv, getDistance } from './helpers'
 import Experience from '../Experience'
-import { CAMERA_BUILDING_LOOKAT, CAMERA_LOOKAT, VIEW_MODES } from './constants'
+import { CAMERA_BUILDING_LOOKAT, CAMERA_LOOKAT, VIEW_MODES, ADDITIONAL_HEIGHTS} from './constants'
 
 const MIN_DISTANCE = 10
 const MIN_FILTER_DISTANCE = 30
@@ -128,12 +128,13 @@ export default class ScreenshotHelper {
         // disable update to improve performance
         this.experience.shouldUpdateOnTick = false
         
-        console.log(scPositions.length)
+        console.log("There will be generated ", scPositions.length.toLocaleString(), " positions")
         
         for(let i = 0; i < scPositions.length; i++) {
             //add multiple heights here:
             const cameraPosOff20 = [...scPositions[i]]
             cameraPosOff20[1] += 20
+            console.log(`Position ${i+1}/${scPositions.length.toLocaleString()}`)
             // const cameraPosOff70 = [...scPositions[i]]
             // cameraPosOff70[1] += 70
             for(let j = 0; j < CAMERA_LOOKAT.length; j++) {
@@ -143,7 +144,11 @@ export default class ScreenshotHelper {
                 this.camera.instance.lookAt(CAMERA_LOOKAT[j])
                 this.experience.update() // force update b4 screenshot
 
-                csv.data.push(this.createCsvLineForScene(`${imageName}-20`))
+                // csv.data.push(this.createCsvLineForScene(`${imageName}-20`))
+                let csvLine = this.createCsvLineForScene(`${imageName}-20`)
+                console.log(csvLine)
+                csv.data.push(csvLine)
+
                 if(shouldCreateImage) {
                     this.renderer.createImage(`${imageName}-20`)
                 }
@@ -158,20 +163,22 @@ export default class ScreenshotHelper {
                 //     this.renderer.createImage(`${imageName}-70`)
                 // }
 
-                //replicating the blocks above for multiple hieghts.
-                // const additionalHeights = [70, 120, 170, 220, 270]
-                // const additionalHeights = [5, 10, 15, 25, 30, 70, 120, 170, 220, 270]//Include street level views more frequent.
-                const additionalHeights = [5, 10, 15] // Short data testing heights
-                for (let h in additionalHeights){
+                /*lines below are duplicates from the above ones, if height smaller than 60*/ 
+                //replicating the blocks above for multiple hieghts. ADDITIONAL_HEIGHTS in constants.js 02.03.2025
+                for (let h in ADDITIONAL_HEIGHTS){
                     const cameraPosOff = [...scPositions[i]]
-                    const additionalHeight = additionalHeights[h]
+                    const additionalHeight = ADDITIONAL_HEIGHTS[h]
                     cameraPosOff[1] += additionalHeight
 
                     this.camera.instance.position.set(...cameraPosOff)
                     this.camera.instance.lookAt(CAMERA_LOOKAT[j])
                     this.experience.update() // force update b4 screenshot
 
-                    csv.data.push(this.createCsvLineForScene(`${imageName}-${additionalHeight}`))
+                    let csvLine = this.createCsvLineForScene(`${imageName}-${additionalHeight}`)
+                    console.log(csvLine)
+                    csv.data.push(csvLine)
+                    
+                    // csv.data.push(this.createCsvLineForScene(`${imageName}-${additionalHeight}`))
                     if(shouldCreateImage) {
                         this.renderer.createImage(`${imageName}-${additionalHeight}`)
                     }
@@ -196,6 +203,7 @@ export default class ScreenshotHelper {
         this.generateBuildingImageOfMode(scPositions, buildingName, this.experience.currentMode)
     }
     generateBuildingImageOfMode(scPositions, buildingName, mode) {
+        let shouldCreateImage = false
         const start = performance.now()
         // disable update to improve performance
         this.experience.shouldUpdateOnTick = false
@@ -233,9 +241,10 @@ export default class ScreenshotHelper {
             data: []
         }
         
-        console.log(scPositions.length)
+        console.log("There will be generated ", scPositions.length.toLocaleString(), " positions")
         
         for(let i = 0; i < scPositions.length; i++) {
+            console.log(`Position ${i+1}/${scPositions.length.toLocaleString()}`)
             for(let j = 0; j < CAMERA_BUILDING_LOOKAT.length; j++) {
                 const imageName = `${buildingName}-${i}-${j}-${mode}`
                 
@@ -245,11 +254,16 @@ export default class ScreenshotHelper {
                 this.renderer.compile()
                 this.experience.update() // force update b4 screenshots
                 
-                csv.data.push(this.createCsvLineForBuilding(`${imageName}-down`, isVisibility))
+                
+                let csvLine = this.createCsvLineForBuilding(`${imageName}-down`, isVisibility)
+                console.log(csvLine)
+                csv.data.push(csvLine)
 
                 this.renderer.createImage(`${imageName}-down`,i,j)
 
-                // offset to current position height
+                /*lines below are duplicates from the above ones, if height smaller than 60*/ 
+                // offset to current position height - commented on 02.03.2025
+                /*
                 if(scPositions[i][1] < 60) {
                     continue
                 }
@@ -261,6 +275,32 @@ export default class ScreenshotHelper {
                 csv.data.push(this.createCsvLineForBuilding(`${imageName}-front`, isVisibility))
 
                 this.renderer.createImage(`${imageName}-front`)
+                */
+
+                /*lines below are duplicates from the above ones, if height smaller than 60*/ 
+                //replicating the blocks above for multiple hieghts. ADDITIONAL_HEIGHTS in constants.js 02.03.2025
+                for (let h in ADDITIONAL_HEIGHTS){
+                    const cameraPosOff = [...scPositions[i]]
+                    const additionalHeight = ADDITIONAL_HEIGHTS[h]
+                    cameraPosOff[1] += additionalHeight
+
+                    this.camera.instance.position.set(...cameraPosOff)
+
+                    //Make the camera lookat Heigth to be the same as the position
+                    const lookAtOffset = [...CAMERA_LOOKAT[j]]
+                    lookAtOffset[1] = scPositions[i][1]
+                    this.camera.instance.lookAt(...lookAtOffset)
+
+                    // this.camera.instance.lookAt(CAMERA_LOOKAT[j])
+                    this.experience.update() // force update b4 screenshot
+                    let csvLine = this.createCsvLineForBuilding(`${imageName}-${additionalHeight}`, isVisibility)
+                    console.log(csvLine)
+                    csv.data.push(csvLine)
+                    if(shouldCreateImage) {
+                        this.renderer.createImage(`${imageName}-${additionalHeight}`)
+                    }
+
+                }
             }
         }
         const csvFile = PAPA.unparse(csv)

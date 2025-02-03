@@ -101,6 +101,11 @@ export const DEPTH_SKY = '255, 0, 0'
 export const INITIAL_FLOOR_BUILDING_POSITION = new THREE.Vector3(310, 45, 268)
 export const ENDING_FLOOR_BUILDING_POSITION = new THREE.Vector3(348, 45, 204)
 
+//Heights where camera will be placed:
+// const additionalHeights = [70, 120, 170, 220, 270]
+// const additionalHeights = [5, 10, 15, 25, 30, 70, 120, 170, 220, 270]//Include street level views more frequent.
+export const ADDITIONAL_HEIGHTS = [5, 10, 15] // Short data testing heights
+
 export const CAMERA_LOOKAT = [
     // new THREE.Vector3(
     //     500,

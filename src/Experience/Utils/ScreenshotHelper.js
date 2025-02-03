@@ -131,10 +131,13 @@ export default class ScreenshotHelper {
         console.log("There will be generated ", scPositions.length.toLocaleString(), " positions")
         
         for(let i = 0; i < scPositions.length; i++) {
+
+            let percentageProgress = ((i+1)/scPositions.length.toLocaleString()*100).toFixed(2)
+            console.log(`${percentageProgress}% - Position ${i+1}/${scPositions.length.toLocaleString()}`)
+            
             //add multiple heights here:
             const cameraPosOff20 = [...scPositions[i]]
             cameraPosOff20[1] += 20
-            console.log(`Position ${i+1}/${scPositions.length.toLocaleString()}`)
             // const cameraPosOff70 = [...scPositions[i]]
             // cameraPosOff70[1] += 70
             for(let j = 0; j < CAMERA_LOOKAT.length; j++) {
@@ -244,7 +247,8 @@ export default class ScreenshotHelper {
         console.log("There will be generated ", scPositions.length.toLocaleString(), " positions")
         
         for(let i = 0; i < scPositions.length; i++) {
-            console.log(`Position ${i+1}/${scPositions.length.toLocaleString()}`)
+            let percentageProgress = ((i+1)/scPositions.length.toLocaleString()*100).toFixed(2)
+            console.log(`${percentageProgress}% - Position ${i+1}/${scPositions.length.toLocaleString()}`)
             for(let j = 0; j < CAMERA_BUILDING_LOOKAT.length; j++) {
                 const imageName = `${buildingName}-${i}-${j}-${mode}`
                 

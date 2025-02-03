@@ -133,7 +133,7 @@ export const createCsvColor = (colorMap, mode = VIEW_MODES.visibility) => {
         csvColorLine = csvColorLine.slice(0, -1)
     }
     csvColorLine += ']'
-    console.log(csvColorLine);
+    // console.log(csvColorLine);
     return csvColorLine
 }
 const checkMapValue = (map, key, mode) => {

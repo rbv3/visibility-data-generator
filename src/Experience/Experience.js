@@ -270,7 +270,7 @@ export default class Experience {
         
         /*World Roation Angles - 02.03.2025*/
         const rotationMatrix = new THREE.Matrix4();
-        rotationMatrix.extractRotation(this.instance.matrixWorld);
+        rotationMatrix.extractRotation(this.camera.instance.matrixWorld);
         // Convert to Euler angles
         const euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
         // Convert radians to degrees
@@ -341,7 +341,7 @@ export default class Experience {
 
         /*World Roation Angles - 02.03.2025*/
         const rotationMatrix = new THREE.Matrix4();
-        rotationMatrix.extractRotation(this.instance.matrixWorld);
+        rotationMatrix.extractRotation(this.camera.instance.matrixWorld);
         // Convert to Euler angles
         const euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
         // Convert radians to degrees
@@ -417,7 +417,7 @@ export default class Experience {
 
         /*World Roation Angles - 02.03.2025*/
         const rotationMatrix = new THREE.Matrix4();
-        rotationMatrix.extractRotation(this.instance.matrixWorld);
+        rotationMatrix.extractRotation(this.camera.instance.matrixWorld);
         // Convert to Euler angles
         const euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
         // Convert radians to degrees

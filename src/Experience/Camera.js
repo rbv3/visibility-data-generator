@@ -60,7 +60,7 @@ export default class Camera {
             /*
             const cameraPosition = this.instance.position.clone();
             //Got scene center using - np.mean(buildings_vis_df[["x","y","z"]].values, axis=0)
-            const targetPosition = new THREE.Vector3(1406.54009895,  161.69680881, 1061.20413751); // Scene center
+            const targetPosition = new THREE.Vector3(1406.54009895,  161.69680881, 1061.20413751); // Scene center centroid
 
             // Vector from center to camera
             const vector = cameraPosition.sub(targetPosition);
@@ -87,6 +87,29 @@ export default class Camera {
             console.log("Spherical:", spherical)
 
             console.log(`Spherical angles, Smooth relative to / around scene center: theta = ${theta}, phi = ${phi}`);
+
+            
+            // Centroid of the scene
+            // const centroid = new THREE.Vector3(1406.54009895,  161.69680881, 1061.20413751);
+            /////Further trials:
+            // Camera position
+            // Define the centroid of the scene
+            // const centroid =  new THREE.Vector3(1406.54009895,  161.69680881, 1061.20413751); // Replace with actual centroid coordinates
+
+            // Get camera's world rotation matrix
+            const rotationMatrix = new THREE.Matrix4();
+            rotationMatrix.extractRotation(this.instance.matrixWorld);
+
+            // Convert to Euler angles
+            const euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
+
+            // Convert radians to degrees
+            const rotX = THREE.MathUtils.radToDeg(euler.x);
+            const rotY = THREE.MathUtils.radToDeg(euler.y);
+            const rotZ = THREE.MathUtils.radToDeg(euler.z);
+
+            // Store in CSV
+            console.log(`rotX, rotY, rotZ [${rotX},  ${rotY},  ${rotZ}]`);
 
             console.log("\n")
 

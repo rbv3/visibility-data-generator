@@ -95,20 +95,22 @@ export default class ScreenshotHelper {
     }
     generateImageOfMode(scPositions, mode, shouldCreateImage, shouldDownloadCsv = true) {
         const start = performance.now()
-        // const csv = {
-        //     fields: [
-        //         'x',
-        //         'y',
-        //         'z',
-        //         'xh',
-        //         'yh',
-        //         'zh',
-        //         'f_xyz',
-        //         'image_name'
-        //     ],
-        //     data: []
-        // }
+        /*Euler Angles and World Roation Angles - 02.03.2025*/
+        const csv = {
+            fields: [
+                'x',
+                'y',
+                'z',
+                'xh',
+                'yh',
+                'zh',
+                'f_xyz',
+                'image_name'
+            ],
+            data: []
+        }
 
+        /*Sperical coordinates 01.31.2025
         const csv = {
             fields: [
                 'x',
@@ -121,6 +123,7 @@ export default class ScreenshotHelper {
             ],
             data: []
         }
+        */
 
         // disable update to improve performance
         this.experience.shouldUpdateOnTick = false
@@ -197,14 +200,18 @@ export default class ScreenshotHelper {
         // disable update to improve performance
         this.experience.shouldUpdateOnTick = false
         const isVisibility = mode == VIEW_MODES.visibility
-        // const csvCommonFields = [
-        //     'x',
-        //     'y',
-        //     'z',
-        //     'xh',
-        //     'yh',
-        //     'zh',
-        // ]
+        
+        /*Euler Angles and World Roation Angles - 02.03.2025*/
+        const csvCommonFields = [
+            'x',
+            'y',
+            'z',
+            'xh',
+            'yh',
+            'zh',
+        ]
+
+        /*Sperical coordinates 01.31.2025
         const csvCommonFields = [
                 'x',
                 'y',
@@ -212,7 +219,7 @@ export default class ScreenshotHelper {
                 'phi',
                 'theta',
             ]
-        
+        */
 
         if(isVisibility) {
             csvCommonFields.push('f_xyz')

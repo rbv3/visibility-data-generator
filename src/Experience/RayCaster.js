@@ -143,11 +143,44 @@ export default class RayCaster {
         let points = basePoint.map(b => new THREE.Vector3(b[0],b[1],b[2]))
         points = this.sortPointsClockwise(points)
         
+        console.log("Angle to faces are actually roatated with 90deg.")
+        /// Computing viewing angles for each side:
         for (let i=0; i<4; i++){
             // console.log(points[i], points[(i+1) % 4])
             let p1 = points[i]
             let p2 =  points[(i+1) % 4]
 
+            // Compute direction vector
+            // const direction = new THREE.Vector3().subVectors(p2, p1).normalize();
+            const direction = new THREE.Vector3().subVectors(p1, p2).normalize();
+
+            // Choose a reference up vector (avoid collinear cases)
+            const worldUp = new THREE.Vector3(0, 1, 0);
+            if (Math.abs(direction.dot(worldUp)) > 0.99) {
+                // If collinear, choose another reference
+                worldUp.set(1, 0, 0);
+            }
+
+            // Compute perpendicular right vector
+            const right = new THREE.Vector3().crossVectors(worldUp, direction).normalize();
+
+            // Compute new "up" vector to maintain orthogonality
+            const up = new THREE.Vector3().crossVectors(direction, 1).normalize();
+
+            // Create rotation matrix
+            const rotationMatrix = new THREE.Matrix4();
+            rotationMatrix.makeBasis(right, up, direction); // Aligns with p1->p2
+
+            // Extract Euler angles (optional)
+            const euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
+            const rotX = THREE.MathUtils.radToDeg(euler.x);
+            const rotY = THREE.MathUtils.radToDeg(euler.y);
+            const rotZ = THREE.MathUtils.radToDeg(euler.z);
+
+            // Output
+            console.log(`Side: [${p1.x}, ${p1.y}, ${p1.z}] - [${p2.x}, ${p2.y}, ${p2.z}]`, "Perpendicular orientation:", rotX, rotY, rotZ);
+
+            /* Spherical Coordinates:
             // Compute direction from p1 to p2
             const direction = new THREE.Vector3().subVectors(p2, p1).normalize();
 
@@ -163,8 +196,9 @@ export default class RayCaster {
 
             console.log(`Side [${p1.x},${p1.y},${p1.z}] - [${p2.x},${p2.y},${p2.z}]  has: Theta (Yaw): ${theta} degrees, Phi (Pitch): ${phi} degrees`);
             ////////
+            */
         }
-        /// Computing viewing angles for each side:
+
         
 
         this.visibilityEncoderService.predictFacadeFromBasePointsV2AsTiles(basePoint, this.clickedBuildingHeight)

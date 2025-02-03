@@ -264,11 +264,25 @@ export default class Experience {
         csvLine.push(`${this.camera.instance.position.z}`)
 
         // console.log(this.camera.instance.quaternion)
-
         // csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
         // csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
         // csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+        
+        /*World Roation Angles - 02.03.2025*/
+        const rotationMatrix = new THREE.Matrix4();
+        rotationMatrix.extractRotation(this.instance.matrixWorld);
+        // Convert to Euler angles
+        const euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
+        // Convert radians to degrees
+        const rotX = THREE.MathUtils.radToDeg(euler.x);
+        const rotY = THREE.MathUtils.radToDeg(euler.y);
+        const rotZ = THREE.MathUtils.radToDeg(euler.z);
+        csvLine.push(`${rotX}`)
+        csvLine.push(`${rotY}`)
+        csvLine.push(`${rotZ}`)
 
+        //Sperical coordinates 01.31.2025
+        /*
         const cameraDirection = new THREE.Vector3();
         this.camera.instance.getWorldDirection(cameraDirection); // Get forward direction of camera
         // Compute angles in spherical coordinates
@@ -277,6 +291,7 @@ export default class Experience {
         const phi = THREE.MathUtils.radToDeg(spherical.phi); // Vertical viewing angle
         csvLine.push(`${phi}`)
         csvLine.push(`${theta}`)
+        */
 
 
         const totalPixels = readPixelBuffer.length / 4
@@ -320,11 +335,25 @@ export default class Experience {
         csvLine.push(`${this.camera.instance.position.z}`)
 
         // console.log(this.camera.instance.quaternion)
-
         // csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
         // csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
         // csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
 
+        /*World Roation Angles - 02.03.2025*/
+        const rotationMatrix = new THREE.Matrix4();
+        rotationMatrix.extractRotation(this.instance.matrixWorld);
+        // Convert to Euler angles
+        const euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
+        // Convert radians to degrees
+        const rotX = THREE.MathUtils.radToDeg(euler.x);
+        const rotY = THREE.MathUtils.radToDeg(euler.y);
+        const rotZ = THREE.MathUtils.radToDeg(euler.z);
+        csvLine.push(`${rotX}`)
+        csvLine.push(`${rotY}`)
+        csvLine.push(`${rotZ}`)
+
+        //Sperical coordinates 01.31.2025
+        /*
         const cameraDirection = new THREE.Vector3();
         this.camera.instance.getWorldDirection(cameraDirection); // Get forward direction of camera
         // Compute angles in spherical coordinates
@@ -333,6 +362,7 @@ export default class Experience {
         const phi = THREE.MathUtils.radToDeg(spherical.phi); // Vertical viewing angle
         csvLine.push(`${phi}`)
         csvLine.push(`${theta}`)
+        */
 
         const totalPixels = readPixelBuffer.length / 4
         if (shouldLogResults) {
@@ -384,6 +414,22 @@ export default class Experience {
         // csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
         // csvLine.push(`${this.camera.instance.rotation.y * (180 / Math.PI)}`)
         // csvLine.push(`${this.camera.instance.rotation.z * (180 / Math.PI)}`)
+
+        /*World Roation Angles - 02.03.2025*/
+        const rotationMatrix = new THREE.Matrix4();
+        rotationMatrix.extractRotation(this.instance.matrixWorld);
+        // Convert to Euler angles
+        const euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
+        // Convert radians to degrees
+        const rotX = THREE.MathUtils.radToDeg(euler.x);
+        const rotY = THREE.MathUtils.radToDeg(euler.y);
+        const rotZ = THREE.MathUtils.radToDeg(euler.z);
+        csvLine.push(`${rotX}`)
+        csvLine.push(`${rotY}`)
+        csvLine.push(`${rotZ}`)
+
+        //Sperical coordinates 01.31.2025
+        /*
         const cameraDirection = new THREE.Vector3();
         this.camera.instance.getWorldDirection(cameraDirection); // Get forward direction of camera
         // Compute angles in spherical coordinates
@@ -392,8 +438,8 @@ export default class Experience {
         const phi = THREE.MathUtils.radToDeg(spherical.phi); // Vertical viewing angle
         csvLine.push(`${phi}`)
         csvLine.push(`${theta}`)
+        */
         
-
         return csvLine
     }
 

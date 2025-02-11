@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import Experience from './Experience.js'
 import { CustomPointerLockControls } from './CustomPointerLockControls.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { CAMERA_QUATERNIONS } from './Utils/constants.js'
+import { CAMERA_QUATERNIONS, CAMERA_LOOKAT } from './Utils/constants.js'
 
 
 export default class Camera {
@@ -99,15 +99,12 @@ export default class Camera {
             // Get camera's world rotation matrix
             const rotationMatrix = new THREE.Matrix4();
             rotationMatrix.extractRotation(this.instance.matrixWorld);
-
             // Convert to Euler angles
             const euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
-
             // Convert radians to degrees
             const rotX = THREE.MathUtils.radToDeg(euler.x);
             const rotY = THREE.MathUtils.radToDeg(euler.y);
             const rotZ = THREE.MathUtils.radToDeg(euler.z);
-
             // Store in CSV
             console.log(`rotX, rotY, rotZ [${rotX},  ${rotY},  ${rotZ}]`);
 
@@ -117,6 +114,56 @@ export default class Camera {
         this.gui.cameraFolder.add({getCamera : () => {
             console.log(this.instance)
         }}, 'getCamera')
+
+        this.gui.cameraFolder.add({rotateToRandomAngle : () => {
+            console.log("Current Euler angles are:")
+            // Get camera's world rotation matrix
+            let rotationMatrix = new THREE.Matrix4();
+            rotationMatrix.extractRotation(this.instance.matrixWorld);
+            // Convert to Euler angles
+            let euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
+            // Convert radians to degrees
+            let rotX = THREE.MathUtils.radToDeg(euler.x);
+            let rotY = THREE.MathUtils.radToDeg(euler.y);
+            let rotZ = THREE.MathUtils.radToDeg(euler.z);
+            // Store in CSV
+            console.log(`rotX, rotY, rotZ [${rotX},  ${rotY},  ${rotZ}]`);
+
+            //////////////
+            console.log("Changed Euler angles are:")
+            // Create an Euler object with desired rotations (in radians) YX taken as such in YXZ order
+            let xRandomAngle = Math.random()*10 - 5
+            let yRandomAngle = Math.random()*360 - 180
+            console.log(`Random generated angles - x:${xRandomAngle}, y: ${yRandomAngle}`)
+            euler = new THREE.Euler(THREE.MathUtils.degToRad(xRandomAngle), THREE.MathUtils.degToRad(yRandomAngle), 0, 'YXZ'); // Rotation around X, then Y, then Z
+            // Create rotation matrix
+            rotationMatrix = new THREE.Matrix4();
+            rotationMatrix.makeRotationFromEuler(euler);
+
+            // Apply to camera's quaternion
+            this.instance.quaternion.setFromRotationMatrix(rotationMatrix);
+
+            // Ensure matrix updates
+            this.instance.updateMatrixWorld(true);
+
+            // this.instance.lookAt(CAMERA_LOOKAT[0])
+
+            // this.experience.update() 
+            //////////////
+
+            // Get camera's world rotation matrix
+            rotationMatrix = new THREE.Matrix4();
+            rotationMatrix.extractRotation(this.instance.matrixWorld);
+            // Convert to Euler angles
+            euler = new THREE.Euler().setFromRotationMatrix(rotationMatrix, 'YXZ');
+            // Convert radians to degrees
+            rotX = THREE.MathUtils.radToDeg(euler.x);
+            rotY = THREE.MathUtils.radToDeg(euler.y);
+            rotZ = THREE.MathUtils.radToDeg(euler.z);
+            // Store in CSV
+            console.log(`rotX, rotY, rotZ [${rotX},  ${rotY},  ${rotZ}]`);
+
+        }}, 'rotateToRandomAngle')
         
         this.gui.cameraFolder.add(this.instance, 'far').min(100).max(10000).onFinishChange(() => this.instance.updateProjectionMatrix())
     }

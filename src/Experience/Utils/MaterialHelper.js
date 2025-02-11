@@ -113,13 +113,13 @@ export default class MaterialHelper {
                 case 'brick':
                     return new THREE.Color(255, 0, 0);
                 case 'concrete':
-                    return new THREE.Color(0, 255, 0);
+                    return new THREE.Color(255, 255, 0);
                 case 'marble':
                     return new THREE.Color(0, 0, 255);
                 case 'plaster':
                     return new THREE.Color(255, 255, 255);
                 case 'metal':
-                    return new THREE.Color(255, 255, 0);
+                    return new THREE.Color(0, 255, 0);
 
             }
         }

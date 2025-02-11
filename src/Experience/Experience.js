@@ -259,9 +259,9 @@ export default class Experience {
         // console.log('Camera position and quaternion:')
         // console.log(this.camera.instance.position)
 
-        csvLine.push(`${this.camera.instance.position.x}`)
-        csvLine.push(`${this.camera.instance.position.y}`)
-        csvLine.push(`${this.camera.instance.position.z}`)
+        csvLine.push(`${this.camera.instance.position.x.toFixed(1)}`)
+        csvLine.push(`${this.camera.instance.position.y.toFixed(1)}`)
+        csvLine.push(`${this.camera.instance.position.z.toFixed(1)}`)
 
         // console.log(this.camera.instance.quaternion)
         // csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
@@ -277,9 +277,9 @@ export default class Experience {
         const rotX = THREE.MathUtils.radToDeg(euler.x);
         const rotY = THREE.MathUtils.radToDeg(euler.y);
         const rotZ = THREE.MathUtils.radToDeg(euler.z);
-        csvLine.push(`${rotX}`)
-        csvLine.push(`${rotY}`)
-        csvLine.push(`${rotZ}`)
+        csvLine.push(`${rotX.toFixed(1)}`)
+        csvLine.push(`${rotY.toFixed(1)}`)
+        csvLine.push(`${rotZ.toFixed(1)}`)
 
         //Sperical coordinates 01.31.2025
         /*
@@ -330,9 +330,9 @@ export default class Experience {
         // console.log('Camera position and quaternion:')
         // console.log(this.camera.instance.position)
 
-        csvLine.push(`${this.camera.instance.position.x}`)
-        csvLine.push(`${this.camera.instance.position.y}`)
-        csvLine.push(`${this.camera.instance.position.z}`)
+        csvLine.push(`${this.camera.instance.position.x.toFixed(1)}`)
+        csvLine.push(`${this.camera.instance.position.y.toFixed(1)}`)
+        csvLine.push(`${this.camera.instance.position.z.toFixed(1)}`)
 
         // console.log(this.camera.instance.quaternion)
         // csvLine.push(`${this.camera.instance.rotation.x * (180 / Math.PI)}`)
@@ -348,9 +348,9 @@ export default class Experience {
         const rotX = THREE.MathUtils.radToDeg(euler.x);
         const rotY = THREE.MathUtils.radToDeg(euler.y);
         const rotZ = THREE.MathUtils.radToDeg(euler.z);
-        csvLine.push(`${rotX}`)
-        csvLine.push(`${rotY}`)
-        csvLine.push(`${rotZ}`)
+        csvLine.push(`${rotX.toFixed(1)}`)
+        csvLine.push(`${rotY.toFixed(1)}`)
+        csvLine.push(`${rotZ.toFixed(1)}`)
 
         //Sperical coordinates 01.31.2025
         /*

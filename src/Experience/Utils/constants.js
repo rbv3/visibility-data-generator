@@ -48,18 +48,18 @@ export const COLOR_TO_OBJECT = {
 // Building Data Detection 
 export const BUILDING_OBJECT_TO_COLOR = {
     'brick': '255,0,0',
-    'concrete': '0,255,0',
+    'concrete': '255,255,0',
     'marble': '0,0,255',
     'plaster': '255,255,255',
-    'metal': '255,255,0',
+    'metal': '255,0,0',
     'miscelaneous':'0,0,0',
 }
 export const BUILDING_COLOR_TO_OBJECT = {
     '255,0,0': 'brick',
-    '0,255,0': 'concrete',
+    '255,255,0': 'concrete',
     '0,0,255': 'marble' ,
     '255,255,255': 'plaster',
-    '255,255,0': 'metal',
+    '0,255,0': 'metal',
     '0,0,0': 'miscelaneous'
 }
 // // Real world look like rendering
@@ -102,9 +102,9 @@ export const INITIAL_FLOOR_BUILDING_POSITION = new THREE.Vector3(310, 45, 268)
 export const ENDING_FLOOR_BUILDING_POSITION = new THREE.Vector3(348, 45, 204)
 
 //Heights where camera will be placed:
-// const additionalHeights = [70, 120, 170, 220, 270]
-// const additionalHeights = [5, 10, 15, 25, 30, 70, 120, 170, 220, 270]//Include street level views more frequent.
-export const ADDITIONAL_HEIGHTS = [5, 10, 15] // Short data testing heights
+// export const additionalHeights = [0, 70, 120, 170, 220, 270]
+export const ADDITIONAL_HEIGHTS = [5, 10, 15, 25, 45, 70, 120, 170, 220, 270]//Include street level views more frequent.
+// export const ADDITIONAL_HEIGHTS = [0, 5, 10, 15] // Short data testing heights
 
 export const CAMERA_LOOKAT = [
     // new THREE.Vector3(

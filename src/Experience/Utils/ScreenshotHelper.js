@@ -93,7 +93,89 @@ export default class ScreenshotHelper {
     generateImages(scPositions, shouldCreateImage, shouldDownloadCsv = true) {
         return this.generateImageOfMode(scPositions, this.experience.currentMode, shouldCreateImage, shouldDownloadCsv)
     }
+
+    //Dataset generation using random euler angles:
     generateImageOfMode(scPositions, mode, shouldCreateImage, shouldDownloadCsv = true) {
+        const start = performance.now()
+        /*Euler Angles and World Roation Angles - 02.03.2025*/
+        const csv = {
+            fields: [
+                'x',
+                'y',
+                'z',
+                'xh',
+                'yh',
+                'zh',
+                'f_xyz',
+                'image_name'
+            ],
+            data: []
+        }
+        // disable update to improve performance
+        this.experience.shouldUpdateOnTick = false
+        let numberOfAnglesPerLocation = 2
+
+        console.log("There will be generated ", scPositions.length.toLocaleString(), " positions")
+        for(let i = 0; i < scPositions.length; i++) {
+            let percentageProgress = ((i+1)/scPositions.length*100).toFixed(2)
+            console.log(`${percentageProgress}% - Position ${i+1}/${scPositions.length.toLocaleString()}`)
+            for (let h in ADDITIONAL_HEIGHTS){ //for each height
+                for (let j = 0; j < numberOfAnglesPerLocation; j++){ //for each angle
+                    const imageName = `pos${i}-${j}-${mode}`
+                    //1. set camera possition x, z from screenshotPositions.js and height from ADDITIONAL_HEIGHTS, in constants.js
+                    const cameraPosOff = [...scPositions[i]]
+                    const additionalHeight = ADDITIONAL_HEIGHTS[h]
+                    cameraPosOff[1] += additionalHeight
+                    cameraPosOff[0] += Math.random()*10 - 5 //Add some variability to x and z
+                    cameraPosOff[2] += Math.random()*10 - 5
+                    this.camera.instance.position.set(...cameraPosOff)
+
+                    //2. set camera orientation - check rotateToRandomAngle in Camera.js for testing
+                    let xRandomAngle = Math.random()*10 - 5
+                    let yRandomAngle = Math.random()*360 - 180
+                    // console.log(`Random generated angles - x:${xRandomAngle}, y: ${yRandomAngle}`)
+                    let euler = new THREE.Euler(THREE.MathUtils.degToRad(xRandomAngle), THREE.MathUtils.degToRad(yRandomAngle), 0, 'YXZ'); // Rotation around X, then Y, then Z
+                    // Create rotation matrix
+                    let rotationMatrix = new THREE.Matrix4();
+                    rotationMatrix.makeRotationFromEuler(euler);
+                    // Apply to camera's quaternion
+                    this.camera.instance.quaternion.setFromRotationMatrix(rotationMatrix);
+                    // Ensure matrix updates
+                    this.camera.instance.updateMatrixWorld(true);
+                    this.experience.update() // force update b4 screenshot
+
+                    //3. Add entry to CSV data entry
+                    let csvLine = this.createCsvLineForScene(`${imageName}-${additionalHeight}`)
+                    console.log(csvLine)
+                    csv.data.push(csvLine)
+                    
+                    // csv.data.push(this.createCsvLineForScene(`${imageName}-${additionalHeight}`))
+                    if(shouldCreateImage) {
+                        this.renderer.createImage(`${imageName}-${additionalHeight}`)
+                    }
+                }
+            }
+            // if (i==3){
+            //     break //testing purposes.
+            // }
+        }
+
+        const end = performance.now()
+        console.log(`Execution time: ${((end - start) / 1000).toFixed(2)} s`)
+
+        const csvFile = PAPA.unparse(csv)
+        if(shouldDownloadCsv) {
+            download_csv(csvFile, `${this.experience.currentMode}`)
+        }
+
+        this.experience.shouldUpdateOnTick = true
+
+        return csvFile
+        
+    }
+
+    //Dataset generation using lookats
+    generateImageOfModeBackup(scPositions, mode, shouldCreateImage, shouldDownloadCsv = true) {
         const start = performance.now()
         /*Euler Angles and World Roation Angles - 02.03.2025*/
         const csv = {

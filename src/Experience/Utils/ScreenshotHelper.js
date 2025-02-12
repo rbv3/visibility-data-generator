@@ -190,9 +190,9 @@ export default class ScreenshotHelper {
                 data: []
             }
             // if (i==30){
-            if (i==1){
-                break //testing purposes.
-            }
+            // if (i==1){
+            //     break //testing purposes.
+            // }
         }
 
         end = performance.now()
@@ -206,7 +206,7 @@ export default class ScreenshotHelper {
 
         this.experience.shouldUpdateOnTick = true
 
-        return csvFile
+        return //csvFile
         
     }
 

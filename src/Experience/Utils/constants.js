@@ -51,7 +51,7 @@ export const BUILDING_OBJECT_TO_COLOR = {
     'concrete': '255,255,0',
     'marble': '0,0,255',
     'plaster': '255,255,255',
-    'metal': '255,0,0',
+    'metal': '0,255,0',
     'miscelaneous':'0,0,0',
 }
 export const BUILDING_COLOR_TO_OBJECT = {

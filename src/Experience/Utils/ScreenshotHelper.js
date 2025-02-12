@@ -95,7 +95,7 @@ export default class ScreenshotHelper {
     }
 
     //Dataset generation using random euler angles:
-    generateImageOfMode(scPositions, mode, shouldCreateImage, shouldDownloadCsv = true) {
+    generateImageOfMode(scPositions, mode, shouldCreateImage, shouldDownloadCsv = true) {//, buildingMode = false
         const start = performance.now()
         let end = performance.now()
         /*Euler Angles and World Roation Angles - 02.03.2025*/
@@ -153,7 +153,14 @@ export default class ScreenshotHelper {
                     this.experience.update() // force update b4 screenshot
 
                     //3. Add entry to CSV data entry
-                    let csvLine = this.createCsvLineForScene(`${imageName}-${additionalHeight}`)
+                    let csvLine;
+                    // if (buildingMode){ //It never gets into here.
+                    //     csvLine = this.createCsvLineForBuilding(`build-${imageName}-${additionalHeight}`, isVisibility)
+                    // }
+                    // else{
+                    csvLine = this.createCsvLineForScene(`${imageName}-${additionalHeight}`)    
+                    // }
+                    
                     // console.log(csvLine)
                     csv.data.push(csvLine)
                     
@@ -183,18 +190,19 @@ export default class ScreenshotHelper {
                 data: []
             }
             // if (i==30){
-            //     break //testing purposes.
-            // }
+            if (i==1){
+                break //testing purposes.
+            }
         }
 
         end = performance.now()
         console.log(`Execution time: ${((end - start) / 1000).toFixed(2)} s`)
 
-        const csvFile = PAPA.unparse(csv)
-        if(shouldDownloadCsv) {
-            // let csvFileName = `${this.experience.currentMode}_${i}_${scPositions.length}`
-            download_csv(csvFile, csvFileName)
-        }
+        // const csvFile = PAPA.unparse(csv)
+        // if(shouldDownloadCsv) {
+        //     // let csvFileName = `${this.experience.currentMode}_${i}_${scPositions.length}`
+        //     download_csv(csvFile, csvFileName)
+        // }
 
         this.experience.shouldUpdateOnTick = true
 
@@ -313,9 +321,11 @@ export default class ScreenshotHelper {
     }
 
     generateBuildingImages(scPositions, buildingName) {
+        // this.generateBuildingImageOfMode(scPositions, buildingName, this.experience.currentMode)
         this.generateBuildingImageOfMode(scPositions, buildingName, this.experience.currentMode)
     }
     generateBuildingImageOfMode(scPositions, buildingName, mode) {
+        //Deprecated method -  dataset generation uses - this.generateImageOfMode with 
         let shouldCreateImage = false
         const start = performance.now()
         // disable update to improve performance

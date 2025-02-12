@@ -97,8 +97,9 @@ export default class ScreenshotHelper {
     //Dataset generation using random euler angles:
     generateImageOfMode(scPositions, mode, shouldCreateImage, shouldDownloadCsv = true) {
         const start = performance.now()
+        let end = performance.now()
         /*Euler Angles and World Roation Angles - 02.03.2025*/
-        const csv = {
+        let csv = {
             fields: [
                 'x',
                 'y',
@@ -115,10 +116,17 @@ export default class ScreenshotHelper {
         this.experience.shouldUpdateOnTick = false
         let numberOfAnglesPerLocation = 2
 
-        console.log("There will be generated ", scPositions.length.toLocaleString(), " positions")
+        let loggingEvery = 1 
+        console.log(`There will be generated ${scPositions.length.toLocaleString()} positions each with ${ADDITIONAL_HEIGHTS.length} heights and ${numberOfAnglesPerLocation} view angles. In total ${(scPositions.length * ADDITIONAL_HEIGHTS.length * numberOfAnglesPerLocation).toLocaleString()} views. Logging every ${loggingEvery}%` )
         for(let i = 0; i < scPositions.length; i++) {
             let percentageProgress = ((i+1)/scPositions.length*100).toFixed(2)
-            console.log(`${percentageProgress}% - Position ${i+1}/${scPositions.length.toLocaleString()}`)
+            if (((i+1) % Math.floor(scPositions.length / (Math.floor(100 / loggingEvery)))) == 0){ 
+                //20 screenshots take 15 - 30 seconds. - Since 2k postions in scPositions.length
+                // ETA in hours ~ ADDITIONAL_HEIGHTS.length * numberOfAnglesPerLocation
+                //Log only for each x% progress //2000 for 0.05%, 100 for 1% and 20 for 5%
+                end = performance.now()
+                console.log(`${percentageProgress}% - Position ${i+1}/${scPositions.length.toLocaleString()} - In CSV file we have a total of ${csv.data.length.toLocaleString()} - Elapsed time: ${((end - start) / 1000).toFixed(2)}s - ${new Date().toLocaleTimeString()} ${new Date().toLocaleDateString()}`)
+            }
             for (let h in ADDITIONAL_HEIGHTS){ //for each height
                 for (let j = 0; j < numberOfAnglesPerLocation; j++){ //for each angle
                     const imageName = `pos${i}-${j}-${mode}`
@@ -146,7 +154,7 @@ export default class ScreenshotHelper {
 
                     //3. Add entry to CSV data entry
                     let csvLine = this.createCsvLineForScene(`${imageName}-${additionalHeight}`)
-                    console.log(csvLine)
+                    // console.log(csvLine)
                     csv.data.push(csvLine)
                     
                     // csv.data.push(this.createCsvLineForScene(`${imageName}-${additionalHeight}`))
@@ -155,17 +163,37 @@ export default class ScreenshotHelper {
                     }
                 }
             }
-            // if (i==3){
+            //Save Csvs in batches, after each postion, to avoid memory overflow and browser crashing:
+            const csvFile = PAPA.unparse(csv)
+            if(shouldDownloadCsv) {
+                let csvFileName = `${this.experience.currentMode}_${i}_${scPositions.length}`
+                download_csv(csvFile, csvFileName)
+            }
+            csv = {
+                fields: [
+                    'x',
+                    'y',
+                    'z',
+                    'xh',
+                    'yh',
+                    'zh',
+                    'f_xyz',
+                    'image_name'
+                ],
+                data: []
+            }
+            // if (i==30){
             //     break //testing purposes.
             // }
         }
 
-        const end = performance.now()
+        end = performance.now()
         console.log(`Execution time: ${((end - start) / 1000).toFixed(2)} s`)
 
         const csvFile = PAPA.unparse(csv)
         if(shouldDownloadCsv) {
-            download_csv(csvFile, `${this.experience.currentMode}`)
+            // let csvFileName = `${this.experience.currentMode}_${i}_${scPositions.length}`
+            download_csv(csvFile, csvFileName)
         }
 
         this.experience.shouldUpdateOnTick = true

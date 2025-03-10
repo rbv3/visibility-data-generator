@@ -1,5 +1,5 @@
 export const predefinedFormulaLibrary = {
-    "greeness": {
+    "greenness": {
         "expression": "tree",
     },
     "openness": {

@@ -4,3 +4,4 @@ node_modules
 .env*.local
 src/Experience/World/models.js
 src/Experience/Utils/GUI.js
+static/data/

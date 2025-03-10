@@ -101,7 +101,8 @@ export default class MaterialHelper {
         return customMaterial
     }
     getColorByMaterial(material) {
-        let outlierFindingDataset = true
+        // let outlierFindingDataset = true
+        let outlierFindingDataset = false
         if(outlierFindingDataset){
             if (material == 'metal')
                 return new THREE.Color(0, 255, 0);                
